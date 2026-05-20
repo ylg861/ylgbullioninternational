@@ -367,7 +367,8 @@
                 localStorage.setItem('userShortUID', user.uid.slice(0, 8).toUpperCase());
                 currentUser = user;
                 const displayName = localStorage.getItem('userName') || 'Member';
-                document.getElementById('head-user-display').innerText = "Account: " + displayName;
+                const headEl = document.getElementById('head-user-display');
+                if (headEl) headEl.innerText = "Account: " + displayName;
 
                 // Check KYC status from Firestore
                 try {

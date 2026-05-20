@@ -220,6 +220,11 @@
       submitBtn.disabled = true; btnText.textContent = 'Processing...';
 
       try{
+        // Step 1: Create Firebase Auth user first (user becomes authenticated)
+        const cred = await createUserWithEmailAndPassword(auth, emailVal, passVal);
+        await updateProfile(cred.user, { displayName: nameVal });
+
+        // Step 2: Now authenticated — run Firestore counter transaction
         const counterRef = doc(db, 'settings', 'userCounter');
         let newIndex = 1;
         await runTransaction(db, async (tx)=>{
@@ -232,9 +237,7 @@
         const formatted = String(newIndex).padStart(4,'0');
         const customYlgId = `YLG-${currentYear}${formatted}`;
 
-        const cred = await createUserWithEmailAndPassword(auth, emailVal, passVal);
-        await updateProfile(cred.user, { displayName: nameVal });
-
+        // Step 3: Write user doc
         await setDoc(doc(db, 'users', cred.user.uid), {
           uid: cred.user.uid, fullname: nameVal, email: emailVal, phone: phoneVal, balance: 0,
           userIndex: newIndex, ylgId: customYlgId, tradeControl: 'NORMAL', kycStatus: 'pending', createdAt: new Date().toISOString()

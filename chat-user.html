@@ -248,7 +248,7 @@
                 const time = data.timestamp ? new Date(data.timestamp.seconds*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : '...';
                 let content='';
                 if(data.chatImageUrl){
-                    const img = `<img src="${data.chatImageUrl}" style="max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;" onload="this.closest('#chat-messages').scrollTop=this.closest('#chat-messages').scrollHeight" onclick="window.open('${data.chatImageUrl}','_blank')">`;
+                    const img = `<img src="${data.chatImageUrl}" class="chat-img" style="max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;" onload="this.closest('#chat-messages').scrollTop=this.closest('#chat-messages').scrollHeight">`;
                     content = (data.message&&data.message!=='[Image]') ? `<div>${data.message}</div>`+img : img;
                 } else { content=`<div>${data.message||''}</div>`; }
                 div.innerHTML=content+`<span class="message-time">${isAdmin?texts.supportLabelShort:texts.youLabel} • ${time}</span>`;
@@ -263,6 +263,9 @@
         }, (err) => { console.error(err); document.getElementById('chat-messages').innerHTML='<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load chat. Please refresh.</p></div>'; });
     }
 
+    document.getElementById('chat-messages').addEventListener('click', (e) => {
+        if (e.target.classList.contains('chat-img')) window.open(e.target.src, '_blank');
+    });
     document.getElementById('send-btn').onclick = sendMessage;
     document.getElementById('chat-input-field').addEventListener('keypress',(e)=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} });
 

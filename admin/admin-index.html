@@ -384,6 +384,11 @@
             'junalama463@gmail.com'
         ];
 
+        // ── HTML escape helper (prevents XSS) ──
+        function esc(str) {
+            return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+
         // ── Nav badge helper ──
         function setNavBadge(id, count) {
             const el = document.getElementById(id);
@@ -685,11 +690,11 @@
                 const wUser = allUsers.find(u => u.id === w.uid);
                 const wName = wUser ? (wUser.fullName || wUser.email) : (w.email || w.uid || 'N/A');
                 html += '<div class="withdraw-card">' +
-                    '<div class="info"><h4>' + wName + '</h4>' +
+                    '<div class="info"><h4>' + esc(wName) + '</h4>' +
                     '<p>Amount: $' + (w.amount || 0) + '</p>' +
-                    '<p style="font-size:11px;color:#aaa;">' + (w.email || '') + '</p></div>' +
-                    '<div class="info"><h4>Method</h4><p>' + (w.method || w.withdrawalMethod || 'N/A') + '</p>' +
-                    '<p style="font-size:11px;color:#aaa;">' + (w.details || '') + '</p></div>' +
+                    '<p style="font-size:11px;color:#aaa;">' + esc(w.email || '') + '</p></div>' +
+                    '<div class="info"><h4>Method</h4><p>' + esc(w.method || w.withdrawalMethod || 'N/A') + '</p>' +
+                    '<p style="font-size:11px;color:#aaa;">' + esc(w.details || '') + '</p></div>' +
                     '<div class="info"><h4>Date</h4><p>' + dateStr + '</p></div>' +
                     '<div class="info">' + actionButtons + '</div></div>';
             });
@@ -717,11 +722,11 @@
                     actionButtons = '<button class="btn-action btn-view" onclick="viewKYCDocuments(\'' + k.id + '\')">View</button>';
                 }
                 html += '<div class="user-card">' +
-                    '<div class="info"><h4>' + (k.fullName || 'N/A') + '</h4>' +
-                    '<p>' + (k.email || 'N/A') + '</p>' +
-                    '<span class="kyc-badge kyc-' + k.status + '">' + k.status + '</span></div>' +
-                    '<div class="info"><h4>ID Type</h4><p>' + (k.idType || 'N/A') + '</p></div>' +
-                    '<div class="info"><h4>Country</h4><p>' + (k.country || 'N/A') + '</p></div>' +
+                    '<div class="info"><h4>' + esc(k.fullName || 'N/A') + '</h4>' +
+                    '<p>' + esc(k.email || 'N/A') + '</p>' +
+                    '<span class="kyc-badge kyc-' + k.status + '">' + esc(k.status) + '</span></div>' +
+                    '<div class="info"><h4>ID Type</h4><p>' + esc(k.idType || 'N/A') + '</p></div>' +
+                    '<div class="info"><h4>Country</h4><p>' + esc(k.country || 'N/A') + '</p></div>' +
                     '<div class="info">' + actionButtons + '</div></div>';
             });
             list.innerHTML = html;
@@ -1763,10 +1768,10 @@
                                 + $${parseFloat(r.amount || 0).toLocaleString()}
                             </div>
                             <div style="font-size:12px;color:#888;margin-bottom:2px;">
-                                <i class="fas fa-user" style="margin-right:4px;"></i>${r.userName || r.userEmail || '—'} &nbsp;·&nbsp; ${r.ylgId || ''}
+                                <i class="fas fa-user" style="margin-right:4px;"></i>${esc(r.userName || r.userEmail || '—')} &nbsp;·&nbsp; ${esc(r.ylgId || '')}
                             </div>
                             <div style="font-size:12px;color:#888;margin-bottom:2px;">
-                                <i class="fas fa-credit-card" style="margin-right:4px;"></i>${r.paymentMethod || '—'}
+                                <i class="fas fa-credit-card" style="margin-right:4px;"></i>${esc(r.paymentMethod || '—')}
                             </div>
                             <div style="font-size:11px;color:#555;">${fmtDate(r.createdAt)}</div>
                         </div>
@@ -1788,7 +1793,7 @@
                             </button>` : ''}
                         </div>
                     </div>
-                    ${r.note ? `<div style="margin-top:8px;font-size:11px;color:#FF9800;border-top:1px solid #2a2a2a;padding-top:8px;"><i class="fas fa-comment" style="margin-right:4px;"></i>${r.note}</div>` : ''}
+                    ${r.note ? `<div style="margin-top:8px;font-size:11px;color:#FF9800;border-top:1px solid #2a2a2a;padding-top:8px;"><i class="fas fa-comment" style="margin-right:4px;"></i>${esc(r.note)}</div>` : ''}
                 </div>`
             ).join('');
         }

@@ -339,7 +339,7 @@
                 // Also populate the payment method select
                 const sel = document.getElementById('dep-method');
                 sel.innerHTML = accounts.map(a =>
-                    `<option value="${a.label}">${a.label}</option>`
+                    `<option value="${a.label || '—'}">${a.label || '—'}</option>`
                 ).join('');
 
                 grid.innerHTML = accounts.map(a => `

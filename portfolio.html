@@ -391,7 +391,7 @@
 
             const balance = Number(data.balance) || 0;
             const deposit = Number(data.depositBalance) || 0;
-            const profit  = data.profit != null ? Number(data.profit) : Math.max(0, balance - deposit);
+            const profit  = data.profit != null ? Number(data.profit) : (balance - deposit);
 
             set('total-assets-main', fmt2(balance));
             set('deposit-amount',    '$ ' + deposit.toLocaleString());
@@ -490,6 +490,11 @@
                 if (elB('perf-win-rate'))   elB('perf-win-rate').style.color   = winRate >= 50 ? 'var(--green)' : 'var(--red)';
                 if (elB('perf-total-pl'))   elB('perf-total-pl').style.color   = finalPL >= 0 ? 'var(--green)' : 'var(--red)';
                 if (elB('stat-best-trade')) elB('stat-best-trade').style.color = 'var(--gold)';
+
+                // Update hero profit with accurate cumulative P&L from trade history
+                set('profit-amount', (finalPL >= 0 ? '+ $ ' : '- $ ') + Math.abs(finalPL).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}));
+                const heroProfitEl = elB('profit-amount');
+                if (heroProfitEl) heroProfitEl.style.color = finalPL >= 0 ? 'var(--green)' : 'var(--red)';
 
                 const lineColor = finalPL >= 0 ? '#22c55e' : '#ef4444';
                 const fillColor = finalPL >= 0 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)';

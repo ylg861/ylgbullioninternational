@@ -792,6 +792,10 @@
                 Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please fill all details correctly.', background: '#1a1a1a', color: '#fff' });
                 return;
             }
+            if (amount < 10) {
+                Swal.fire({ icon: 'warning', title: 'Minimum Withdrawal', text: 'Minimum withdrawal amount is $10.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
             if (amount > currentBalance) {
                 Swal.fire({ icon: 'warning', title: 'Insufficient Balance', text: 'You do not have enough funds.', background: '#1a1a1a', color: '#fff' });
                 return;

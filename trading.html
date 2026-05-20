@@ -949,7 +949,8 @@
             userBalance -= amt;
             updateBalanceChip();
 
-            getDoc(doc(db, 'users', activeUser.uid)).then(snap => {
+            try {
+                const snap = await getDoc(doc(db, 'users', activeUser.uid));
                 const userData = snap.exists() ? snap.data() : {};
                 if (userData.frozen) {
                     isTrading = false;
@@ -963,10 +964,20 @@
                         background: '#1a1a1a', color: '#fff' });
                     return;
                 }
-                updateDoc(doc(db, 'users', activeUser.uid), { balance: increment(-amt) }).catch(console.error);
-            }).catch(console.error);
-
-            startCountdown(tier.duration, type, amt);
+                await updateDoc(doc(db, 'users', activeUser.uid), { balance: increment(-amt) });
+                startCountdown(tier.duration, type, amt);
+            } catch(e) {
+                console.error(e);
+                isTrading = false;
+                userBalance += amt;
+                updateBalanceChip();
+                overlay.style.display = 'none';
+                document.getElementById('btn-up').classList.remove('btn-disabled');
+                document.getElementById('btn-down').classList.remove('btn-disabled');
+                Swal.fire({ icon: 'error', title: 'Trade Error',
+                    text: 'Could not process trade. Please try again.',
+                    background: '#1a1a1a', color: '#fff' });
+            }
         };
 
         function startCountdown(seconds, type, amt) {
