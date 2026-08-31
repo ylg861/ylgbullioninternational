@@ -1,0 +1,132 @@
+�<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG - Withdrawal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --color-dark-bg: #111111; 
+            --color-medium-dark: #151920; 
+            --color-gold-accent: #FFD700; 
+            --color-text-light: #E6E9EE; 
+            --color-text-fade: #9aa0b3; 
+            --color-positive: #00B050; 
+            --color-negative: #D93025; 
+            --bg: var(--color-dark-bg); 
+            --panel: var(--color-medium-dark); 
+            --gold: var(--color-gold-accent); 
+            --text: var(--color-text-light); 
+            --shadow: 0 18px 50px rgba(0,0,0,0.18);
+        }
+        body { 
+            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+        }
+        .sidebar { 
+            width: 240px; 
+            height: 100vh; 
+            background: var(--panel); 
+            position: fixed; 
+            box-shadow: none;
+        }
+        .nav-item { 
+            padding: 12px 18px; 
+            color: #888; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: all 0.18s ease;
+            margin: 6px 12px;
+            border-radius: 6px;
+        }
+        .nav-item.active { 
+            color: var(--gold); 
+            background: #252525; 
+            border-left-color: var(--gold); 
+        }
+        .main-content { 
+            margin-left: 240px; 
+            padding: 28px; 
+            width: calc(100% - 240px); 
+        }
+        .withdraw-card { 
+            background: var(--panel); 
+            padding: 28px; 
+            border-radius: 12px; 
+            max-width: 500px; 
+            border: 1px solid rgba(15,23,36,0.04);
+            box-shadow: var(--shadow);
+        }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; }
+        .btn-withdraw { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+    </style>
+    <link rel="stylesheet" href="mobile-responsive.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div style="padding: 25px;"><h2 style="color:var(--gold); margin:0;">YLG BULLION</h2></div>
+        <nav>
+            <a href="account.html" class="nav-item"><i class="fas fa-user-circle"></i> My Account</a>
+            <a href="trading.html" class="nav-item"><i class="fas fa-chart-line"></i> Gold Trading</a>
+            <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> My Wallet</a>
+            <a href="withdraw.html" class="nav-item active"><i class="fas fa-hand-holding-usd"></i> Withdrawal</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <h1>Withdraw Funds</h1>
+        <div class="withdraw-card">
+            <h3 style="color: var(--gold); margin-top:0;">Request Withdrawal (�ᬽᬱ�ᬯᬐᬺ�aᬰ�:�ᬺ)</h3>
+            <p style="font-size: 14px; color: #888;">�ᬯᬐᬺ�aᬰ�Sᬭᬯ�~ᬱᬬ �"�"ᬬᬏ�ᬾ�ᬷᬺ �Sᬬᬺᬁᬶ�"�`ᬷᬺ ᬡᬬᬱᬬ�ᬷᬺ�ᬶ�"ᬫᬐᬺᬬᬭᬯ �:ᬭᬯᬬᬺ��`ᬷᬺ�"ᬫ�9</p>
+            
+            <label>Amount (USD):</label>
+            <input type="number" id="wdAmount" placeholder="Min: $10">
+
+            <label>Payment Method:</label>
+            <select id="wdMethod">
+                <option value="KPay">KPay</option>
+                <option value="WavePay">WavePay</option>
+                <option value="KBZ Bank">KBZ Bank</option>
+            </select>
+
+            <label>Account Number (ᬡᬬᬱᬬ�ᬷᬺ�ᬶ�"ᬫᬐᬺ):</label>
+            <input type="text" id="wdAccount" placeholder="09xxxxxxxxx">
+
+            <button class="btn-withdraw" onclick="submitWithdraw()">Submit Withdrawal Request</button>
+        </div>
+    </main>
+
+    <script>
+        async function submitWithdraw() {
+            const userId = localStorage.getItem('userId');
+            const userName = localStorage.getItem('userName');
+            const amount = document.getElementById('wdAmount').value;
+            const method = document.getElementById('wdMethod').value;
+            const accountNumber = document.getElementById('wdAccount').value;
+
+            if(!amount || amount < 10) return alert("ᬡ��`ᬺᬸ� ᬯᬶᬸ $10 �ᬯᬐᬺ�"ᬱᬸ�"ᬫ�9");
+            if(!accountNumber) return alert("ᬡᬬᬱᬬ�ᬷᬺ�ᬶ�"ᬫᬐᬺ �ᬼ�`ᬷᬺ�"ᬱᬸ�"ᬫ�9");
+
+            try {
+                const res = await fetch('http://localhost:3000/api/withdraw', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, userName, amount, method, accountNumber })
+                });
+                const data = await res.json();
+                alert(data.message);
+                window.location.href = 'account.html';
+            } catch (err) {
+                alert("�ᬽᬱ�ᬯᬐᬺ�aᬰ�"ᬾᬯ �"ᬡᬱᬬ�ᬺ�"ᬼ�ᬺ�"ᬫ");
+            }
+        }
+    </script>
+</body>
+</html>

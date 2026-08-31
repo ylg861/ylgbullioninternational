@@ -1,0 +1,596 @@
+�<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Admin - Control Panel</title>
+    
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --color-dark-bg: #111111;
+            --color-medium-dark: #151920;
+            --color-gold-accent: #FFD700;
+            --color-text-light: #E6E9EE;
+            --color-text-fade: #9aa0b3;
+            --color-positive: #00B050;
+            --color-negative: #D93025;
+
+            --bg-dark: var(--color-dark-bg);
+            --card-bg: var(--color-medium-dark);
+            --gold: var(--color-gold-accent);
+            --green: var(--color-positive);
+            --red: var(--color-negative);
+        }
+        
+        body { 
+            display: flex; 
+            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background-color: var(--bg-dark); 
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        .main-content { flex: 1; padding: 20px; max-width: calc(100% - 380px); height: 100vh; overflow-y: auto; }
+        .sidebar-right { width: 350px; background: #151515; border-left: 2px solid var(--gold); height: 100vh; position: fixed; right: 0; top: 0; display: flex; flex-direction: column; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 25px; }
+        .user-card, .withdraw-card { background: var(--card-bg); border-radius: 10px; padding: 20px; margin-bottom: 15px; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.5fr; align-items: center; border-left: 6px solid #333; gap: 20px; transition: 0.3s; }
+        .withdraw-card { grid-template-columns: 1.5fr 1fr 1fr 1fr; border-left: 6px solid #ff9800; }
+        .info h4 { margin: 0 0 5px 0; color: var(--gold); font-size: 15px; word-break: break-all; }
+        .info p { margin: 2px 0; font-size: 12px; color: #999; }
+        .kyc-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; display: inline-block; margin-top: 5px; text-transform: uppercase; }
+        .kyc-pending { background: #444; color: #fff; }
+        .kyc-verified { background: var(--green); color: #fff; }
+        .kyc-rejected { background: var(--red); color: #fff; }
+        .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.2s; }
+        button:hover { opacity: 0.8; transform: scale(1.02); }
+        input[type="number"], .chat-input, .search-input { padding: 8px; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; outline: none; }
+        input:focus { border-color: var(--gold); }
+        input[type="number"] { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+        .search-input { width: 100%; padding: 12px; margin-bottom: 20px; border-color: var(--gold); }
+        .logout-btn { background: #333; color: #fff; padding: 8px 15px; border: 1px solid #444; }
+        .refresh-btn { background: var(--gold); color: black; padding: 10px 20px; border-radius: 5px; font-weight: bold; }
+        .section { margin-top: 20px; }
+        .chat-header { padding: 15px; background: var(--card-bg); border-bottom: 1px solid #333; text-align: center; }
+        .chat-header h3 { margin: 0; color: var(--gold); font-size: 16px; }
+        #chatContainer { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { padding: 10px; background: #222; border-radius: 8px; border-left: 4px solid transparent; font-size: 13px; }
+        
+        /* New Styles for KYC Preview */
+        .kyc-img-link { color: #2196F3; text-decoration: none; font-size: 11px; cursor: pointer; display: block; margin-top: 8px; font-weight: bold; }
+        .kyc-img-link i { margin-right: 4px; }
+        .kyc-img-link:hover { color: var(--gold); }
+        
+        .btn-delete { background: transparent; color: var(--red); border: 1px solid var(--red) !important; margin-top: 10px; width: 100%; }
+        
+        @media (max-width: 1000px) {
+            body { flex-direction: column; }
+            .main-content { max-width: 100%; height: auto; margin-bottom: 400px; }
+            .sidebar-right { width: 100%; height: 400px; bottom: 0; top: auto; border-left: none; border-top: 2px solid var(--gold); }
+        }
+    </style>
+    <link rel="stylesheet" href="../mobile-responsive.css">
+</head>
+<body>
+
+    <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3" preload="auto"></audio>
+
+    <div class="main-content">
+        <header>
+            <div>
+                <h2 style="margin:0;"><i class="fas fa-user-shield"></i> YLG Admin</h2>
+                <small id="adminEmailDisplay" style="color: var(--gold); font-weight: bold;">Authenticating...</small>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.updateAllUserIndices()" style="background: #444; color: var(--gold); border: 1px solid var(--gold);">Index Users</button>
+                <button onclick="window.adminLogout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button id="refreshBtn" class="refresh-btn"><i class="fas fa-sync"></i> Refresh All</button>
+            </div>
+        </header>
+
+        <div class="section">
+            <h3><i class="fas fa-hand-holding-usd"></i> Withdrawal Requests</h3>
+            <div id="withdrawList">
+                <p style="text-align: center; color: #555;">Loading requests...</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3><i class="fas fa-users"></i> Users List</h3>
+            <div style="position: sticky; top: -20px; z-index: 100; background: var(--bg-dark); padding: 10px 0;">
+                <input type="text" id="userSearch" class="search-input" placeholder="Name, Email �~ᬭᬯᬷ�"�xᬯᬐᬺ ID �ᬼ�ᬷᬺ �:ᬾᬬ�ᬽᬱ�:�ᬺ..." onkeyup="window.filterUsers()">
+            </div>
+            <div id="userList">
+                <p style="text-align: center; color: #666; margin-top: 50px;">Fetching users from Firestore...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-right">
+        <div class="chat-header">
+            <h3><i class="fas fa-comments"></i> Live Support</h3>
+        </div>
+        <div id="chatContainer">
+            <p style="text-align: center; color: #555;">No messages.</p>
+        </div>
+    </div>
+
+    <script type="module">
+    import { app } from "../firebase-init.js";
+    import { getFirestore, collection, doc, getDocs, getDoc, updateDoc, setDoc, increment, onSnapshot, addDoc, deleteDoc, serverTimestamp, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const audio = document.getElementById('notifSound');
+    let firstLoad = true;
+    let allUsers = []; // For KYC viewing
+
+    const Toast = Swal.mixin({
+        toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true,
+        background: '#1a1a1a', color: '#fff'
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        const adminEmail = "junalama463@gmail.com"; 
+        if (user) {
+            if (user.email === adminEmail) {
+                document.getElementById('adminEmailDisplay').innerText = "Admin: " + user.email;
+                document.body.style.display = "block"; 
+                startApp(); 
+            } else {
+                Swal.fire({
+                    icon: 'error', title: 'ᬝ�ᬺᬁᬽ�ᬷᬺ�"�:ᬾᬭ�"ᬫ', text: 'ᬤᬡᬬᬱᬬ�ᬷᬺ�~�`ᬺ Admin �"�xᬯᬐᬺ�"ᬫ�9',
+                    background: '#1a1a1a', color: '#fff'
+                }).then(() => {
+                    signOut(auth).then(() => { window.location.replace("login.html"); });
+                });
+            }
+        } else {
+            window.location.replace("login.html");
+        }
+    });
+
+    window.adminLogout = async () => {
+        const res = await Swal.fire({
+            title: 'Logout �ᬽᬬᬺ�"ᬾᬬ�Sᬬᬸ?', icon: 'warning', showCancelButton: true,
+            confirmButtonColor: '#D93025', cancelButtonColor: '#333', confirmButtonText: 'Logout',
+            background: '#1a1a1a', color: '#fff'
+        });
+        if (res.isConfirmed) {
+            await signOut(auth);
+            window.location.replace("login.html");
+        }
+    };
+
+    function startApp() {
+        listenUsers(); 
+        listenChats(); 
+        listenWithdrawals();
+    }
+
+    window.updateAllUserIndices = async () => {
+        const res = await Swal.fire({
+            title: '�ᬶ�"ᬫᬐᬺ�&�0ᬺᬐᬽᬱ �"ᬼ�ᬺ�&ᬮ�"ᬾᬬ�Sᬬᬸ?',
+            text: "User ᬡᬬᬸ�Sᬯᬶᬸᬬᬭᬯ 00001 ᬬ�ᬱ �"ᬼ�ᬺ�&ᬮ�"ᬫ�"�aᬺ�9",
+            icon: 'question', showCancelButton: true, confirmButtonText: 'Yes, Re-index'
+        });
+
+        if (res.isConfirmed) {
+            const usersRef = collection(db, "users");
+            const snapshot = await getDocs(query(usersRef, orderBy("createdAt", "asc")));
+            let count = 1;
+            for (const userDoc of snapshot.docs) {
+                await updateDoc(doc(db, "users", userDoc.id), { userIndex: count });
+                count++;
+            }
+            await setDoc(doc(db, "settings", "userCounter"), { lastIndex: count - 1 });
+            Swal.fire('ᬡᬱᬬ�ᬺ�"ᬼ�ᬺ�"ᬫ�~�`ᬺ', '�ᬶ�"ᬫᬐᬺ�&�0ᬺ�"ᬻᬬᬸ �"ᬼ�ᬺ�&ᬮ�"ᬼᬮᬸ�"ᬫ�"ᬼᬮ�9', 'success');
+        }
+    };
+
+    window.viewKYC = function(uid) {
+        const user = allUsers.find(u => u.id === uid);
+        if (!user || (!user.kycFrontImage && !user.kycImageUrl)) {
+            Swal.fire('�"�:ᬾᬭ�"ᬫ', '�ᬮᬡ�~ᬯᬶᬸ�"ᬼᬯ�~ᬰ�~�`ᬺ KYC ᬐ�ᬺ�ᬬᬸᬁᬼ�ᬺᬸ�"�:ᬾᬭ�~ᬱᬸ�"ᬫ�9', 'info');
+            return;
+        }
+
+        const frontImg = user.kycFrontImage || user.kycImageUrl;
+        const backImg = user.kycBackImage;
+
+        Swal.fire({
+            title: `KYC Verification - ${user.fullname || user.name || 'User'}`,
+            html: `
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <b>Document Type:</b> ${user.kycType || 'N/A'}<br>
+                    <b>Status:</b> ${user.kycStatus || 'pending'}
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <p style="margin: 5px 0; font-size: 12px; color: #FFD700;">Front Side (ᬡ�:ᬾᬱᬷ��ᬬᬺ)</p>
+                        <img src="${frontImg}" style="width: 100%; border-radius: 8px; border: 1px solid #444;">
+                    </div>
+                    ${backImg ? `
+                    <div>
+                        <p style="margin: 5px 0; font-size: 12px; color: #FFD700;">Back Side (ᬡ�ᬱᬬᬬᬺ��ᬬᬺ)</p>
+                        <img src="${backImg}" style="width: 100%; border-radius: 8px; border: 1px solid #444;">
+                    </div>
+                    ` : '<p style="font-size: 12px; color: gray;">ᬡ�ᬱᬬᬬᬺ��ᬬᬺ�"ᬯᬶ �"�:ᬾᬭ�"ᬫ�9</p>'}
+                </div>
+            `,
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonText: 'Approve',
+            denyButtonText: 'Reject',
+            cancelButtonText: 'Close',
+            confirmButtonColor: '#28a745',
+            denyButtonColor: '#dc3545',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                window.updateKYC(uid, 'verified');
+            } else if (result.isDenied) {
+                window.updateKYC(uid, 'rejected');
+            }
+        });
+    };
+
+    function listenUsers() {
+        const container = document.getElementById('userList');
+        const formatID = (num) => "YLG-2026" + String(num || 0).padStart(4, '0');
+
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            container.innerHTML = "";
+            allUsers = [];
+            snapshot.forEach((userDoc) => {
+                const user = userDoc.data();
+                const uid = userDoc.id;
+                user.id = uid;
+                allUsers.push(user);
+
+                const displayName = user.fullname || user.name || 'Unnamed User';
+                const mID = user.userIndex ? formatID(user.userIndex) : '';
+
+                const card = document.createElement('div');
+                card.className = "user-card";
+                card.setAttribute('data-email', (user.email || '').toLowerCase());
+                card.setAttribute('data-name', displayName.toLowerCase());
+                card.setAttribute('data-uid', uid.toLowerCase());
+                card.setAttribute('data-id', mID);
+
+                card.style.borderLeftColor = user.tradeControl === "WIN" ? "var(--green)" : (user.tradeControl === "LOSS" ? "var(--red)" : "var(--gold)");
+                
+                const hasKYC = user.kycFrontImage || user.kycImageUrl;
+                const kycLink = hasKYC ? `<a class="kyc-img-link" onclick="window.viewKYC('${uid}')"><i class="fas fa-image"></i> View KYC Photo</a>` : '<p style="font-size:10px; color:#555; margin-top:5px;">No image uploaded</p>';
+
+                card.innerHTML = `
+                    <div class="info">
+                        <h4 title="${displayName}">${displayName}</h4>
+                        <p>Email: ${user.email}</p>
+                        <p>Member ID: <span style="color:var(--gold); font-weight:bold;">#${mID || 'New User'}</span></p>
+                        <span class="kyc-badge kyc-${user.kycStatus || 'pending'}">${user.kycStatus || 'pending'}</span>
+                        ${kycLink}
+                        <button class="btn-delete" onclick="window.deleteUser('${uid}')"><i class="fas fa-trash"></i> Delete Account</button>
+                    </div>
+                    <div class="info">
+                        <p>Balance:</p>
+                        <strong style="color:white; font-size:16px;">$${(user.balance || 0).toLocaleString()}</strong>
+                        <p style="margin-top:5px;">Status: <span style="color:var(--gold)">${user.tradeControl || 'NORMAL'}</span></p>
+                    </div>
+                    <div class="info">
+                        <p>KYC Control:</p>
+                        <div class="btn-group">
+                            <button style="background:#2196F3; color:white;" onclick="window.updateKYC('${uid}', 'verified')">Verify</button>
+                            <button style="background:var(--red); color:white;" onclick="window.updateKYC('${uid}', 'rejected')">Reject</button>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <div class="btn-group" style="margin-bottom:10px;">
+                            <button style="background:#444; color:white;" onclick="window.updateControl('${uid}', 'NORMAL')">NML</button>
+                            <button style="background:var(--green); color:white;" onclick="window.updateControl('${uid}', 'WIN')">WIN</button>
+                            <button style="background:var(--red); color:white;" onclick="window.updateControl('${uid}', 'LOSS')">LOSS</button>
+                        </div>
+                        <div class="btn-group" style="margin-bottom:10px;">
+                            <button style="background:${user.frozen ? '#2196F3' : '#666'}; color:white; flex:1;" onclick="window.updateFrozen('${uid}', ${!user.frozen})">${user.frozen ? '�x Unfreeze' : '�x Freeze'}</button>
+                        </div>
+                        <input type="number" id="amt-${uid}" placeholder="Amount">
+                        <div class="btn-group">
+                            <button style="background:var(--green); color:white; flex:1;" onclick="window.adjustBalance('${uid}', 'plus')">Deposit</button>
+                            <button style="background:var(--red); color:white; flex:1;" onclick="window.adjustBalance('${uid}', 'minus')">Withdraw</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        });
+    }
+
+    window.filterUsers = () => {
+        const input = document.getElementById('userSearch').value.toLowerCase();
+        const cards = document.getElementsByClassName('user-card');
+        Array.from(cards).forEach(card => {
+            const isMatch = card.getAttribute('data-email').includes(input) || 
+                            card.getAttribute('data-name').includes(input) || 
+                            card.getAttribute('data-uid').includes(input) || 
+                            card.getAttribute('data-id').includes(input);
+            card.style.display = isMatch ? "grid" : "none";
+        });
+    };
+
+    function listenWithdrawals() {
+        const withdrawBox = document.getElementById('withdrawList');
+        const qW = query(collection(db, "withdrawals"), orderBy("timestamp", "desc"));
+        onSnapshot(qW, (snapshot) => {
+            withdrawBox.innerHTML = "";
+            if (snapshot.empty) {
+                withdrawBox.innerHTML = `<p style="text-align:center; color:#555;">No pending withdrawals.</p>`;
+                return;
+            }
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                const div = document.createElement('div');
+                div.className = "withdraw-card";
+                div.innerHTML = `
+                    <div class="info">
+                        <h4>${data.email}</h4>
+                        <p>Method: ${data.method || 'N/A'}</p>
+                        <p style="color:#2196F3; font-size:10px;">
+                            Wallet: ${data.details || 'N/A'}
+                            <i class="fas fa-edit" onclick="window.editWithdrawDetails('${id}', '${data.details}')" style="cursor:pointer; margin-left:5px; color:var(--gold);"></i>
+                        </p>
+                    </div>
+                    <div class="info">
+                        <p>Amount:</p>
+                        <h3 style="margin:0; color:white;">$${parseFloat(data.amount || 0).toFixed(2)}</h3>
+                    </div>
+                    <div class="info"><p>Date: ${data.date || 'N/A'}</p></div>
+                    <div class="btn-group">
+                        <button style="background:var(--green); color:white; width:80px;" onclick="window.processWithdraw('${id}', 'Approve')">Approve</button>
+                        <button style="background:var(--red); color:white; width:80px;" onclick="window.processWithdraw('${id}', 'Reject')">Reject</button>
+                    </div>
+                `;
+                withdrawBox.appendChild(div);
+            });
+        });
+    }
+
+    // --- CHAT FUNCTIONS (Updated with Photo Support) ---
+
+    function listenChats() {
+        const chatBox = document.getElementById('chatContainer');
+        const chatQuery = query(collection(db, "chats"), orderBy("timestamp", "desc"), limit(40));
+        
+        onSnapshot(chatQuery, (snapshot) => {
+            if(snapshot.empty) {
+                chatBox.innerHTML = `<p style="text-align:center; color:#555;">No messages.</p>`;
+                return;
+            }
+            if (!firstLoad && !snapshot.metadata.hasPendingWrites) {
+                audio.play().catch(e => console.log("Sound error:", e));
+            }
+            firstLoad = false;
+            chatBox.innerHTML = "";
+            snapshot.forEach((chatDoc) => {
+                const chat = chatDoc.data();
+                const chatId = chatDoc.id;
+                const isFromAdmin = chat.userEmail === "Admin";
+                
+                const msgDiv = document.createElement('div');
+                msgDiv.className = "chat-msg";
+                msgDiv.style.borderLeft = isFromAdmin ? "4px solid var(--green)" : "4px solid var(--gold)";
+                
+                let chatBody = chat.message || "";
+                if (chat.chatImageUrl) {
+                    chatBody = `<img src="${chat.chatImageUrl}" style="max-width:100%; border-radius:5px; cursor:pointer; margin-top:5px;" onclick="window.open('${chat.chatImageUrl}')">`;
+                }
+
+                msgDiv.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <strong style="color:${isFromAdmin ? 'var(--green)' : 'var(--gold)'}; font-size:11px;">${chat.userEmail}</strong>
+                        <small style="font-size:9px; color:#555;">${chat.timestamp ? new Date(chat.timestamp.seconds * 1000).toLocaleTimeString() : 'Just now'}</small>
+                    </div>
+                    <div style="word-break: break-all;">${chatBody}</div>
+                    ${!isFromAdmin ? `
+                        <div style="display:flex; gap:5px; margin-top:8px;">
+                            <input type="text" id="reply-${chatId}" class="chat-input" placeholder="Reply..." style="flex:1; font-size:11px;">
+                            <button style="background:var(--gold); color:black; padding:5px 10px;" onclick="window.sendAdminPhoto('${chat.userId}', '${chat.userEmail}')">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <button style="background:var(--green); color:white;" onclick="window.sendReply('${chatId}', '${chat.userId}', '${chat.userEmail}')">Send</button>
+                        </div>
+                    ` : '<p style="font-size:9px; color:var(--green); margin:5px 0 0 0; text-align:right;">�S Replied</p>'}
+                `;
+                chatBox.appendChild(msgDiv);
+            });
+        });
+    }
+
+    window.sendReply = async (chatId, userId, userEmail) => {
+        const input = document.getElementById(`reply-${chatId}`);
+        if (!input.value) return;
+        await addDoc(collection(db, "chats"), {
+            userId, userEmail: "Admin", message: input.value, isAdmin: true, toUser: userEmail, timestamp: serverTimestamp()
+        });
+        input.value = "";
+    };
+
+    window.sendAdminPhoto = async (userId, userEmail) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    Toast.fire({ icon: 'info', title: 'Sending Image...' });
+                    const base64Img = await compressAdminImage(file);
+                    
+                    await addDoc(collection(db, "chats"), {
+                        userId: userId,
+                        userEmail: "Admin",
+                        message: "",
+                        chatImageUrl: base64Img,
+                        isAdmin: true,
+                        toUser: userEmail,
+                        timestamp: serverTimestamp()
+                    });
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Error', '�"ᬯᬶ�"ᬭᬯᬷ၍�"�:�"ᬫ (Size ᬬᬼᬮᬸ�Sᬽ�ᬺᬸᬁᬼ�ᬺᬸ �ᬼ�&ᬺ�ᬭᬯ�ᬺ�~�`ᬺ)�9', 'error');
+                }
+            }
+        };
+        input.click();
+    };
+
+    async function compressAdminImage(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 600;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                };
+            };
+        });
+    }
+
+    // --- OTHER CORE FUNCTIONS ---
+
+    window.updateKYC = async (id, status) => { 
+        await updateDoc(doc(db, "users", id), { kycStatus: status }); 
+        Toast.fire({ icon: 'info', title: `KYC set to ${status}` });
+    };
+
+    window.updateControl = async (id, status) => { 
+        await updateDoc(doc(db, "users", id), { tradeControl: status }); 
+        Toast.fire({ icon: 'info', title: `User mode: ${status}` });
+    };
+
+    window.adjustBalance = async (id, type) => {
+        const amtInput = document.getElementById(`amt-${id}`);
+        const amt = parseFloat(amtInput.value);
+        if (!amt || amt <= 0) return;
+        
+        if (type === 'plus') {
+            // Deposit: increment both balance and depositBalance
+            await updateDoc(doc(db, "users", id), { 
+                balance: increment(amt),
+                depositBalance: increment(amt)
+            });
+        } else {
+            // Withdraw: only decrement balance
+            await updateDoc(doc(db, "users", id), { 
+                balance: increment(-amt)
+            });
+        }
+        
+        amtInput.value = "";
+        Toast.fire({ icon: 'success', title: 'Balance updated' });
+    };
+
+    window.updateFrozen = async (id, frozen) => {
+        await updateDoc(doc(db, "users", id), { frozen: frozen });
+        Toast.fire({ icon: 'info', title: frozen ? 'Account Frozen �️' : 'Account Unfrozen �x' });
+    };
+
+    window.deleteUser = async (id) => {
+        const confirm = await Swal.fire({
+            title: 'Are you sure?', text: "Delete this user?", icon: 'warning',
+            showCancelButton: true, confirmButtonColor: '#D93025', background: '#1a1a1a', color: '#fff'
+        });
+        if(confirm.isConfirmed) {
+            await deleteDoc(doc(db, "users", id));
+            Toast.fire({ icon: 'success', title: 'User deleted' });
+        }
+    };
+
+    window.editWithdrawDetails = async (id, currentDetails) => {
+        const { value: newDetails } = await Swal.fire({
+            title: 'Edit Bank Details', input: 'textarea', inputValue: currentDetails,
+            background: '#1a1a1a', color: '#fff', showCancelButton: true
+        });
+        if (newDetails) {
+            await updateDoc(doc(db, "withdrawals", id), { details: newDetails });
+            Toast.fire({ icon: 'success', title: 'Details updated' });
+        }
+    };
+
+   window.processWithdraw = async (id, status) => {
+    try {
+        const withdrawRef = doc(db, "withdrawals", id);
+        const docSnap = await getDoc(withdrawRef);
+        
+        if (!docSnap.exists()) {
+            Swal.fire('Error', '�ᬱᬐᬬ �:ᬾᬬ�"ᬐᬽᬱᬷᬐᬱᬬᬷ�"ᬫ', 'error');
+            return;
+        }
+
+        const data = docSnap.data();
+        // User App ᬬ 'uid' �Sᬭᬯᬷ �~ᬭ�"ᬺᬸ�ᬬᬸᬐᬬᬬᬼᬱᬬ�ᬷᬺ uid ᬬᬭᬯ �~ᬯᬶᬸ�:�"ᬫ�"�aᬺ
+        const userId = data.uid || data.userId; 
+        const amount = parseFloat(data.amount || 0);
+
+        const result = await Swal.fire({
+            title: `${status} �Sᬯ�"ᬺ�"ᬾᬬ �~ᬱᬁᬻา�"ᬫ�~�Sᬬᬸ?`,
+            text: `Email: ${data.email} | Amount: $${amount}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: status === 'Approve' ? '#00B050' : '#D93025',
+            confirmButtonText: '�~ᬱᬁᬻᬬ�~�`ᬺ',
+            background: '#1a1a1a', color: '#fff'
+        });
+
+        if (result.isConfirmed) {
+            // ၁�9 ᬡᬬ�aᬺ၍ Reject �Sᬯ�"ᬺᬐᬬ� ᬭᬯ�:�ᬺ ᬡ�:�ᬺ� ᬯᬶᬸ �ᬽᬱ�"ᬼ�ᬺᬡ�"ᬺᬸ�"ᬫ�"�aᬺ
+            if (status === 'Reject') {
+                if (userId) {
+                    const userRef = doc(db, "users", userId);
+                    // �ᬽᬱ�"ᬼ�ᬺ�"ᬱᬫ�ᬺᬸ��`ᬷᬺᬁᬼ�ᬺᬸ
+                    await updateDoc(userRef, { 
+                        balance: increment(amount) 
+                    });
+                    
+                    // User �:ᬲᬷ History �"ᬾᬬ Status ᬬᬭᬯ �"ᬼᬱᬬ�ᬺᬸ�"ᬱᬸ�ᬭᬯᬷ (Optional)
+                    // �ᬮ�ᬱ�:ᬬ�"ᬾᬬ Delete �"�Sᬯ�"ᬺ��ᬲ Status �"ᬲ �"ᬼᬱᬬ�ᬺᬸᬁᬻ�ᬺ�:�ᬺ updateDoc �~ᬯᬶᬸ�ᬭᬯ�ᬺ�"ᬫᬐ�aᬺ
+                } else {
+                    Swal.fire('Error', 'User ID �:ᬾᬬ�"ᬐᬽᬱᬷ�~�ᬼ�ᬷᬺ �ᬽᬱ�"ᬼ�ᬺᬡ�"ᬺᬸ၍�"�:�"ᬫ', 'error');
+                    return;
+                }
+            }
+
+            // ��9 �ᬽᬱᬡ�"ᬺᬸ�"ᬼᬮᬸ�"ᬾ �~ᬭᬯᬷ�"�xᬯᬐᬺ Approve �Sᬯ�"ᬺ�"ᬼᬮᬸ�"ᬾ Withdrawal Request ᬬᬭᬯ �ᬻᬬᬺ�"ᬫ�"�aᬺ
+            await deleteDoc(withdrawRef);
+            
+            Toast.fire({ icon: 'success', title: '�Sᬯ�"ᬺ� ᬱᬬ�ᬺᬁᬻᬬᬺ ᬡᬱᬬ�ᬺ�"ᬼ�ᬺ�"ᬫ�~�`ᬺ' });
+        }
+    } catch (error) {
+        console.error("Error processing withdrawal:", error);
+        Swal.fire('Error', 'ᬐ�&ᬺᬁᬯᬁᬯ�"ᬾᬬᬸ�aᬽ�ᬺᬸ�ᬱ�"ᬫ�~�`ᬺ- ' + error.message, 'error');
+    }
+};
+    document.getElementById('refreshBtn').onclick = () => { location.reload(); };
+</script>
+</body>
+</html>

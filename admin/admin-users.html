@@ -1,0 +1,447 @@
+�<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - User Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* Base Admin Styles (Reused from admin.html) */
+        :root {
+            --color-dark-bg: #111111;
+            --color-medium-dark: #151920;
+            --color-gold-accent: #FFD700;
+            --color-text-light: #E6E9EE;
+            --color-text-fade: #9aa0b3;
+            --color-positive: #00B050;
+            --color-negative: #D93025;
+            --color-info: #3498db;
+            --color-warning: #FFC107;
+            --color-sidebar: var(--color-medium-dark);
+
+            --panel-bg: var(--color-medium-dark);
+            --gold: var(--color-gold-accent);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Admin Sidebar Styling (Same as admin.html) */
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--color-sidebar);
+            padding: 20px 0 20px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .admin-logo-section {
+            padding: 0 20px 20px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #3A3A3A;
+        }
+
+        .admin-logo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-gold-accent);
+        }
+
+        .admin-logo-sub {
+            font-size: 12px;
+            color: var(--color-text-fade);
+        }
+
+        .admin-nav {
+            flex-grow: 1;
+        }
+
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--color-text-fade);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .admin-nav-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-nav-item:hover, .admin-nav-item.active {
+            background-color: #383838;
+            color: var(--color-text-light);
+            border-left: 5px solid var(--color-gold-accent);
+        }
+
+        /* Admin Main Content */
+        .admin-main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #3A3A3A;
+            padding-bottom: 15px;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--color-text-light);
+        }
+
+        /* User Management Specific Styles */
+        .user-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 300px;
+            background-color: #333;
+            border: 1px solid #555;
+            color: var(--color-text-light);
+            border-radius: 4px;
+        }
+
+        .filter-select {
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #555;
+            color: var(--color-text-light);
+            border-radius: 4px;
+        }
+        
+        .add-user-btn {
+            padding: 10px 20px;
+            background-color: var(--color-positive);
+            color: var(--color-white);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Users Table */
+        .users-table-panel {
+            background-color: var(--color-panel-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            border-top: 4px solid var(--color-info);
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th, .users-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #3A3A3A;
+            font-size: 14px;
+        }
+
+        .users-table th {
+            color: var(--color-text-fade);
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .users-table tr:hover {
+            background-color: #2A2A2A;
+        }
+
+        .kyc-verified {
+            color: var(--color-positive);
+            font-weight: bold;
+        }
+        
+        .kyc-pending {
+            color: var(--color-warning);
+            font-weight: bold;
+        }
+        
+        .kyc-rejected {
+            color: var(--color-negative);
+            font-weight: bold;
+        }
+        
+        .status-active {
+            color: var(--color-positive);
+        }
+        
+        .status-blocked {
+            color: var(--color-negative);
+        }
+
+        .btn-action-small {
+            padding: 6px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .btn-view {
+            background-color: var(--color-info);
+            color: var(--color-white);
+        }
+
+        .btn-block {
+            background-color: var(--color-negative);
+            color: var(--color-white);
+        }
+        
+        .balance-value {
+            font-weight: bold;
+            color: var(--color-gold-accent);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            color: var(--color-text-fade);
+        }
+        
+        .pagination a {
+            padding: 8px 12px;
+            margin-left: 5px;
+            text-decoration: none;
+            color: var(--color-text-light);
+            background-color: #333;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .pagination a:hover {
+            background-color: var(--color-gold-accent);
+            color: var(--color-dark-bg);
+        }
+    </style>
+    <link rel="stylesheet" href="../mobile-responsive.css">
+</head>
+<body>
+
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo-section">
+                <div class="admin-logo-title">ADMIN PANEL</div>
+                <div class="admin-logo-sub">YLG BULLION PLATFORM</div>
+            </div>
+
+            <nav class="admin-nav">
+    <a href="admin.html" class="admin-nav-item"><i class="fas fa-gauge-high"></i> Dashboard</a>
+    <a href="admin-users.html" class="admin-nav-item"><i class="fas fa-users"></i> User Management</a>
+    <a href="admin-trades.html" class="admin-nav-item"><i class="fas fa-hand-holding-usd"></i> Trades & Orders</a>
+    <a href="admin-finance.html" class="admin-nav-item"><i class="fas fa-money-bill-transfer"></i> Finance & KYC</a>
+    <a href="admin-reports.html" class="admin-nav-item"><i class="fas fa-chart-bar"></i> Reporting</a>
+    <a href="admin-settings.html" class="admin-nav-item"><i class="fas fa-cogs"></i> System Settings</a>
+    <a href="admin-chat.html" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Live Chat Inbox</a> </nav>
+
+            <div style="padding: 20px; text-align: center;">
+                <a href="#" style="color: var(--color-negative); text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main-content">
+            <header class="admin-header">
+                <h1>User Management</h1>
+                <p>Total Users: 4,521</p>
+            </header>
+
+            <section class="user-controls">
+                <div class="search-and-filter">
+                    <input type="text" class="search-input" placeholder="Search by User ID or Email...">
+                    <select class="filter-select">
+                        <option>Filter by KYC Status</option>
+                        <option>Verified</option>
+                        <option>Pending</option>
+                        <option>Rejected</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Filter by Status</option>
+                        <option>Active</option>
+                        <option>Blocked</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="add-user-btn"><i class="fas fa-user-plus"></i> Add New User</button>
+                </div>
+            </section>
+            
+            <section class="users-table-panel">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Email / Name</th>
+                            <th>Registration Date</th>
+                            <th>Balance ($)</th>
+                            <th>KYC Status</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#10015</td>
+                            <td>mgmg@example.com</td>
+                            <td>2025-12-01</td>
+                            <td class="balance-value">$15,450.00</td>
+                            <td class="kyc-verified"><i class="fas fa-check-circle"></i> Verified</td>
+                            <td class="status-active">Active</td>
+                            <td>
+    <button class="btn-action-small btn-view"><i class="fas fa-eye"></i> View</button>
+    <button class="btn-action-small" style="background-color: var(--color-positive);" onclick="document.getElementById('depositModal').style.display='block';">
+        <i class="fas fa-dollar-sign"></i> Deposit
+    </button>
+    <button class="btn-action-small btn-block"><i class="fas fa-user-slash"></i> Block</button>
+</td>
+                        </tr>
+                        <tr>
+                            <td>#10016</td>
+                            <td>aungaung@mail.com</td>
+                            <td>2025-12-05</td>
+                            <td class="balance-value">$5,120.50</td>
+                            <td class="kyc-pending"><i class="fas fa-clock"></i> Pending</td>
+                            <td class="status-active">Active</td>
+                            <td>
+                                <button class="btn-action-small btn-view"><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-action-small btn-block"><i class="fas fa-user-slash"></i> Block</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#10017</td>
+                            <td>htethlaing@web.com</td>
+                            <td>2025-12-10</td>
+                            <td class="balance-value">$0.00</td>
+                            <td class="kyc-rejected"><i class="fas fa-times-circle"></i> Rejected</td>
+                            <td class="status-blocked">Blocked</td>
+                            <td>
+                                <button class="btn-action-small btn-view"><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-action-small btn-block" style="background-color: var(--color-positive);"><i class="fas fa-unlock"></i> Unblock</button>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>#10018</td>
+                            <td>thuyein@test.com</td>
+                            <td>2025-12-14</td>
+                            <td class="balance-value">$25,000.00</td>
+                            <td class="kyc-verified"><i class="fas fa-check-circle"></i> Verified</td>
+                            <td class="status-active">Active</td>
+                            <td>
+                                <button class="btn-action-small btn-view"><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-action-small btn-block"><i class="fas fa-user-slash"></i> Block</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="pagination">
+                    <span>Page 1 of 453</span>
+                    <a href="#">Prev</a>
+                    <a href="#" style="background-color: var(--color-gold-accent); color: var(--color-dark-bg);">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">Next</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+<div id="depositModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7);">
+    <div style="background-color: var(--color-panel-bg); margin: 15% auto; padding: 30px; border: 1px solid #888; width: 30%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.6);">
+        <h3 style="color: var(--color-positive); margin-top: 0;"><i class="fas fa-circle-plus"></i> Manual Balance Deposit</h3>
+        <p style="color: var(--color-text-fade);">User: Mg Mg (ID: #10015)</p>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px;">Deposit Amount ($):</label>
+            <input type="number" id="depositAmount" placeholder="Enter amount" style="padding: 10px; width: 95%; background-color: #333; border: 1px solid #555; color: var(--color-text-light); border-radius: 4px;" step="1.00" required>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px;">Note / Reason:</label>
+            <textarea id="depositNote" style="padding: 10px; width: 95%; background-color: #333; border: 1px solid #555; color: var(--color-text-light); border-radius: 4px;" rows="3" placeholder="Manual deposit for bank transfer ID ABC123..."></textarea>
+        </div>
+
+        <button onclick="confirmManualDeposit()" style="padding: 10px 15px; background-color: var(--color-positive); color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+            <i class="fas fa-wallet"></i> Confirm Deposit
+        </button>
+        <button onclick="document.getElementById('depositModal').style.display='none';" style="padding: 10px 15px; background-color: var(--color-negative); color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Cancel
+        </button>
+    </div>
+</div>
+<script>
+    // ᬤ�~�`ᬺ�"ᬾᬬ Backend ᬬᬭᬯ �&�"ᬺᬸ�~�"ᬺ�:�ᬺ Test User Data ᬬᬭᬯ Database �ᬲ�~ᬭᬯᬷ ��`ᬷᬺ�~ᬽ�ᬺᬸ�~ᬱᬬ Function �ᬼ�&ᬺ�~�`ᬺ
+    async function initializeTestUser() {
+        await fetch('http://localhost:3000/api/users/init', { method: 'POST' });
+    }
+    
+    // Page �&ᬐ�ᬺ load ᬁᬻᬭ�ᬺᬐᬽ�ᬺ Test User ᬬᬭᬯ ��ᬺᬐᬮᬸ�"ᬫ
+    document.addEventListener('DOMContentLoaded', initializeTestUser);
+
+
+    // Manual Deposit Function
+    async function confirmManualDeposit() {
+        const userId = "10015"; // �Sᬬᬺ�:ᬾᬭ �"ᬯᬶ�&ᬶᬐᬰᬡᬐᬽᬬᬺ �&�"ᬺᬸ�~�"ᬺ User ID ᬬᬭᬯ ᬐᬭᬯᬬᬺ�:ᬭᬯᬬᬺ �~ᬐᬺ�"ᬾᬐᬺ�ᬬᬸ�~�`ᬺ
+        const amount = parseFloat(document.getElementById('depositAmount').value);
+        const note = document.getElementById('depositNote').value;
+
+        if (isNaN(amount) || amount <= 0) {
+            alert("ᬬᬻᬱᬸ�!ᬰᬸ�"ᬼᬯ၍ �"ᬾ�ᬺᬬ�ᬺ�~ᬱᬬ �ᬽᬱ�"�"ᬬᬏᬬᬭᬯ ��`ᬷᬺ�~ᬽ�ᬺᬸ�"ᬫ (0 �ᬬᬺᬬᬼᬮᬸ�:�"ᬫ�"�`ᬺ)");
+            return;
+        }
+
+        const response = await fetch('http://localhost:3000/api/admin/deposit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId, amount, note })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`�S& ᬡᬱᬬ�ᬺ�"ᬼ�ᬺ�"ᬫ�~�`ᬺ! User ${userId} ၏ ᬡᬬᬱᬬ�ᬷᬺ�ᬲ�~ᬭᬯᬷ $${amount.toFixed(2)} ��`ᬷᬺ�~ᬽ�ᬺᬸ�"ᬼᬮᬸ�"ᬫ�"ᬼᬮ�9`);
+            document.getElementById('depositModal').style.display = 'none';
+        } else {
+            alert(`�R Deposit �"ᬡᬱᬬ�ᬺ�"ᬼ�ᬺ�"ᬫ�9 Error: ${data.message || 'Server Error'}`);
+        }
+    }
+</script>
+</body>
+</html>

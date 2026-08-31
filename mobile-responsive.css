@@ -1,0 +1,186 @@
+:root {
+    --responsive-gap: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    word-break: break-word;
+    overflow-x: hidden;
+}
+
+img, video, iframe, svg, canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+button, input, select, textarea {
+    min-width: 0;
+}
+
+a {
+    word-break: break-word;
+}
+
+/* Make form cards, modals and panels adapt on smaller screens */
+.login-card,
+.register-card,
+.card,
+.chart-card,
+.order-box,
+.wallet-card,
+.wallet-actions,
+.balance-card,
+.tier-card,
+.modal-content,
+.profile-card,
+.section-card,
+.history-card,
+.timeline-content,
+.timeline-img-box {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        width: 100% !important;
+        position: relative !important;
+        border-right: none !important;
+        border-bottom: 1px solid #333 !important;
+        min-height: auto !important;
+    }
+
+    .main-content,
+    .content-wrapper,
+    .page-container,
+    .dashboard-container {
+        margin: 0 !important;
+        width: 100% !important;
+        padding: 16px !important;
+    }
+
+    .trading-grid,
+    .wallet-actions,
+    .trade-action-row,
+    .history-grid,
+    .card-grid,
+    .balance-grid,
+    .grid-two,
+    .grid-three {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    .nav-item {
+        border-left: none !important;
+        border-bottom: 2px solid transparent !important;
+        padding: 12px 10px !important;
+        font-size: 13px !important;
+    }
+
+    .nav-item.active {
+        border-bottom-color: var(--color-gold-accent) !important;
+    }
+
+    header,
+    .main-header,
+    .section-title,
+    .trade-box-header,
+    .topbar,
+    .hero-content,
+    .header-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        text-align: left !important;
+        gap: 12px !important;
+    }
+
+    .timeline-item,
+    .timeline-item.reverse {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        padding-left: 0 !important;
+    }
+
+    .timeline-line {
+        left: 12px !important;
+        height: auto !important;
+    }
+
+    .timeline-img-box,
+    .timeline-content {
+        width: 100% !important;
+        margin-bottom: 18px !important;
+    }
+
+    .sidebar-nav,
+    .sidebar nav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
+    }
+
+    .sidebar .nav-item,
+    .sidebar-nav .nav-item {
+        flex: 1 1 45% !important;
+        justify-content: center !important;
+        text-align: center !important;
+    }
+
+    .sidebar .logo-section,
+    .sidebar-lang-box,
+    .auth-control-box,
+    .side-profile {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    .sidebar { overflow: visible !important; }
+    body {
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar .nav-item,
+    .sidebar-nav .nav-item {
+        flex: 1 1 100% !important;
+    }
+
+    .header-actions .btn-login,
+    .header-actions .btn-register,
+    .btn-sidebar-login,
+    .btn-logout-sidebar,
+    .trade-btn,
+    .modal-content button,
+    .wallet-actions button {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .sidebar { padding-bottom: 12px !important; }
+
+    .main-content,
+    .content-wrapper,
+    .page-container {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .modal-content {
+        margin: 16px !important;
+    }
+
+    .trade-action-row { grid-template-columns: 1fr !important; }
+}

@@ -1,0 +1,1 @@
+const fs=require('fs'); const files=process.argv.slice(2); if(files.length===0){console.error('no files'); process.exit(1);} files.forEach(f= s=fs.readFileSync(f,'utf8'); fs.writeFileSync(f, Buffer.from(s,'latin1').toString('utf8'),'utf8'); console.log('fixed',f);});  

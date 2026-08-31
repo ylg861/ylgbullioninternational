@@ -1,0 +1,274 @@
+﻿<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - System Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* Base Admin Styles (Reused) */
+        :root {
+            --color-dark-bg: #111111;
+            --color-medium-dark: #151920;
+            --color-gold-accent: #FFD700;
+            --color-text-light: #E6E9EE;
+            --color-text-fade: #9aa0b3;
+            --color-positive: #00B050;
+            --color-negative: #D93025;
+            --color-info: #3498db;
+            --color-warning: #FFC107;
+            --color-sidebar: var(--color-medium-dark);
+
+            --panel-bg: var(--color-medium-dark);
+            --gold: var(--color-gold-accent);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Admin Sidebar Styling (Same as others) */
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--color-sidebar);
+            padding: 20px 0 20px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .admin-logo-section {
+            padding: 0 20px 20px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #3A3A3A;
+        }
+
+        .admin-logo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-gold-accent);
+        }
+
+        .admin-logo-sub {
+            font-size: 12px;
+            color: var(--color-text-fade);
+        }
+
+        .admin-nav {
+            flex-grow: 1;
+        }
+
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--color-text-fade);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .admin-nav-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .admin-nav-item:hover, .admin-nav-item.active {
+            background-color: #383838;
+            color: var(--color-text-light);
+            border-left: 5px solid var(--color-gold-accent);
+        }
+
+        /* Admin Main Content */
+        .admin-main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #3A3A3A;
+            padding-bottom: 15px;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: var(--color-text-light);
+        }
+
+        /* Settings Specific Styles */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .settings-section {
+            background-color: var(--color-panel-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            border-top: 4px solid var(--color-info);
+        }
+
+        .settings-section h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3A3A3A;
+            margin-bottom: 20px;
+            color: var(--color-info);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--color-text-fade);
+        }
+
+        .form-input[type="text"], .form-input[type="number"], .form-input select {
+            width: 100%;
+            padding: 10px;
+            background-color: #333333;
+            border: 1px solid #555555;
+            color: var(--color-white);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        
+        .btn-save {
+            padding: 10px 20px;
+            background-color: var(--color-positive);
+            color: var(--color-white);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .status-indicator {
+            padding: 10px;
+            background-color: var(--color-positive);
+            color: var(--color-white);
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+    <link rel="stylesheet" href="../mobile-responsive.css">
+</head>
+<body>
+
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo-section">
+                <div class="admin-logo-title">ADMIN PANEL</div>
+                <div class="admin-logo-sub">YLG BULLION PLATFORM</div>
+            </div>
+
+            <nav class="admin-nav">
+    <a href="admin.html" class="admin-nav-item"><i class="fas fa-gauge-high"></i> Dashboard</a>
+    <a href="admin-users.html" class="admin-nav-item"><i class="fas fa-users"></i> User Management</a>
+    <a href="admin-trades.html" class="admin-nav-item"><i class="fas fa-hand-holding-usd"></i> Trades & Orders</a>
+    <a href="admin-finance.html" class="admin-nav-item"><i class="fas fa-money-bill-transfer"></i> Finance & KYC</a>
+    <a href="admin-reports.html" class="admin-nav-item"><i class="fas fa-chart-bar"></i> Reporting</a>
+    <a href="admin-settings.html" class="admin-nav-item"><i class="fas fa-cogs"></i> System Settings</a>
+    <a href="admin-chat.html" class="admin-nav-item"><i class="fas fa-comment-dots"></i> Live Chat Inbox</a> </nav>
+
+            <div style="padding: 20px; text-align: center;">
+                <a href="#" style="color: var(--color-negative); text-decoration: none;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main-content">
+            <header class="admin-header">
+                <h1>System Settings</h1>
+                <p>Configure trading parameters and platform status</p>
+            </header>
+            
+            <section class="settings-grid">
+                
+                <div class="settings-section">
+                    <h3><i class="fas fa-chart-area"></i> Trading & Price Configuration</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="gold-spread">Gold Price Spread (%)</label>
+                            <input type="number" id="gold-spread" class="form-input" value="0.50" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="max-leverage">Maximum Leverage</label>
+                            <select id="max-leverage" class="form-input">
+                                <option>1:50</option>
+                                <option>1:100</option>
+                                <option selected>1:200</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="commission">Commission per Trade ($)</label>
+                            <input type="number" id="commission" class="form-input" value="5.00" step="0.01">
+                        </div>
+                        <button type="submit" class="btn-save"><i class="fas fa-save"></i> Save Trading Settings</button>
+                    </form>
+                </div>
+
+                <div class="settings-section" style="border-top-color: var(--color-gold-accent);">
+                    <h3><i class="fas fa-shield-alt"></i> Platform Status & KYC</h3>
+                    
+                    <div class="form-group">
+                        <label>Current System Status</label>
+                        <div class="status-indicator">
+                            <i class="fas fa-check-circle"></i> Fully Operational
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trading-mode">Trading Mode</label>
+                        <select id="trading-mode" class="form-input">
+                            <option selected>Live Trading</option>
+                            <option>Maintenance</option>
+                            <option>Demo Only</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kyc-required">KYC Requirement Level</label>
+                        <select id="kyc-required" class="form-input">
+                            <option selected>Level 2 (Document Required)</option>
+                            <option>Level 1 (Basic Info Only)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-save" style="background-color: var(--color-gold-accent); color: var(--color-dark-bg);"><i class="fas fa-save"></i> Apply System Changes</button>
+                </div>
+                
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>

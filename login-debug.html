@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login Debug - YLG</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>body{font-family:Segoe UI,Arial;background:#111;color:#fff;padding:20px} .card{max-width:420px;margin:40px auto;padding:20px;background:#1a1a1a;border-radius:8px}</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Login Debug Page</h2>
+    <p>Use this page to test Firebase login without touching the corrupted file.</p>
+    <form id="f">
+      <input id="email" placeholder="email" style="width:100%;padding:8px;margin:6px 0" />
+      <input id="password" type="password" placeholder="password" style="width:100%;padding:8px;margin:6px 0" />
+      <button type="submit" style="width:100%;padding:10px;margin-top:8px;background:#ffd700;border:none;color:#000;font-weight:700">Login</button>
+    </form>
+    <pre id="dbg" style="background:#000;padding:8px;margin-top:12px;white-space:pre-wrap"></pre>
+  </div>
+
+  <script type="module">
+    import { app } from "./firebase-init.js";
+    import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const auth = getAuth(app);
+
+    const dbg = document.getElementById('dbg');
+    document.getElementById('f').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      dbg.textContent = 'Attempting...';
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        const u = await signInWithEmailAndPassword(auth, email, password);
+        dbg.textContent = 'Success: ' + JSON.stringify({uid: u.user.uid, email: u.user.email}, null, 2);
+      } catch (err) {
+        dbg.textContent = 'Error:\n' + (err.code || '') + '\n' + (err.message || '');
+      }
+    });
+  </script>
+</body>
+</html>

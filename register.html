@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register — YLG Bullion</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root{--bg:#0f1113;--panel:#151617;--accent:#E5B800;--muted:#9aa0a6;--input:#1e1e1e}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:'Noto Sans Myanmar','Noto Sans Thai','Inter',Segoe UI,Arial,system-ui,sans-serif;background:linear-gradient(180deg,#060607 0%,#0f1113 100%);color:#fff;display:flex;align-items:center;justify-content:center;padding:24px}
+    /* Hide any global site chrome that may be injected on top of this standalone page */
+    .sidebar, aside, .right-panel, .floating-panel, .site-overlay { display: none !important; }
+    body { padding: 24px !important; }
+
+    .card{width:100%;max-width:520px;background:var(--panel);padding:28px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(229,184,0,0.06);position:relative;z-index:9999;margin:0 auto}
+    .brand{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#d9a800);display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:22px}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:4px 0 16px 0;color:var(--muted);font-size:13px}
+
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:600px){.grid{grid-template-columns:1fr}}
+
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--input);color:#fff;font-size:14px}
+    .actions{margin-top:14px}
+    button.primary{width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#111;font-weight:700;cursor:pointer}
+    .small{font-size:12px;color:var(--muted)}
+    .error{margin-top:10px;padding:10px;background:#3a1b1b;color:#ffd3d3;border-radius:8px;display:none}
+    .debug{margin-top:10px;padding:10px;background:#071017;color:#9fefff;border-radius:8px;white-space:pre-wrap;display:none;font-size:13px}
+    .inline-row{display:flex;gap:10px;align-items:center}
+  </style>
+</head>
+<body>
+  <div id="ylg-auth-wrapper">
+    <main class="card" role="main">
+    <div class="brand">
+      <div class="logo">YLG</div>
+      <div>
+        <h1 id="title">Create your account</h1>
+        <p class="lead" id="subtitle">Sign up to access trading & wallet</p>
+      </div>
+    </div>
+
+    <form id="registerForm" novalidate>
+      <div class="grid">
+        <div>
+          <label for="fullname" id="labelFull">Full name</label>
+          <input id="fullname" type="text" autocomplete="name" required />
+        </div>
+        <div>
+          <label for="phone" id="labelPhone">Phone</label>
+          <input id="phone" type="tel" autocomplete="tel" />
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label for="email" id="labelEmail">Email</label>
+        <input id="email" type="email" autocomplete="email" required />
+      </div>
+
+      <div class="grid" style="margin-top:12px">
+        <div>
+          <label for="password" id="labelPass">Password</label>
+          <input id="password" type="password" required />
+        </div>
+        <div>
+          <label for="confirm" id="labelConfirm">Confirm password</label>
+          <input id="confirm" type="password" required />
+        </div>
+      </div>
+
+      <p style="margin-top:12px"><label class="inline-row"><input id="terms" type="checkbox" /> <span id="labelTerms" class="small">I agree to Terms and Privacy</span></label></p>
+
+      <div class="actions">
+        <button id="submitBtn" class="primary" type="submit"><i class="fa-solid fa-user-plus" style="margin-right:8px"></i> <span id="btnText">Register</span></button>
+      </div>
+
+      <div class="error" id="errorBox" role="alert" aria-live="assertive"></div>
+      <pre class="debug" id="debugBox" aria-hidden="true"></pre>
+
+      <p class="small" style="margin-top:14px">Already have an account? <a href="login.html" style="color:var(--accent);text-decoration:none">Login</a></p>
+    </form>
+    </main>
+  </div>
+
+  <style>
+    /* Ensure this wrapper is the only visible content on the page */
+    html,body{height:100%}
+    body > :not(#ylg-auth-wrapper){display:none !important}
+    #ylg-auth-wrapper{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2147483647;padding:24px;background:transparent}
+  </style>
+
+    <script type="module">
+    import { app } from './firebase-init.js';
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, setDoc, runTransaction } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('registerForm');
+    const fullname = document.getElementById('fullname');
+    const phone = document.getElementById('phone');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirm = document.getElementById('confirm');
+    const terms = document.getElementById('terms');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const errorBox = document.getElementById('errorBox');
+    const debugBox = document.getElementById('debugBox');
+
+    const texts = {
+      en: { title:'Create your account', subtitle:'Sign up to access trading & wallet', full:'Full name', phone:'Phone', email:'Email', pass:'Password', confirm:'Confirm password', terms:'I agree to Terms and Privacy', register:'Register', required:'Please fill required fields.' },
+      mm: { title:'အကောင့်အသစ်ဖန်တီးပါ', subtitle:'ရောင်းဝယ်မှုနှင့် အိတ်ချယ်နိုင်ရန်', full:'အမည်', phone:'ဖုန်း', email:'အီးမေးလ်', pass:'စကားဝှက်', confirm:'စကားဝှက် ထပ်မံရိုက်ပါ', terms:'စည်းမျဉ်းနှင့် ကိုယ်ရေးမူဝါဒ အတည်ပြုပါ', register:'မှတ်ပုံတင်ရန်', required:'လိုအပ်သောအချက်များကို ဖြည့်ပါ။' },
+      th: { title:'สร้างบัญชีของคุณ', subtitle:'สมัครเพื่อใช้งานการซื้อขายและกระเป๋า', full:'ชื่อ-นามสกุล', phone:'โทรศัพท์', email:'อีเมล', pass:'รหัสผ่าน', confirm:'ยืนยันรหัสผ่าน', terms:'ฉันยอมรับข้อกำหนดและนโยบาย', register:'สมัคร', required:'กรุณากรอกข้อมูลที่จำเป็น.' }
+    };
+
+    function applyLang(){
+      const lang = localStorage.getItem('selectedLang') || 'en';
+      const t = texts[lang] || texts.en;
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('subtitle').textContent = t.subtitle;
+      document.getElementById('labelFull').textContent = t.full;
+      document.getElementById('labelPhone').textContent = t.phone;
+      document.getElementById('labelEmail').textContent = t.email;
+      document.getElementById('labelPass').textContent = t.pass;
+      document.getElementById('labelConfirm').textContent = t.confirm;
+      document.getElementById('labelTerms').textContent = t.terms;
+      btnText.textContent = t.register;
+    }
+    applyLang();
+
+    function setError(msg){ errorBox.style.display = msg ? 'block' : 'none'; errorBox.textContent = msg || ''; }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      setError(''); debugBox.style.display = 'none';
+
+      const nameVal = fullname.value.trim();
+      const phoneVal = phone.value.trim();
+      const emailVal = email.value.trim();
+      const passVal = password.value;
+      const confVal = confirm.value;
+
+      const lang = localStorage.getItem('selectedLang') || 'en';
+      const t = texts[lang] || texts.en;
+
+      if (!nameVal || !emailVal || !passVal || !confVal || !terms.checked){ setError(t.required); return; }
+      if (passVal.length < 6){ setError('Password must be at least 6 characters'); return; }
+      if (passVal !== confVal){ setError('Passwords do not match'); return; }
+
+      submitBtn.disabled = true; btnText.textContent = 'Processing...';
+
+      try{
+        const counterRef = doc(db, 'settings', 'userCounter');
+        let newIndex = 1;
+        await runTransaction(db, async (tx)=>{
+          const snap = await tx.get(counterRef);
+          if (snap.exists()){ newIndex = (snap.data().lastIndex || 0) + 1; tx.update(counterRef, { lastIndex: newIndex }); }
+          else { tx.set(counterRef, { lastIndex: 1 }); newIndex = 1; }
+        });
+
+        const currentYear = new Date().getFullYear();
+        const formatted = String(newIndex).padStart(4,'0');
+        const customYlgId = `YLG-${currentYear}${formatted}`;
+
+        const cred = await createUserWithEmailAndPassword(auth, emailVal, passVal);
+        await updateProfile(cred.user, { displayName: nameVal });
+
+        await setDoc(doc(db, 'users', cred.user.uid), {
+          uid: cred.user.uid, fullname: nameVal, email: emailVal, phone: phoneVal, balance: 0,
+          userIndex: newIndex, ylgId: customYlgId, tradeControl: 'NORMAL', kycStatus: 'pending', createdAt: new Date().toISOString()
+        });
+
+        await Swal.fire({ icon:'success', title:t.register, text:`Account created. ID: ${customYlgId}`, timer:1800 });
+        window.location.href = 'login.html';
+      }catch(err){
+        console.error(err);
+        submitBtn.disabled = false; btnText.textContent = texts[localStorage.getItem('selectedLang')||'en'].register;
+        let msg = err.message || 'Register error';
+        if (err.code === 'auth/email-already-in-use') msg = 'Email already in use';
+        if (location.search.includes('debug=1') || localStorage.getItem('debug')==='true'){ debugBox.style.display='block'; debugBox.textContent = `Error code: ${err.code || 'N/A'}\n${err.message || ''}`; }
+        setError(msg);
+      }
+    });
+  </script>
+</body>
+</html>

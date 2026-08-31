@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Trading - YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-dark-bg: #111111;
+            --color-medium-dark: #1A1A1A;
+            --color-gold-accent: #FFD700;
+            --color-text-light: #E0E0E0;
+            --color-text-fade: #A0A0A0;
+            --color-positive: #00B050;
+            --color-negative: #D93025;
+            --color-error: #ff4d4d;
+        }
+
+        body { font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', sans-serif; background-color: var(--color-dark-bg); color: var(--color-text-light); margin: 0; display: flex; }
+
+        #trading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 6px solid #333;
+            border-top: 6px solid var(--color-gold-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #overlay-timer { font-size: 32px; font-weight: bold; color: white; margin: 10px 0; }
+
+        .sidebar { width: 260px; min-height: 100vh; background-color: var(--color-medium-dark); display: flex; flex-direction: column; position: fixed; z-index: 1000; border-right: 1px solid #333; }
+        .logo-section { padding: 20px; border-bottom: 1px solid #3A3A3A; display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #FFD700; object-fit: cover; }
+        .logo-y-text { font-size: 24px; font-weight: 800; color: #FFD700; line-height: 1; }
+        .logo-subtext { font-size: 16px; font-weight: 700; color: #FFFFFF; letter-spacing: 1px; }
+
+        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
+        .nav-item { display: flex; align-items: center; padding: 15px 20px; color: var(--color-text-fade); text-decoration: none; transition: 0.3s; }
+        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
+        .nav-item:hover, .nav-item.active { background-color: #252525; color: white; border-left: 4px solid var(--color-gold-accent); }
+
+        .side-profile { padding: 20px; border-top: 1px solid #333; display: none; }
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 20px; box-sizing: border-box; }
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid #333; }
+
+        .trading-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; margin-top: 22px; }
+        .chart-card, .order-box { background: #151920; border: 1px solid #2a2f3a; border-radius: 18px; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18); }
+
+        .chart-card { display: flex; flex-direction: column; overflow: hidden; }
+        .chart-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, rgba(255,215,0,0.08), transparent);
+        }
+        .chart-card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            color: var(--color-text-light);
+        }
+        .market-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 215, 0, 0.12);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .order-box { padding: 28px; }
+        .trade-box-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+        .trade-box-header h3 { color: var(--color-gold-accent); margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+        .trade-box-subtitle { max-width: 230px; color: var(--color-text-fade); font-size: 13px; line-height: 1.7; margin: 4px 0 0; }
+
+        label { display: block; margin-top: 18px; font-size: 13px; color: #8b8f9d; letter-spacing: 0.2px; }
+        select, input { width: 100%; padding: 14px; margin-top: 10px; background: #171d28; border: 1px solid #2f3647; color: #fff; border-radius: 12px; box-sizing: border-box; transition: border-color 0.25s ease, transform 0.2s ease; }
+        select:focus, input:focus { border-color: rgba(255, 215, 0, 0.7); outline: none; transform: translateY(-1px); }
+
+        .profit-container { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; margin: 22px 0; border: 1px solid rgba(255, 215, 0, 0.12); }
+        .profit-container p { margin: 0; font-size: 12px; color: #9aa0b3; text-transform: uppercase; letter-spacing: 0.2em; }
+        .profit-container h2 { margin: 10px 0 6px; font-size: 30px; color: var(--color-positive); }
+        .profit-container small { color: var(--color-gold-accent); font-weight: 700; letter-spacing: 0.05em; }
+
+        .trade-action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+        .trade-btn { width: 100%; padding: 16px; border: none; color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; border-radius: 12px; transition: transform 0.2s ease, box-shadow 0.25s ease; }
+        .trade-btn:hover:not(.btn-disabled) { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25); }
+        .btn-buy { background: linear-gradient(135deg, #00c176, #00a662); }
+        .btn-sell { background: linear-gradient(135deg, #ef4354, #c6252a); }
+
+        .btn-disabled { opacity: 0.4; cursor: not-allowed !important; pointer-events: none; }
+
+        .trade-note { margin-top: 18px; padding: 14px 18px; border-radius: 14px; background: rgba(255,255,255,0.03); color: #9aa0b3; font-size: 12px; border: 1px solid rgba(255, 255, 255, 0.04); }
+
+        @media (max-width: 992px) {
+            .trading-grid { grid-template-columns: 1fr; }
+            .chart-card, .order-box { border-radius: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; min-height: auto; position: relative; border-right: none; border-bottom: 1px solid #333; }
+            .sidebar nav { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+            .nav-item { padding: 12px 10px; font-size: 11px; border-left: none !important; }
+            .main-content { margin-left: 0; width: 100%; padding: 15px; }
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .trade-action-row { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; min-height: auto; position: relative; border-right: none; border-bottom: 1px solid #333; }
+            .sidebar nav { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+            .nav-item { padding: 12px 10px; font-size: 11px; border-left: none !important; }
+            .main-content { margin-left: 0; width: 100%; padding: 15px; }
+            .trading-grid { grid-template-columns: 1fr; }
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile-responsive.css">
+</head>
+<body>
+
+    <div id="trading-overlay">
+        <div class="spinner"></div>
+        <div style="color: var(--color-gold-accent); font-size: 18px; letter-spacing: 1px;">TRADING IN PROGRESS</div>
+        <div id="overlay-timer">0s</div>
+        <div style="color: #888; font-size: 12px;">Please wait. Do not close or refresh.</div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
+            <div class="logo-text-group">
+                <div class="logo-y-text">YLG</div>
+                <div class="logo-subtext">BULLION</div>
+            </div>
+        </div>
+        <nav>
+            <a href="index.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html" class="nav-item active"><i class="fas fa-chart-line"></i> Trading</a>
+            <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="history.html" class="nav-item"><i class="fas fa-history"></i> History</a>
+            <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="#" id="logoutBtn" class="nav-item"><i class="fas fa-sign-out-alt"></i> Exit</a>
+        </nav>
+        <div id="side-profile-box" class="side-profile">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-user-circle" style="font-size: 24px; color: var(--color-gold-accent);"></i>
+                <span id="side-user-name" style="font-size: 12px; font-weight: bold;">User</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h2 style="margin:0;">Gold Trading</h2>
+                <div id="head-user-name" style="color:var(--color-gold-accent); font-size: 13px; margin-top: 5px;">Checking...</div>
+            </div>
+            <div id="auth-buttons" style="display: none;">
+                <a href="login.html" style="color:var(--color-gold-accent); text-decoration:none; border:1px solid var(--color-gold-accent); padding: 6px 16px; border-radius: 4px; font-size: 14px;">Login</a>
+            </div>
+        </header>
+
+        <div class="trading-grid">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <h3>Live Gold Price</h3>
+                    <span class="market-badge"><i class="fas fa-chart-line"></i> XAU/USD</span>
+                </div>
+                <div id="chart-area" style="background:#131722; height: 560px; overflow: hidden;">
+                    <div id="tradingview_gold" style="height: 100%; width: 100%"></div>
+                </div>
+            </div>
+
+            <div class="order-box">
+                <div class="trade-box-header">
+                    <div>
+                        <h3>Quick Trade</h3>
+                        <p class="trade-box-subtitle">Trade gold with a clean and modern interface. Choose duration and amount, then place your BUY or SELL order instantly.</p>
+                    </div>
+                </div>
+
+                <label>Select Duration:</label>
+                <select id="tradeDuration" onchange="updateProfit()">
+                    <option value="60">60 Seconds</option>
+                    <option value="120">120 Seconds</option>
+                    <option value="240">240 Seconds</option>
+                    <option value="300">300 Seconds</option>
+                    <option value="360">360 Seconds</option>
+                </select>
+
+                <label id="amountLabel">Amount (100+ USD):</label>
+                <input type="number" id="tradeAmount" value="100" oninput="updateProfit()">
+                
+                <div class="profit-container">
+                    <p>Potential Profit</p>
+                    <h2 id="profitDisplay">+$15.00</h2>
+                    <small id="percentDisplay">Payout: 15%</small>
+                </div>
+                <div class="trade-note" id="tierNote">Tier rules: under $10,000 â†’ 60s / 15%, $10,000â€“30,000 â†’ 120s / 25%, $30,000â€“50,000 â†’ 240s / 45%, $50,000â€“100,000 â†’ 300s / 55%, over $100,000 â†’ 360s / 65%.</div>
+
+                <div class="trade-action-row">
+                    <button id="btn-up" class="trade-btn btn-buy" onclick="handleTrade('UP')">BUY</button>
+                    <button id="btn-down" class="trade-btn btn-sell" onclick="handleTrade('DOWN')">SELL</button>
+                </div>
+
+                <div class="trade-note">The chart is live and reflects real market conditions. Trades execute automatically after the timer ends.</div>
+            </div>
+        </div>
+    </main>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        new TradingView.widget({ "autosize": true, "symbol": "OANDA:XAUUSD", "interval": "1", "theme": "dark", "container_id": "tradingview_gold" });
+
+        function getTradeTier(amount) {
+            if (amount < 100) return null;
+            if (amount < 10000) return { duration: 60, pct: 15, label: 'Under $10,000: 60s / 15%' };
+            if (amount <= 30000) return { duration: 120, pct: 25, label: '$10,000 - $30,000: 120s / 25%' };
+            if (amount <= 50000) return { duration: 240, pct: 45, label: '$30,000 - $50,000: 240s / 45%' };
+            if (amount <= 100000) return { duration: 300, pct: 55, label: '$50,000 - $100,000: 300s / 55%' };
+            return { duration: 360, pct: 65, label: 'Over $100,000: 360s / 65%' };
+        }
+
+        function updateProfit() {
+            const amount = parseFloat(document.getElementById('tradeAmount').value) || 0;
+            const duration = document.getElementById('tradeDuration').value;
+            const amountLabel = document.getElementById('amountLabel');
+            const tierNote = document.getElementById('tierNote');
+            const tier = getTradeTier(amount);
+            let pct = 0;
+            let note = 'Tier rules: under $10,000 â†’ 60s / 15%, $10,000â€“30,000 â†’ 120s / 25%, $30,000â€“50,000 â†’ 240s / 45%, $50,000â€“100,000 â†’ 300s / 55%, over $100,000 â†’ 360s / 65%.';
+
+            if (tier) {
+                pct = tier.pct;
+                amountLabel.innerText = `Amount (${amount >= 100 && amount < 10000 ? '100 - 9,999' : amount <= 30000 ? '10,000 - 30,000' : amount <= 50000 ? '30,000 - 50,000' : amount <= 100000 ? '50,000 - 100,000' : '100,000+'} USD):`;
+                note = `Current Tier: ${tier.label}. Selected duration: ${duration}s.`;
+                if (parseInt(duration, 10) !== tier.duration) {
+                    note += ` Required duration for this amount is ${tier.duration}s.`;
+                }
+            } else {
+                if (amount < 100) {
+                    note = 'Enter an amount of at least $100.';
+                } else {
+                    note = 'Select the correct duration for your trade amount.';
+                }
+            }
+
+            document.getElementById('profitDisplay').innerText = "+$" + (amount * pct / 100).toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('percentDisplay').innerText = pct ? `Payout: ${pct}%` : 'Payout: N/A';
+            tierNote.innerText = note;
+        }
+    </script>
+
+    <script type="module">
+        import { app } from './firebase-init.js';
+        import { getAuth, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let activeUser = null;
+        let userBalance = 0;
+        let isTrading = false;
+
+        setPersistence(auth, browserLocalPersistence).then(() => {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    activeUser = user;
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    const userData = userDoc.exists() ? userDoc.data() : {};
+                    userBalance = userData.balance || 0;
+                    
+                    // ðŸ”¥ á€•á€¼á€„á€ºá€œá€­á€¯á€€á€ºá€žá€±á€¬á€”á€±á€›á€¬: á€¡á€®á€¸á€™á€±á€¸á€œá€ºá€¡á€…á€¬á€¸ Firestore á€‘á€²á€€ fullname á€€á€­á€¯ á€šá€°á€•á€¼á€žá€Šá€º
+                    const displayName = userData.fullname || localStorage.getItem('userName') || 'Member';
+                    document.getElementById('head-user-name').innerText = `Account: ${displayName} (Balance: $${userBalance.toLocaleString()})`;
+                    
+                    document.getElementById('side-user-name').innerText = displayName;
+                    document.getElementById('side-profile-box').style.display = 'block';
+                    document.getElementById('auth-buttons').style.display = 'none';
+                } else {
+                    activeUser = null;
+                    document.getElementById('head-user-name').innerText = "Guest Mode";
+                    document.getElementById('side-profile-box').style.display = 'none';
+                    document.getElementById('auth-buttons').style.display = 'block';
+                }
+            });
+        });
+
+        // Balance update function á€¡á€á€½á€€á€ºá€œá€Šá€ºá€¸ á€”á€¬á€™á€Šá€ºá€€á€­á€¯ á€‘á€­á€”á€ºá€¸á€žá€­á€™á€ºá€¸á€‘á€¬á€¸á€›á€”á€º
+        async function updateHeaderInfo() {
+            const userDoc = await getDoc(doc(db, "users", activeUser.uid));
+            const userData = userDoc.exists() ? userDoc.data() : {};
+            const displayName = userData.fullname || localStorage.getItem('userName') || 'Member';
+            document.getElementById('head-user-name').innerText = `Account: ${displayName} (Balance: $${userBalance.toLocaleString()})`;
+        }
+
+        window.handleTrade = async (type) => {
+            if (!activeUser) { alert("Please login to trade!"); window.location.href="login.html"; return; }
+            if (isTrading) return;
+
+            // Check if user account is frozen
+            const userDoc = await getDoc(doc(db, "users", activeUser.uid));
+            const userData = userDoc.exists() ? userDoc.data() : {};
+            if (userData.frozen) {
+                Swal.fire({ icon: 'error', title: 'Account Frozen', text: 'Your account has been frozen. Please contact support.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+
+            const amt = parseFloat(document.getElementById('tradeAmount').value);
+            const dur = parseInt(document.getElementById('tradeDuration').value);
+            const tier = getTradeTier(amt);
+
+            if (!tier) {
+                Swal.fire({ icon: 'warning', title: 'Invalid Amount', text: 'Please enter an amount between $100 and $100,000.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+
+            if (dur !== tier.duration) {
+                Swal.fire({ icon: 'warning', title: 'Invalid Duration', text: `For $${amt.toLocaleString()} trades, only ${tier.duration}s is allowed.`, background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+
+            if (userBalance < amt) { 
+                Swal.fire({ icon: 'warning', title: 'Balance Low', text: 'á€œá€€á€ºá€€á€»á€”á€ºá€„á€½á€± á€™á€œá€¯á€¶á€œá€±á€¬á€€á€ºá€•á€«á‹', background: '#1a1a1a', color: '#fff' });
+                return; 
+            }
+
+            isTrading = true;
+            
+            const overlay = document.getElementById('trading-overlay');
+            overlay.style.display = 'flex';
+
+            document.getElementById('btn-up').classList.add('btn-disabled');
+            document.getElementById('btn-down').classList.add('btn-disabled');
+
+            userBalance -= amt;
+            updateHeaderInfo(); // updateHeaderInfo á€á€±á€«á€ºá€œá€­á€¯á€€á€ºá€á€¬á€”á€²á€· á€”á€¬á€™á€Šá€ºá€›á€±á€¬ balance á€›á€±á€¬ update á€–á€¼á€…á€ºá€™á€šá€º
+            await updateDoc(doc(db, "users", activeUser.uid), { balance: increment(-amt) });
+
+            startCountdown(dur, type, amt);
+        };
+
+        function startCountdown(seconds, type, amt) {
+            const timerEl = document.getElementById('overlay-timer');
+            const startTime = Date.now();
+            const endTime = startTime + (seconds * 1000);
+
+            const timer = setInterval(() => {
+                const now = Date.now();
+                const remainingMs = endTime - now;
+                const secondsLeft = Math.ceil(remainingMs / 1000);
+
+                if (secondsLeft <= 0) {
+                    clearInterval(timer);
+                    timerEl.innerText = "0s";
+                    document.getElementById('trading-overlay').style.display = 'none';
+                    finishTrade(type, amt);
+                } else {
+                    timerEl.innerText = `${secondsLeft}s`;
+                }
+            }, 1000);
+        }
+
+        async function finishTrade(type, amt) {
+            try {
+                const userDoc = await getDoc(doc(db, "users", activeUser.uid));
+                let control = userDoc.exists() ? (userDoc.data().tradeControl || "NORMAL") : "NORMAL";
+
+                let isWin = control === "WIN" ? true : (control === "LOSS" ? false : Math.random() > 0.5);
+
+                let finalPayout = 0;
+                const dur = document.getElementById('tradeDuration').value;
+                const tier = getTradeTier(amt);
+                let pct = tier ? tier.pct / 100 : 0;
+
+                if (isWin && pct > 0) {
+                    finalPayout = amt + (amt * pct);
+                    userBalance += finalPayout;
+                    await updateDoc(doc(db, "users", activeUser.uid), { balance: increment(finalPayout) });
+
+                    Swal.fire({
+                        title: 'ðŸŽ‰ Congratulations!',
+                        html: `<b style="font-size: 20px;">You WON $${(amt * pct).toFixed(2)}</b>`,
+                        icon: 'success',
+                        confirmButtonColor: '#FFD700',
+                        background: '#1a1a1a',
+                        color: '#ffffff'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'âŒ Trade Lost!',
+                        html: `<b style="font-size: 20px;">You lost $${amt.toFixed(2)}</b>`,
+                        icon: 'error',
+                        confirmButtonColor: '#D93025',
+                        background: '#1a1a1a',
+                        color: '#ffffff'
+                    });
+                }
+
+                await addDoc(collection(db, "users", activeUser.uid, "trades"), {
+                    date: new Date().toLocaleString(),
+                    type: type === 'UP' ? 'BUY' : 'SELL',
+                    amount: amt,
+                    result: isWin ? "WIN" : "LOSS",
+                    payout: isWin ? finalPayout : 0,
+                    timestamp: serverTimestamp()
+                });
+
+            } catch (error) {
+                console.error("Trade Error:", error);
+            } finally {
+                isTrading = false;
+                document.getElementById('btn-up').classList.remove('btn-disabled');
+                document.getElementById('btn-down').classList.remove('btn-disabled');
+                updateHeaderInfo();
+            }
+        }
+
+        document.getElementById('logoutBtn').onclick = () => signOut(auth).then(() => window.location.href="login.html");
+
+        function applyTradingLanguage(lang) {
+            const texts = {
+                'en': {
+                    nav: ["Dashboard", "Trading", "Portfolio", "History", "Wallet", "Exit"],
+                    title: "Gold Trading",
+                    quickTrade: "Quick Trade",
+                    duration: "Select Duration:",
+                    amount: "Amount (USD):",
+                    potential: "Potential Profit:",
+                    payout: "Payout:",
+                    buy: "BUY",
+                    sell: "SELL"
+                },
+                'mm': {
+                    nav: ["ဒက်ရှ်ဘုတ်", "ရောင်းဝယ်ရေး", "ပို့ဖိုလီယို", "သမိုင်း", "ငွေထည်", "ထွက်မည်"],
+                    title: "ရွှေကုန်သွယ်ရေး",
+                    quickTrade: "အမြန် ကုန်သွယ်ချက်",
+                    duration: "ကာလ ရွေးချယ်ပါ:",
+                    amount: "ပမာဏ (USD):",
+                    potential: "အလားအလာ အမြတ်:",
+                    payout: "ငွေပေးချေမှု:",
+                    buy: "ဝယ် (BUY)",
+                    sell: "ရောင်း (SELL)"
+                },
+                'th': {
+                    nav: ["แดชบอร์ด", "การซื้อขาย", "พอร์ตโฟลิโอ", "ประวัติ", "กระเป๋าสตางค์", "ออก"],
+                    title: "การซื้อขายทองคำ",
+                    quickTrade: "เทรดด่วน",
+                    duration: "เลือกระยะเวลา:",
+                    amount: "จำนวน (USD):",
+                    potential: "กำไรที่เป็นไปได้:",
+                    payout: "อัตราจ่าย:",
+                    buy: "ซื้อ (BUY)",
+                    sell: "ขาย (SELL)"
+                }
+            };
+
+            const navItems = document.querySelectorAll('.nav-item');
+            const icons = ["fa-th-large", "fa-chart-line", "fa-briefcase", "fa-history", "fa-wallet", "fa-sign-out-alt"];
+            navItems.forEach((item, i) => {
+                if(navItems[i]) {
+                    item.innerHTML = `<i class="fas ${icons[i]}"></i> ${texts[lang].nav[i]}`;
+                }
+            });
+
+            if(document.querySelector('header h2')) document.querySelector('header h2').innerText = texts[lang].title;
+            if(document.querySelector('.order-box h3')) document.querySelector('.order-box h3').innerText = texts[lang].quickTrade;
+            
+            const labels = document.querySelectorAll('.order-box label');
+            if(labels[0]) labels[0].innerText = texts[lang].duration;
+            
+            const amtLabel = document.getElementById('amountLabel');
+            if(amtLabel) amtLabel.innerText = texts[lang].amount;
+            
+            const potentialText = document.querySelector('.profit-container p');
+            if(potentialText) potentialText.innerText = texts[lang].potential;
+
+            document.getElementById('btn-up').innerText = texts[lang].buy;
+            document.getElementById('btn-down').innerText = texts[lang].sell;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('selectedLang') || 'en';
+            applyTradingLanguage(savedLang);
+        });
+    </script>
+</body>
+</html>

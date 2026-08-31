@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Live Chat Inbox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* Base Admin Styles (Reused) */
+        :root {
+            --color-dark-bg: #111111;
+            --color-medium-dark: #151920;
+            --color-gold-accent: #FFD700;
+            --color-text-light: #E6E9EE;
+            --color-text-fade: #9aa0b3;
+            --color-positive: #00B050;
+            --color-negative: #D93025;
+            --color-info: #3498db;
+            --color-warning: #FFC107;
+            --color-sidebar: var(--color-medium-dark);
+
+            /* Legacy aliases */
+            --panel-bg: var(--color-medium-dark);
+            --gold: var(--color-gold-accent);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Admin Sidebar Styling (Same as others) */
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--color-sidebar);
+            padding: 20px 0 20px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .admin-logo-section {
+            padding: 0 20px 20px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #3A3A3A;
+        }
+
+        .admin-logo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-gold-accent);
+        }
+        
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--color-text-fade);
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .admin-nav-item:hover, .admin-nav-item.active {
+            background-color: #383838;
+            color: var(--color-text-light);
+            border-left: 5px solid var(--color-gold-accent);
+        }
+
+        /* Admin Main Content */
+        .admin-main-content {
+            flex-grow: 1;
+            padding: 30px 40px;
+        }
+
+        .admin-header {
+            margin-bottom: 30px;
+        }
+        
+        /* Chat Inbox Layout */
+        .inbox-layout {
+            display: flex;
+            height: calc(100vh - 150px);
+            background-color: var(--color-panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+        
+        .ticket-list {
+            width: 300px;
+            border-right: 1px solid #3A3A3A;
+            overflow-y: auto;
+            background-color: #1A1A1A; /* Slightly darker list background */
+        }
+        
+        .ticket-item {
+            padding: 15px;
+            border-bottom: 1px solid #3A3A3A;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .ticket-item:hover {
+            background-color: #2A2A2A;
+        }
+
+        .ticket-item.active {
+            background-color: #333333;
+            border-left: 4px solid var(--color-gold-accent);
+        }
+
+        .ticket-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .ticket-subject {
+            font-weight: bold;
+            color: var(--color-text-light);
+        }
+        
+        .ticket-status {
+            font-size: 12px;
+            color: var(--color-warning);
+        }
+        
+        .ticket-preview {
+            font-size: 12px;
+            color: var(--color-text-fade);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Message Area (Reused Chat Styles) */
+        .message-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            background-color: #2A2A2A;
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #444;
+            color: var(--color-info);
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+        
+        /* Admin is sending (User is receiving) */
+        .admin-message { 
+            background-color: var(--color-positive);
+            color: var(--color-white);
+            align-self: flex-end; 
+            border-bottom-right-radius: 0;
+        }
+        
+        /* User is sending (Admin is receiving) */
+        .user-message {
+            background-color: #444444;
+            color: var(--color-text-light);
+            align-self: flex-start; 
+            border-bottom-left-radius: 0;
+        }
+        
+        .message-time {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            color: #AAAAAA;
+            text-align: right;
+        }
+
+        .user-message .message-time {
+             text-align: left;
+        }
+        
+        .chat-input {
+            padding: 15px 20px;
+            border-top: 1px solid #444;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid #555;
+            color: var(--color-white);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .chat-input button {
+            padding: 10px 15px;
+            background-color: var(--color-info);
+            color: var(--color-white);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    <link rel="stylesheet" href="../mobile-responsive.css">
+</head>
+<body>
+
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo-section">
+                <div class="admin-logo-title">ADMIN PANEL</div>
+                <div class="admin-logo-sub">YLG BULLION PLATFORM</div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin.html" class="admin-nav-item"><i class="fas fa-gauge-high"></i> Dashboard</a>
+                <a href="admin-users.html" class="admin-nav-item"><i class="fas fa-users"></i> User Management</a>
+                <a href="admin-trades.html" class="admin-nav-item"><i class="fas fa-hand-holding-usd"></i> Trades & Orders</a>
+                <a href="admin-finance.html" class="admin-nav-item"><i class="fas fa-money-bill-transfer"></i> Finance & KYC</a>
+                <a href="admin-reports.html" class="admin-nav-item"><i class="fas fa-chart-bar"></i> Reporting</a>
+                <a href="admin-settings.html" class="admin-nav-item"><i class="fas fa-cogs"></i> System Settings</a>
+                <a href="admin-chat.html" class="admin-nav-item active"><i class="fas fa-comment-dots"></i> Live Chat Inbox</a> 
+            </nav>
+            </aside>
+
+        <main class="admin-main-content">
+            <header class="admin-header">
+                <h1>Live Chat Inbox</h1>
+                <p>Manage and respond to user support requests (5 Active Tickets)</p>
+            </header>
+            
+            <section class="inbox-layout">
+                <div class="ticket-list">
+                    <div class="ticket-item active">
+                        <div class="ticket-info">
+                            <span class="ticket-subject">#4567 - Mg Mg (ID: 10015)</span>
+                            <span class="ticket-status" style="color: var(--color-warning);">Open</span>
+                        </div>
+                        <div class="ticket-preview">Withdrawal status still pending...</div>
+                    </div>
+                    
+                    <div class="ticket-item">
+                        <div class="ticket-info">
+                            <span class="ticket-subject">#4568 - Aung Aung (ID: 10016)</span>
+                            <span class="ticket-status" style="color: var(--color-positive);">Resolved</span>
+                        </div>
+                        <div class="ticket-preview">Thank you for confirming KYC...</div>
+                    </div>
+                    
+                    <div class="ticket-item">
+                        <div class="ticket-info">
+                            <span class="ticket-subject">#4569 - Htet Hlaing (ID: 10017)</span>
+                            <span class="ticket-status" style="color: var(--color-warning);">New</span>
+                        </div>
+                        <div class="ticket-preview">Cannot place limit order...</div>
+                    </div>
+                    
+                </div>
+                
+                <div class="message-area">
+                    <div class="chat-header">
+                        Currently Chatting with: #4567 - Mg Mg (Topic: Withdrawal Issue)
+                    </div>
+                    
+                    <div class="chat-messages" id="admin-chat-messages">
+                        <div class="message user-message">
+                            I initiated a withdrawal yesterday, but the status is still pending. Can you check?
+                            <span class="message-time">11:37 PM</span>
+                        </div>
+                        
+                        <div class="message admin-message">
+                            Please provide your User ID. I will verify the status immediately.
+                            <span class="message-time">11:40 PM</span>
+                        </div>
+                        
+                        <div class="message user-message">
+                            My User ID is 10015. Thank you!
+                            <span class="message-time">11:41 PM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <input type="text" placeholder="Reply to Mg Mg...">
+                        <button><i class="fas fa-paper-plane"></i> Send Reply</button>
+                        <button style="background-color: var(--color-positive);"><i class="fas fa-check"></i> Close Ticket</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
