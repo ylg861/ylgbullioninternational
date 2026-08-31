@@ -11,7 +11,7 @@ import { getAuth }        from 'https://www.gstatic.com/firebasejs/10.7.1/fireba
 import { getFirestore }   from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const firebaseConfig = {
-    apiKey:            'AIzaSyBCvOnGL0ptipChgxuCtHzviZb9DZ3MAIk',
+    apiKey:            'AIzaSyA6anucQtLirm53wiiMGJqKyGu587qjGB0',
     authDomain:        'ylg-bullion-7dac6.firebaseapp.com',
     projectId:         'ylg-bullion-7dac6',
     storageBucket:     'ylg-bullion-7dac6.firebasestorage.app',
