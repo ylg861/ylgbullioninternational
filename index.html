@@ -603,6 +603,114 @@
 
 </style>
     <link rel="stylesheet" href="mobile-responsive.css">
+    <style>
+    /* ═══════════════════════════════════════════════════════════
+       Dashboard-only: always use the mobile app-style layout
+       (top header + bottom nav), regardless of screen width.
+       Mirrors mobile-responsive.css's @media (max-width:768px)
+       "MOBILE APP-STYLE NAVIGATION" block, unconditionally.
+       ═══════════════════════════════════════════════════════════ */
+    body { padding-bottom: 0 !important; }
+
+    .sidebar { display: none !important; }
+    #user-account-chip, #side-profile-box, #sidebar-logout-btn { display: none !important; }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 14px 14px 80px !important;
+        padding-top: calc(74px + env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        min-height: 100dvh;
+    }
+
+    /* ── Fixed top header ── */
+    .mobile-top-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 500;
+        background: #1a1a1a;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
+        height: calc(62px + env(safe-area-inset-top, 0px));
+        box-sizing: border-box;
+    }
+    .mobile-left-group { display: flex; align-items: center; gap: 10px; }
+    .mobile-user-section { display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; }
+    .mobile-user-badge {
+        width: 42px; height: 42px; border-radius: 50%;
+        border: 2px solid var(--color-gold-accent, #FFD700);
+        overflow: hidden; flex-shrink: 0; background: #111;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .mobile-user-badge img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mobile-user-info { display: flex; flex-direction: column; gap: 3px; }
+    .mobile-user-name { font-size: 14px; font-weight: 700; color: #EDF0F7; line-height: 1.2; margin-bottom: 2px; }
+    .mobile-uid-row { display: flex; align-items: center; gap: 5px; color: var(--color-gold-accent, #FFD700); font-size: 12px; font-weight: 500; }
+    .mobile-copy-btn { background: none; border: none; color: var(--color-gold-accent, #FFD700); cursor: pointer; padding: 0 2px; font-size: 12px; min-height: auto !important; line-height: 1; }
+    .mobile-header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .mobile-hdr-btn {
+        width: 34px; height: 34px; min-height: 34px !important; border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07); border: none; color: #bbb;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 15px; text-decoration: none;
+        transition: background 0.2s, color 0.2s; position: relative;
+    }
+    .mobile-hdr-btn:hover, .mobile-hdr-btn:active { background: rgba(255, 215, 0, 0.12); color: var(--color-gold-accent, #FFD700); }
+
+    .mobile-lang-dropdown {
+        position: fixed; top: calc(64px + env(safe-area-inset-top, 0px)); right: 16px;
+        background: #252525; border: 1px solid #3a3a3a; border-radius: 10px;
+        overflow: hidden; z-index: 800; min-width: 155px; display: none;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    }
+    .mobile-lang-dropdown.open { display: block; }
+    .mobile-lang-dropdown .mlang-item { padding: 12px 16px; color: #ddd; cursor: pointer; font-size: 14px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 10px; min-height: 40px !important; transition: background 0.15s; }
+    .mobile-lang-dropdown .mlang-item:last-child { border-bottom: none; }
+    .mobile-lang-dropdown .mlang-item:hover { background: rgba(255, 215, 0, 0.08); color: #fff; }
+
+    /* ── Fixed bottom nav ── */
+    .mobile-bottom-nav {
+        display: flex !important;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 500;
+        background: #1a1a1a;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .mbn-item {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 10px 0 8px; color: #555; text-decoration: none; background: none; border: none;
+        cursor: pointer; font-size: 10px; font-family: inherit; gap: 5px; transition: color 0.2s;
+        min-height: auto !important;
+    }
+    .mbn-item i { font-size: 20px; display: block; }
+    .mbn-item span { display: block; font-weight: 500; }
+    .mbn-item.active { color: #00C853; }
+    .mbn-item:not(.active):hover { color: #aaa; }
+
+    /* ── Assets slide-up panel ── */
+    .assets-panel-handle { width: 40px; height: 4px; background: #3a3a3a; border-radius: 2px; margin: 0 auto 18px; }
+    .assets-panel-title { font-size: 16px; font-weight: 700; color: #EDF0F7; margin-bottom: 20px; padding: 0 4px; }
+    .assets-panel-list { display: flex; flex-direction: column; gap: 4px; }
+    .assets-list-item {
+        display: flex; align-items: center; gap: 14px; padding: 15px 16px;
+        background: #252525; border-radius: 12px; color: #ddd; text-decoration: none;
+        font-size: 15px; font-weight: 500; border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.15s, color 0.15s;
+    }
+    .assets-list-item > i:first-child { font-size: 18px; color: var(--color-gold-accent, #FFD700); width: 22px; text-align: center; flex-shrink: 0; }
+    .assets-list-item span { flex: 1; }
+    .ap-arrow { font-size: 12px; color: #555; flex-shrink: 0; }
+    .assets-list-item:hover, .assets-list-item:active { background: rgba(255, 215, 0, 0.08); color: #fff; border-color: rgba(255, 215, 0, 0.15); }
+    .assets-list-item:hover .ap-arrow, .assets-list-item:active .ap-arrow { color: var(--color-gold-accent, #FFD700); }
+    </style>
 <script src="/pwa-register.js" defer></script>
     <link rel="stylesheet" href="/skeleton.css">
 </head>
