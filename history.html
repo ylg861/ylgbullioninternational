@@ -1,206 +1,433 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="my">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trade History - YLG Bullion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
         :root {
-            --color-dark-bg: #111111;
-            --color-medium-dark: #1A1A1A;
-            --color-gold-accent: #FFD700;
-            --color-text-light: #E0E0E0;
-            --color-text-fade: #A0A0A0;
+            --gold: #C9A84C; --gold-light: #FFD700;
+            --bg: #0e0e0e; --card: #141414; --border: rgba(255,255,255,0.06);
+            --text: #E8E8E8; --muted: #6B7280; --green: #22c55e; --red: #ef4444;
         }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--color-dark-bg); color: var(--color-text-light); margin: 0; display: flex; }
-        .sidebar { width: 260px; min-height: 100vh; background-color: var(--color-medium-dark); display: flex; flex-direction: column; position: fixed; z-index: 1000; border-right: 1px solid #333; }
-        .logo-section { padding: 20px; border-bottom: 1px solid #3A3A3A; display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--color-gold-accent); object-fit: cover; }
-        .logo-y-text { font-size: 24px; font-weight: 800; color: var(--color-gold-accent); line-height: 1; }
-        .logo-subtext { font-size: 16px; font-weight: 700; color: #FFFFFF; letter-spacing: 1px; }
-        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
-        .nav-item { display: flex; align-items: center; padding: 15px 20px; color: var(--color-text-fade); text-decoration: none; transition: 0.3s; }
-        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
-        .nav-item:hover, .nav-item.active { background-color: #252525; color: white; border-left: 4px solid var(--color-gold-accent); }
-        .side-profile { padding: 20px; border-top: 1px solid #333; display: none; }
-        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 20px; box-sizing: border-box; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        
-        /* Table & History Card */
-        .history-card { background: var(--color-medium-dark); padding: 25px; border-radius: 12px; border: 1px solid #333; margin-top: 25px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; color: var(--color-gold-accent); padding: 15px; border-bottom: 1px solid #333; }
-        td { padding: 15px; border-bottom: 1px solid #222; font-size: 14px; }
-        .win { color: #00B050; font-weight: bold; }
-        .loss { color: #D93025; font-weight: bold; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Outfit', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; }
 
-        /* á€–á€¯á€”á€ºá€¸á€™á€¾á€¬ á€¡á€•á€¼á€Šá€·á€ºá€•á€±á€«á€ºá€¡á€±á€¬á€„á€º á€•á€¼á€„á€ºá€†á€„á€ºá€á€»á€€á€º */
+        /* Sidebar */
+        .sidebar { width: 260px; min-height: 100vh; background: #111; display: flex; flex-direction: column; position: fixed; z-index: 1000; border-right: 1px solid var(--border); }
+        .logo-section { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); flex-shrink: 0; }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text  { font-size: 20px; font-weight: 800; color: var(--gold); display: block; letter-spacing: 0.5px; }
+        .logo-subtext { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 2px; display: block; margin-top: 2px; }
+        .logo-company { font-size: 9px; color: var(--muted); display: block; margin-top: 3px; letter-spacing: 0.6px; }
+        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
+        .nav-item { display: flex; align-items: center; padding: 14px 20px; color: var(--muted); text-decoration: none; transition: 0.2s; font-size: 14px; font-weight: 500; gap: 12px; }
+        .nav-item i { width: 18px; text-align: center; font-size: 14px; }
+        .nav-item:hover, .nav-item.active { background: rgba(201,168,76,0.07); color: #fff; border-left: 3px solid var(--gold); padding-left: 17px; }
+
+        /* Main */
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 28px 24px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 28px; }
+        header h2 { margin: 0; font-size: 22px; font-weight: 700; }
+
+        /* Stats Strip */
+        .stats-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+        .stat-card .sc-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .sc-value { font-size: 20px; font-weight: 700; }
+
+        /* Filter Tabs */
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+        .ftab { padding: 7px 18px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; transition: 0.2s; }
+        .ftab.active { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.35); color: var(--gold); }
+        .ftab:hover:not(.active) { border-color: rgba(255,255,255,0.15); color: var(--text); }
+
+        /* Table */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        thead th { padding: 14px 18px; text-align: left; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+        tbody tr { transition: background 0.15s; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        tbody td { padding: 15px 18px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        tbody tr:last-child td { border-bottom: none; }
+
+        .pair-cell { display: flex; align-items: center; gap: 10px; }
+        .pair-icon { width: 34px; height: 34px; background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--gold); flex-shrink: 0; }
+        .pair-name { font-weight: 600; font-size: 14px; }
+        .pair-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+        .chip-win  { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+        .chip-loss { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+
+        .empty-state { text-align: center; padding: 64px 20px; }
+        .empty-state i { font-size: 40px; color: #333; margin-bottom: 14px; display: block; }
+        .empty-state p { color: var(--muted); font-size: 14px; }
+
+        /* ── Toolbar (filters + export) ── */
+        .history-toolbar {
+            display: flex; align-items: center; flex-wrap: wrap;
+            gap: 10px; margin-bottom: 14px;
+        }
+        .date-group {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 10px; padding: 6px 12px;
+        }
+        .date-group label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+        .date-group input[type="date"] {
+            background: transparent; border: none; color: var(--text);
+            font-size: 13px; font-family: inherit; cursor: pointer;
+            outline: none; padding: 0;
+        }
+        .date-group input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+        .date-sep { color: var(--muted); font-size: 12px; }
+        .btn-export {
+            margin-left: auto;
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 8px 16px; border-radius: 10px;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.3);
+            color: var(--gold); font-size: 13px; font-weight: 600;
+            cursor: pointer; font-family: inherit;
+            transition: background 0.18s;
+        }
+        .btn-export:hover { background: rgba(201,168,76,0.18); }
+        .btn-clear-date {
+            background: none; border: none; color: var(--muted);
+            cursor: pointer; font-size: 12px; padding: 0 2px;
+            transition: color 0.15s;
+        }
+        .btn-clear-date:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .history-toolbar { flex-direction: column; align-items: stretch; }
+            .date-group { justify-content: space-between; }
+            .btn-export { margin-left: 0; justify-content: center; }
+        }
+
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar { width: 100%; min-height: auto; position: relative; border-right: none; }
-            .sidebar nav { flex-direction: row; flex-wrap: wrap; justify-content: space-around; }
-            .main-content { margin-left: 0; width: 100%; padding: 15px; }
-            .nav-item { padding: 12px 10px; font-size: 12px; border-left: none !important; }
-            .nav-item.active { border-bottom: 3px solid var(--color-gold-accent); }
-            
-            /* Table á€€á€­á€¯ Card á€¡á€–á€¼á€…á€ºá€•á€¼á€±á€¬á€„á€ºá€¸á€œá€²á€á€¼á€„á€ºá€¸ */
-            .history-card { padding: 10px; overflow-x: visible; }
-            thead { display: none; } /* Table á€á€±á€«á€„á€ºá€¸á€…á€‰á€ºá€€á€­á€¯ á€–á€»á€±á€¬á€€á€ºá€™á€šá€º */
-            tr { 
-                display: block; 
-                margin-bottom: 15px; 
-                border: 1px solid #333; 
-                border-radius: 8px; 
-                padding: 10px; 
-                background: #222;
-            }
-            td { 
-                display: flex; 
-                justify-content: space-between; 
-                padding: 10px 5px; 
-                border-bottom: 1px solid #333; 
-                text-align: right; 
-                font-size: 13px;
-            }
-            td:last-child { border-bottom: none; }
-            
-            /* á€á€±á€«á€„á€ºá€¸á€…á€‰á€ºá€œá€±á€¸á€á€½á€± á€•á€¼á€”á€ºá€•á€±á€«á€ºá€¡á€±á€¬á€„á€º á€œá€¯á€•á€ºá€á€¼á€„á€ºá€¸ */
-            td::before {
-                content: attr(data-label);
-                float: left;
-                font-weight: bold;
-                color: var(--color-gold-accent);
-                text-transform: uppercase;
-                font-size: 11px;
-            }
+            .sidebar { width: 100%; min-height: auto; position: relative; border-right: none; display: none; }
+            .main-content { margin-left: 0; width: 100%; padding: 16px 14px 90px; }
+            .stats-strip { grid-template-columns: repeat(3, 1fr); }
+            .stats-strip .stat-card:nth-child(4), .stats-strip .stat-card:nth-child(5) { display: none; }
+            thead { display: none; }
+            tbody tr { display: block; margin: 0; border-bottom: 1px solid var(--border) !important; }
+            tbody td { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: none !important; font-size: 13px; }
+            tbody td::before { content: attr(data-label); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; }
+            .pair-cell { flex-direction: row; }
+            .table-wrap { border-radius: 12px; }
         }
     </style>
     <link rel="stylesheet" href="mobile-responsive.css">
+    <script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
 
     <aside class="sidebar">
         <div class="logo-section">
-            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
             <div class="logo-text-group">
                 <div class="logo-y-text">YLG</div>
                 <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
             </div>
         </div>
         <nav>
-            <a href="index.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="trading.html" class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
-            <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
-            <a href="history.html" class="nav-item active"><i class="fas fa-history"></i> History</a>
-            <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="index.html"    class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html"  class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
+            <a href="portfolio.html"class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="history.html"  class="nav-item active"><i class="fas fa-history"></i> History</a>
+            <a href="wallet.html"   class="nav-item"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="kyc.html"      class="nav-item"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="chat-user.html"class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
         </nav>
-        <div id="side-profile-box" class="side-profile">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-user-circle" style="font-size: 24px; color: var(--color-gold-accent);"></i>
-                <span id="side-user-name" style="font-size: 12px; font-weight: bold;">User</span>
-            </div>
-        </div>
     </aside>
 
     <main class="main-content">
         <header>
             <h2 id="page-title">Trade History</h2>
-            <div id="head-user-display" style="color:var(--color-gold-accent); font-size: 13px;">Guest Mode</div>
         </header>
 
-        <div class="history-card">
+        <!-- Stats -->
+        <div class="stats-strip">
+            <div class="stat-card">
+                <div class="sc-label" id="lbl-total">Total Trades</div>
+                <div class="sc-value" id="stat-total" style="color:#fff;">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label" id="lbl-wins">Wins</div>
+                <div class="sc-value" id="stat-wins" style="color:var(--green);">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label" id="lbl-losses">Losses</div>
+                <div class="sc-value" id="stat-losses" style="color:var(--red);">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label" id="lbl-winrate">Win Rate</div>
+                <div class="sc-value" id="stat-winrate">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="sc-label" id="lbl-pl">P / L</div>
+                <div class="sc-value" id="stat-pl">—</div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs + Date Range + Export -->
+        <div class="filter-tabs">
+            <button class="ftab active" id="ftab-all"  onclick="setFilter('all')">All</button>
+            <button class="ftab"        id="ftab-win"  onclick="setFilter('win')">WIN</button>
+            <button class="ftab"        id="ftab-loss" onclick="setFilter('loss')">LOSS</button>
+        </div>
+
+        <div class="history-toolbar">
+            <div class="date-group">
+                <label id="lbl-from">From</label>
+                <input type="date" id="filter-from" onchange="renderRows()">
+                <span class="date-sep">–</span>
+                <label id="lbl-to">To</label>
+                <input type="date" id="filter-to" onchange="renderRows()">
+                <button class="btn-clear-date" onclick="clearDateFilter()" title="Clear dates"><i class="fas fa-times"></i></button>
+            </div>
+            <button class="btn-export" onclick="exportCSV()">
+                <i class="fas fa-download"></i>
+                <span id="lbl-export">Export CSV</span>
+            </button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
             <table>
                 <thead>
-                    <tr id="table-head">
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Status</th>
+                    <tr>
+                        <th id="th-trade">Trade</th>
+                        <th id="th-type">Type</th>
+                        <th id="th-amount">Amount</th>
+                        <th id="th-result">Result</th>
                     </tr>
                 </thead>
                 <tbody id="history-body">
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: #555; padding: 40px;">Loading history...</td>
-                    </tr>
+                    <tr><td colspan="4"><div class="empty-state"><i class="fas fa-circle-notch fa-spin"></i><p>Loading...</p></div></td></tr>
                 </tbody>
             </table>
         </div>
     </main>
 
     <script type="module">
-        import { app } from './firebase-init.js';
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { app, auth, db } from './firebase-init.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Language settings á€€á€­á€¯ JS á€€á€”á€± á€œá€¾á€™á€ºá€¸á€šá€°á€–á€­á€¯á€·
+        let allTrades = [];
+        let currentFilter = 'all';
         let currentLang = localStorage.getItem('selectedLang') || 'en';
-        const labels = {
-            'en': ["Date", "Type", "Amount", "Status"],
-            'mm': ["á€›á€€á€ºá€…á€½á€²", "á€¡á€™á€»á€­á€¯á€¸á€¡á€…á€¬á€¸", "á€•á€™á€¬á€", "á€¡á€á€¼á€±á€¡á€”á€±"],
-            'th': ["à¸§à¸±à¸™à¸—à¸µà¹ˆ", "à¸›à¸£à¸°à¹€à¸ à¸—", "à¸ˆà¸³à¸™à¸§à¸™", "à¸ªà¸–à¸²à¸™à¸°"]
+
+        const colLabels = {
+            en: ['Trade', 'Type', 'Amount', 'Result'],
+            mm: ['ကုန်သွယ်မှု', 'အမျိုးအစား', 'ပမာဏ', 'ရလဒ်'],
+            th: ['การเทรด', 'ประเภท', 'จำนวน', 'ผลลัพธ์']
         };
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const fullName = localStorage.getItem('userName') || user.displayName || 'Member';
-                document.getElementById('head-user-display').innerText = "Account: " + fullName;
-                document.getElementById('side-user-name').innerText = fullName;
-                document.getElementById('side-profile-box').style.display = 'block';
+        window.setFilter = function(f) {
+            currentFilter = f;
+            ['all','win','loss'].forEach(k => document.getElementById('ftab-'+k).classList.toggle('active', k === f));
+            renderRows();
+        };
 
-                const q = query(collection(db, "users", user.uid, "trades"), orderBy("timestamp", "desc"));
-                onSnapshot(q, (snapshot) => {
-                    const tbody = document.getElementById('history-body');
-                    tbody.innerHTML = "";
-                    
-                    if (snapshot.empty) {
-                        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #555; padding: 40px;">No trade history found.</td></tr>`;
-                        return;
+        window.clearDateFilter = function() {
+            document.getElementById('filter-from').value = '';
+            document.getElementById('filter-to').value   = '';
+            renderRows();
+        };
+
+        function getFilteredTrades() {
+            const fromVal = document.getElementById('filter-from').value;
+            const toVal   = document.getElementById('filter-to').value;
+            const from    = fromVal ? new Date(fromVal + 'T00:00:00') : null;
+            const to      = toVal   ? new Date(toVal   + 'T23:59:59') : null;
+
+            return allTrades.filter(t => {
+                if (currentFilter === 'win'  && t.result !== 'WIN') return false;
+                if (currentFilter === 'loss' && t.result === 'WIN') return false;
+                if (from || to) {
+                    let tDate = null;
+                    if (t.timestamp && typeof t.timestamp.toDate === 'function') {
+                        tDate = t.timestamp.toDate();
+                    } else if (t.date) {
+                        tDate = new Date(t.date);
                     }
+                    if (tDate) {
+                        if (from && tDate < from) return false;
+                        if (to   && tDate > to)   return false;
+                    }
+                }
+                return true;
+            });
+        }
 
-                    snapshot.forEach((doc) => {
-                        const trade = doc.data();
-                        let statusHTML = "";
-                        if (trade.result === "WIN") {
-                            const profit = (trade.payout || 0) - (trade.amount || 0);
-                            statusHTML = `<span class="win">+$${profit.toFixed(2)}</span>`;
-                        } else {
-                            statusHTML = `<span class="loss">-$${(trade.amount || 0).toFixed(2)}</span>`;
-                        }
+        window.exportCSV = function() {
+            const rows = getFilteredTrades();
+            if (!rows.length) return;
+            const header = ['Date','Pair','Type','Amount','Payout','Result','P/L'];
+            const lines  = rows.map(t => {
+                const isWin = t.result === 'WIN';
+                const pl    = isWin ? ((t.payout||0)-(t.amount||0)).toFixed(2) : (-t.amount||0).toFixed(2);
+                const date  = t.date || (t.timestamp && typeof t.timestamp.toDate === 'function' ? t.timestamp.toDate().toLocaleDateString() : '—');
+                return [date, t.pair||'XAU/USD', t.type||'—',
+                        (t.amount||0).toFixed(2), (t.payout||0).toFixed(2),
+                        t.result||'—', pl].join(',');
+            });
+            const csv  = [header.join(','), ...lines].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href = url; a.download = 'ylg-trade-history.csv';
+            a.click(); URL.revokeObjectURL(url);
+        };
 
-                        const row = `
-                            <tr>
-                                <td data-label="${labels[currentLang][0]}">${trade.date || 'N/A'}</td>
-                                <td data-label="${labels[currentLang][1]}">${trade.type}</td>
-                                <td data-label="${labels[currentLang][2]}">$${(trade.amount || 0).toLocaleString()}</td>
-                                <td data-label="${labels[currentLang][3]}">${statusHTML}</td>
-                            </tr>
-                        `;
-                        tbody.innerHTML += row;
-                    });
-                });
-            } else {
-                window.location.href = "login.html";
+        function renderRows() {
+            const tbody    = document.getElementById('history-body');
+            const filtered = getFilteredTrades();
+
+            if (!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><i class="fas fa-inbox"></i><p>No trades found.</p></div></td></tr>`;
+                return;
             }
+
+            const lang = currentLang;
+            const labs = colLabels[lang] || colLabels.en;
+            tbody.innerHTML = filtered.map(t => {
+                const isWin = t.result === 'WIN';
+                const pl = isWin ? '+$' + ((t.payout||0)-(t.amount||0)).toFixed(2) : '-$' + (t.amount||0).toFixed(2);
+                const chip = isWin
+                    ? `<span class="chip-win"><i class="fas fa-check-circle"></i> WIN &nbsp;${pl}</span>`
+                    : `<span class="chip-loss"><i class="fas fa-times-circle"></i> LOSS &nbsp;${pl}</span>`;
+                return `<tr>
+                    <td data-label="${labs[0]}">
+                        <div class="pair-cell">
+                            <div class="pair-icon"><i class="fas fa-chart-bar"></i></div>
+                            <div>
+                                <div class="pair-name">${t.pair || 'XAU/USD'}</div>
+                                <div class="pair-date">${t.date || '—'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td data-label="${labs[1]}">${t.type || '—'}</td>
+                    <td data-label="${labs[2]}">$${(t.amount||0).toLocaleString()}</td>
+                    <td data-label="${labs[3]}">${chip}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            localStorage.setItem('userShortUID', user.uid.slice(0, 8).toUpperCase());
+
+            const q = query(collection(db, 'users', user.uid, 'trades'), orderBy('timestamp', 'desc'));
+            onSnapshot(q, (snap) => {
+                allTrades = [];
+                snap.forEach(d => allTrades.push(d.data()));
+
+                if (snap.empty) {
+                    document.getElementById('history-body').innerHTML =
+                        `<tr><td colspan="4"><div class="empty-state"><i class="fas fa-inbox"></i><p>No trade history yet. Start trading to see your history.</p></div></td></tr>`;
+                    ['stat-total','stat-wins','stat-losses','stat-winrate','stat-pl'].forEach(id => { const e = document.getElementById(id); if(e) e.textContent='0'; });
+                    return;
+                }
+
+                let wins=0, losses=0, pl=0;
+                allTrades.forEach(t => {
+                    if (t.result === 'WIN') { wins++; pl += (t.payout||0)-(t.amount||0); }
+                    else { losses++; pl -= (t.amount||0); }
+                });
+                const total = allTrades.length;
+                const wr = Math.round((wins/total)*100);
+
+                const s = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+                s('stat-total',   total);
+                s('stat-wins',    wins);
+                s('stat-losses',  losses);
+                s('stat-winrate', wr + '%');
+                s('stat-pl',      (pl >= 0 ? '+$' : '-$') + Math.abs(pl).toFixed(2));
+
+                const wrEl = document.getElementById('stat-winrate');
+                const plEl = document.getElementById('stat-pl');
+                if (wrEl) wrEl.style.color = wr >= 50 ? 'var(--green)' : 'var(--red)';
+                if (plEl) plEl.style.color  = pl >= 0  ? 'var(--green)' : 'var(--red)';
+
+                renderRows();
+            });
         });
 
-        function applyHistoryLanguage(lang) {
-            const texts = {
-                'en': { nav: ["Dashboard", "Trading", "Portfolio", "History", "Wallet"], title: "Trade History", table: ["Date", "Type", "Amount", "Status"] },
-                'mm': { nav: ["ဒက်ရှ်ဘုတ်", "ရောင်းဝယ်ရေး", "ပိုင်ဆိုင်မှု", "သမိုင်း", "ငွေထည်"], title: "ကုန်သွယ်မှု သမိုင်း", table: ["ရက်စွဲ", "အမျိုးအစား", "ပမာဏ", "အခြေအနေ"] },
-                'th': { nav: ["แดชบอร์ด", "การซื้อขาย", "พอร์ตโฟลิโอ", "ประวัติ", "กระเป๋าสตางค์"], title: "ประวัติการเทรด", table: ["วันที่", "ประเภท", "จำนวน", "สถานะ"] }
+        window.applyHistoryLanguage = function(lang) {
+            currentLang = lang;
+            const T = {
+                en: { title: 'Trade History', total: 'Total Trades', wins: 'Wins', losses: 'Losses', winrate: 'Win Rate', pl: 'P / L',
+                      all: 'All', cols: colLabels.en, from: 'From', to: 'To', export: 'Export CSV',
+                      nav: ['Dashboard','Trading','Portfolio','History','Wallet','KYC','Live Support'] },
+                mm: { title: 'ကုန်သွယ်မှု မှတ်တမ်း', total: 'ကုန်သွယ်မှု', wins: 'အနိုင်', losses: 'အရှုံး', winrate: 'အနိုင်နှုန်း', pl: 'အမြတ်/အရှုံး',
+                      all: 'အားလုံး', cols: colLabels.mm, from: 'မှ', to: 'ထိ', export: 'CSV ထုတ်ရန်',
+                      nav: ['ပင်မစာမျက်နှာ','ရွှေရောင်းဝယ်မှု','ပိုင်ဆိုင်မှုစာရင်း','အရောင်းအဝယ်မှတ်တမ်း','ကျွန်ုပ်၏ ပိုက်ဆံအိတ်','KYC စစ်ဆေးခြင်း','တိုက်ရိုက် အထောက်အပံ့'] },
+                th: { title: 'ประวัติการเทรด', total: 'เทรดทั้งหมด', wins: 'ชนะ', losses: 'แพ้', winrate: 'อัตราชนะ', pl: 'กำไร/ขาดทุน',
+                      all: 'ทั้งหมด', cols: colLabels.th, from: 'จาก', to: 'ถึง', export: 'ส่งออก CSV',
+                      nav: ['แดชบอร์ด','การซื้อขาย','พอร์ตโฟลิโอ','ประวัติ','กระเป๋าสตางค์','KYC','สนับสนุนสด'] }
             };
-            const navItems = document.querySelectorAll('.nav-item');
-            const icons = ["fa-th-large", "fa-chart-line", "fa-briefcase", "fa-history", "fa-wallet"];
-            navItems.forEach((item, i) => { if(item && texts[lang].nav[i]) item.innerHTML = `<i class="fas ${icons[i]}"></i> ${texts[lang].nav[i]}`; });
-            document.getElementById('page-title').innerText = texts[lang].title;
-            const ths = document.querySelectorAll('thead th');
-            ths.forEach((th, i) => { if(th) th.innerText = texts[lang].table[i]; });
-        }
+            const t = T[lang] || T.en;
+            const icons = ['fa-th-large','fa-chart-line','fa-briefcase','fa-history','fa-wallet','fa-user-check','fa-headset'];
+            document.querySelectorAll('.nav-item').forEach((item, i) => {
+                if (t.nav[i]) item.innerHTML = `<i class="fas ${icons[i]}"></i> ${t.nav[i]}`;
+            });
+            const s = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+            s('page-title', t.title);
+            s('lbl-total',   t.total);  s('lbl-wins',    t.wins);
+            s('lbl-losses',  t.losses); s('lbl-winrate', t.winrate);
+            s('lbl-pl',      t.pl);
+            s('ftab-all',    t.all);
+            s('lbl-from',   t.from);  s('lbl-to',    t.to);
+            s('lbl-export', t.export);
+            s('th-trade', t.cols[0]); s('th-type',   t.cols[1]);
+            s('th-amount', t.cols[2]); s('th-result', t.cols[3]);
+            renderRows();
+        };
         applyHistoryLanguage(currentLang);
     </script>
+
+    <script>
+    /* ═══ YLG Language Sync — v2 ═══ */
+    (function(){
+        function triggerApply(lang){
+            const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                         'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                         'applyTradingLanguage','applyAccountLanguage','applyLang'];
+            for (const fn of fns) {
+                if (typeof window[fn] === 'function') try { window[fn](lang); } catch(e) {}
+            }
+        }
+        window.addEventListener('storage', e => { if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue); });
+        function init(){ triggerApply(localStorage.getItem('selectedLang') || 'en'); }
+        if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', () => setTimeout(init, 50));
+        else setTimeout(init, 50);
+        setTimeout(init, 500); setTimeout(init, 1500);
+    })();
+    </script>
+
+    <script src="mobile-nav.js"></script>
+    <script src="sidebar-user.js"></script>
+    <script src="/toast.js"></script>
+<script type="module" src="notifications-bell.js"></script>
 </body>
 </html>

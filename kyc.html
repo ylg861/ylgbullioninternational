@@ -1,11 +1,22 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="my">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KYC Verification - YLG Bullion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
         :root {
             --color-dark-bg: #111111;
@@ -121,9 +132,12 @@
         .kyc-container { margin-top: 25px; }
         
         .kyc-header {
-            background: linear-gradient(135deg, #2A2A2A 0%, #1A1A1A 100%);
-            padding: 30px; border-radius: 12px; border-left: 4px solid var(--color-gold-accent);
+            background: linear-gradient(135deg, #1a1610 0%, #141414 60%, #0e0e0e 100%);
+            padding: 28px 30px; border-radius: 16px;
+            border: 1px solid rgba(201,168,76,0.2);
+            border-left: 4px solid var(--color-gold-accent);
             margin-bottom: 25px;
+            box-shadow: 0 0 30px rgba(201,168,76,0.05);
         }
         
         .kyc-header h2 {
@@ -141,8 +155,9 @@
         }
         
         .kyc-card {
-            background: var(--color-medium-dark);
-            padding: 30px; border-radius: 12px; border: 1px solid #333;
+            background: #141414;
+            padding: 30px; border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
         }
         
         .form-section {
@@ -183,11 +198,11 @@
         }
 
         .upload-area {
-            border: 2px dashed #555; padding: 30px 20px; text-align: center;
-            border-radius: 12px; cursor: pointer; transition: 0.3s;
+            border: 2px dashed rgba(255,255,255,0.12); padding: 30px 20px; text-align: center;
+            border-radius: 14px; cursor: pointer; transition: 0.3s;
             position: relative; min-height: 200px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: #1a1a1a;
+            background: rgba(255,255,255,0.02);
         }
         
         .upload-area:hover { 
@@ -217,15 +232,27 @@
         }
     </style>
     <link rel="stylesheet" href="mobile-responsive.css">
+<style>
+        /* 3-line logo */
+        .logo-section { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold, #C9A84C); flex-shrink: 0; }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text    { font-size: 20px !important; font-weight: 800 !important; color: var(--gold, #C9A84C) !important; display: block !important; letter-spacing: 0.5px !important; }
+        .logo-subtext   { font-size: 11px !important; font-weight: 700 !important; color: #fff !important; letter-spacing: 2px !important; display: block !important; margin-top: 2px !important; }
+        .logo-company   { font-size: 9px !important; color: var(--muted, #7A8196) !important; display: block !important; margin-top: 3px !important; letter-spacing: 0.6px !important; }
+    </style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
 
     <aside class="sidebar">
         <div class="logo-section">
-            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
             <div class="logo-text-group">
                 <div class="logo-y-text">YLG</div>
                 <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
             </div>
         </div>
         <nav>
@@ -235,46 +262,27 @@
             <a href="history.html" class="nav-item"><i class="fas fa-history"></i> History</a>
             <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> Wallet</a>
             <a href="kyc.html" class="nav-item active"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="chat-user.html" class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
         </nav>
-        <div id="side-profile-box" class="side-profile">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-user-circle" style="font-size: 24px; color: var(--color-gold-accent);"></i>
-                <span id="side-user-name" style="font-size: 12px; font-weight: bold;">User</span>
-            </div>
-        </div>
     </aside>
 
     <main class="main-content">
         <header>
             <h2 id="pageTitle" style="margin:0;">KYC Verification</h2>
-            <div style="display: flex; align-items: center; gap: 14px;">
-                <div id="head-user-display" style="color:var(--color-gold-accent); font-size: 13px;">Guest Mode</div>
-                <div class="lang-switcher">
-                    <button class="lang-btn-trigger" onclick="toggleLangList()" type="button">
-                        <i class="fas fa-globe"></i>
-                        <span id="display-lang-name">English</span>
-                    </button>
-                    <div id="sidebar-lang-list" class="lang-list">
-                        <button type="button" onclick="handleLangChange('en')">English</button>
-                        <button type="button" onclick="handleLangChange('mm')">မြန်မာ (Myanmar)</button>
-                        <button type="button" onclick="handleLangChange('th')">ไทย (Thai)</button>
-                    </div>
-                </div>
-            </div>
         </header>
 
         <div class="kyc-container">
             <!-- KYC Header Section -->
             <div class="kyc-header">
                 <h2 id="kycTitle"><i class="fas fa-shield-alt"></i> Identity Verification</h2>
-                <p id="kycSubtitle">á€¡á€€á€±á€¬á€„á€·á€ºá€œá€¯á€¶á€á€¼á€¯á€¶á€›á€±á€¸á€¡á€á€½á€€á€º á€žá€„á€ºá á€¡á€‘á€±á€¬á€€á€ºá€¡á€‘á€¬á€¸á€™á€»á€¬á€¸á€€á€­á€¯ á€¡á€á€Šá€ºá€•á€¼á€¯ á€œá€»á€¾á€±á€¬á€€á€ºá€‘á€¬á€¸á€•á€«á‹ á€€á€­á€¯á€šá€ºá€•á€­á€¯á€„á€ºá€žá€á€„á€ºá€¸á€¡á€á€»á€€á€ºá€¡á€œá€€á€ºá€™á€»á€¬á€¸ á€œá€¯á€¶á€á€¼á€¯á€¶á€…á€½á€¬ á€€á€šá€ºá€œá€¾á€šá€ºá€‘á€¬á€¸á€•á€«á€žá€Šá€ºá‹</p>
+                <p id="kycSubtitle">Submit your identity documents for account verification. Your personal data is protected and secured.</p>
             </div>
 
             <div class="kyc-card">
                 <!-- Document Selection Section -->
                 <div class="form-section">
                     <div class="form-section-title" id="docSectionTitle">
-                        <i class="fas fa-file-contract"></i> á€¡á€‘á€±á€¬á€€á€ºá€¡á€‘á€¬á€¸ á€¡á€™á€»á€­á€¯á€¸á€¡á€…á€¬á€¸ á€›á€½á€±á€¸á€á€»á€šá€º
+                        <i class="fas fa-file-contract"></i> Select Document Type
                     </div>
                     <select id="docType" class="doc-select"></select>
                 </div>
@@ -282,10 +290,10 @@
                 <!-- Upload Section -->
                 <div class="form-section">
                     <div class="form-section-title" id="uploadSectionTitle">
-                        <i class="fas fa-image"></i> á€“á€¬á€á€ºá€•á€¯á€¶á€™á€»á€¬á€¸ á€á€„á€ºá€žá€½á€„á€ºá€¸á€á€¼á€„á€ºá€¸
+                        <i class="fas fa-image"></i> Upload Documents
                     </div>
                     <p id="uploadHelpText" style="color: var(--color-text-fade); font-size: 12px; margin-bottom: 15px;">
-                        á€›á€¾á€„á€ºá€¸á€œá€„á€ºá€¸á€•á€¼á€á€ºá€žá€¬á€¸á€žá€±á€¬ á€“á€¬á€á€ºá€•á€¯á€¶á€™á€»á€¬á€¸ á€á€„á€ºá€žá€½á€„á€ºá€¸á€•á€«á‹ á€¡á€›á€¾á€±á€·á€˜á€€á€ºá€”á€¾á€„á€·á€º á€¡á€”á€±á€¬á€€á€ºá€˜á€€á€º á€”á€¾á€…á€ºá€á€¯á€œá€¯á€¶á€¸ á€œá€­á€¯á€¡á€•á€ºá€žá€Šá€ºá‹
+                        Upload clear photos of both the front and back sides of your document.
                     </p>
                     
                     <div class="upload-grid">
@@ -293,7 +301,7 @@
                             <img id="previewFront" class="img-preview-box">
                             <div id="placeholderFront">
                                 <i class="fas fa-image" style="font-size: 40px; color: #555; margin-bottom: 10px; display: block;"></i>
-                                <p style="margin: 0; font-size: 13px; font-weight: 600;" id="textFront">ðŸ“· Front Side</p>
+                                <p style="margin: 0; font-size: 13px; font-weight: 600;" id="textFront"><i class="fas fa-camera"></i> Front Side</p>
                                 <p id="frontSubText" style="margin: 5px 0 0 0; font-size: 11px; color: #777;">Click or tap to upload</p>
                             </div>
                             <input type="file" style="display: none;" id="kycFront" accept="image/*">
@@ -303,7 +311,7 @@
                             <img id="previewBack" class="img-preview-box">
                             <div id="placeholderBack">
                                 <i class="fas fa-image" style="font-size: 40px; color: #555; margin-bottom: 10px; display: block;"></i>
-                                <p style="margin: 0; font-size: 13px; font-weight: 600;" id="textBack">ðŸ“· Back Side</p>
+                                <p style="margin: 0; font-size: 13px; font-weight: 600;" id="textBack"><i class="fas fa-camera"></i> Back Side</p>
                                 <p id="backSubText" style="margin: 5px 0 0 0; font-size: 11px; color: #777;">Click or tap to upload</p>
                             </div>
                             <input type="file" style="display: none;" id="kycBack" accept="image/*">
@@ -314,19 +322,19 @@
                 <!-- Requirements Checklist -->
                 <div class="form-section" style="background: #1a1a1a; padding: 15px; border-radius: 8px; border-left: 3px solid var(--color-gold-accent);">
                     <div id="requirementsTitle" class="form-section-title" style="margin-bottom: 12px;">
-                        <i class="fas fa-check-circle"></i> á€œá€­á€¯á€¡á€•á€ºá€žá€Šá€·á€ºá€¡á€›á€¬á€™á€»á€¬á€¸
+                        <i class="fas fa-check-circle"></i> Required Documents
                     </div>
                     <ul id="requirementsList" style="margin: 0; padding-left: 20px; color: var(--color-text-fade); font-size: 12px; line-height: 2;">
-                        <li>âœ“ á€¡á€‘á€±á€¬á€€á€ºá€¡á€‘á€¬á€¸á€™á€»á€¬á€¸á€žá€Šá€º á€›á€¾á€„á€ºá€¸á€œá€„á€ºá€¸á€•á€¼á€á€ºá€žá€¬á€¸á€á€¼á€„á€ºá€¸</li>
-                        <li>âœ“ á€¡á€›á€¾á€±á€·á€˜á€€á€ºá€”á€¾á€„á€·á€º á€¡á€”á€±á€¬á€€á€ºá€˜á€€á€º á€”á€¾á€…á€ºá€á€¯á€œá€¯á€¶á€¸ á€•á€«á€á€„á€ºá€á€¼á€„á€ºá€¸</li>
-                        <li>âœ“ á€¡á€‘á€±á€¬á€€á€ºá€¡á€‘á€¬á€¸á€™á€»á€¬á€¸ á€œá€€á€ºá€›á€¾á€­ á€¡á€žá€¯á€¶á€¸á€•á€¼á€¯á€”á€­á€¯á€„á€ºá€á€¼á€„á€ºá€¸</li>
-                        <li>âœ“ á€“á€¬á€á€ºá€•á€¯á€¶ á€¡á€›á€Šá€ºá€¡á€žá€½á€±á€¸ á€€á€±á€¬á€„á€ºá€¸á€™á€½á€”á€ºá€á€¼á€„á€ºá€¸ (JPG, PNG)</li>
+                        <li>Clear and readable document photos.</li>
+                        <li>Both front and back sides are required.</li>
+                        <li>Documents must be valid and unexpired.</li>
+                        <li>High-quality image format (JPG, PNG).</li>
                     </ul>
                 </div>
 
                 <!-- Submit Button -->
-                <button id="submitKyc" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--color-gold-accent) 0%, #FFC700 100%); border:none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; color: #000; margin-top: 25px; transition: 0.3s;">
-                    âœ“ á€¡á€á€Šá€ºá€•á€¼á€¯á€á€¼á€„á€ºá€¸ á€œá€»á€¾á€±á€¬á€€á€ºá€‘á€¬á€¸á€•á€«
+                <button id="submitKyc" style="width: 100%; padding: 16px; background: linear-gradient(135deg, #C9A84C, #FFD700); border:none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 15px; color: #000; margin-top: 25px; transition: 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-shield-alt"></i> Submit Verification
                 </button>
                 <p id="statusMsg" style="text-align:center; font-size:12px; margin-top:12px; color: var(--color-text-fade);"></p>
             </div>
@@ -334,12 +342,9 @@
     </main>
 
     <script type="module">
-        import { app } from './firebase-init.js';
-        import { getFirestore, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        import { app, auth, db } from './firebase-init.js';
+                import { doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const inputFront = document.getElementById('kycFront');
         const inputBack = document.getElementById('kycBack');
@@ -356,11 +361,10 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                localStorage.setItem('userShortUID', user.uid.slice(0, 8).toUpperCase());
                 currentUser = user;
                 const displayName = localStorage.getItem('userName') || 'Member';
                 document.getElementById('head-user-display').innerText = "Account: " + displayName;
-                document.getElementById('side-profile-box').style.display = 'block';
-                document.getElementById('side-user-name').innerText = displayName;
             } else {
                 window.location.replace("login.html");
             }
@@ -385,27 +389,27 @@
             if (list) list.style.display = 'none';
         }
 
-        function applyKycLanguage(lang) {
+        window.applyKycLanguage = function(lang) {
             const langNames = { 'en': 'English', 'mm': 'မြန်မာ', 'th': 'ไทย' };
             const displayLang = document.getElementById('display-lang-name');
             if (displayLang) displayLang.innerText = langNames[lang] || 'English';
 
             const texts = {
                 'en': {
-                    nav: ["Dashboard", "Trading", "Portfolio", "History", "Wallet", "KYC Verification"],
+                    nav: ["Dashboard", "Trading", "Portfolio", "History", "Wallet", "KYC", "Live Support"],
                     pageTitle: "KYC Verification",
                     kycTitle: "Identity Verification",
                     kycSubtitle: "Submit your identity documents for account verification. Your personal data is protected and secured.",
                     docSectionTitle: "Select Document Type",
                     docOptions: [
-                        { value: "NRC Card", label: "ðŸ†” National ID Card (NRC)" },
-                        { value: "Driving License", label: "ðŸš— Driving License" },
-                        { value: "Passport", label: "âœˆï¸ Passport" }
+                        { value: "NRC Card", label: "National ID Card (NRC)" },
+                        { value: "Driving License", label: "Driving License" },
+                        { value: "Passport", label: " Passport" }
                     ],
                     uploadSectionTitle: "Upload Documents",
                     uploadHelpText: "Upload clear photos of both the front and back sides of your document.",
-                    textFront: "ðŸ“· Front Side",
-                    textBack: "ðŸ“· Back Side",
+                    textFront: '<i class="fas fa-camera"></i> Front Side',
+                    textBack: '<i class="fas fa-camera"></i> Back Side',
                     frontSubText: "Click or tap to upload",
                     backSubText: "Click or tap to upload",
                     requirementsTitle: "Required Documents",
@@ -418,20 +422,20 @@
                     submitButton: "Submit Verification"
                 },
                 'mm': {
-                    nav: ["ဒက်ရှ်ဘုတ်", "ရောင်းဝယ်ရေး", "ပို့ဖိုလီယို", "သမိုင်း", "ငွေထည်", "KYC စစ်ဆေးခြင်း"],
+                    nav: ["ပင်မစာမျက်နှာ", "ရွှေရောင်းဝယ်မှု", "ပိုင်ဆိုင်မှုစာရင်း", "အရောင်းအဝယ်မှတ်တမ်း", "ကျွန်ုပ်၏ ပိုက်ဆံအိတ်", "KYC စစ်ဆေးခြင်း", "တိုက်ရိုက် အထောက်အပံ့"],
                     pageTitle: "KYC စစ်ဆေးခြင်း",
                     kycTitle: "လက်မှတ်အချက်အလက်များ",
                     kycSubtitle: "ကျွန်ုပ်တို့၏ KYC စစ်ဆေးမှုသည် သင့်အချက်အလက်များကို ကာကွယ်ရင်း တရားဝင်စနစ်နှင့် ကိုက်ညီစေရန် ဖြစ်သည်။",
                     docSectionTitle: "စာရွက်စာတမ်း အမျိုးအစား",
                     docOptions: [
-                        { value: "NRC Card", label: "✔ NRC ကတ်" },
-                        { value: "Driving License", label: "🚗 ယာဉ်မောင်းလိုင်စင်" },
-                        { value: "Passport", label: "✈️ စာမျက်နှာခွင့်" }
+                        { value: "NRC Card", label: "NRC ကတ်" },
+                        { value: "Driving License", label: "ယာဉ်မောင်းလိုင်စင်" },
+                        { value: "Passport", label: "စာမျက်နှာခွင့်" }
                     ],
                     uploadSectionTitle: "စာရွက်စာတမ်း တင်ရန်",
                     uploadHelpText: "စာရွက်စာတမ်းကို ရှင်းလင်းစွာ ဖတ်ရှုနိုင်ရန် JPG/PNG ဖိုင်ကို တင်ပါ။",
-                    textFront: "📷 ရှေ့ဘက်",
-                    textBack: "📷 နောက်ဘက်",
+                    textFront: '<i class="fas fa-camera"></i> ရှေ့ဘက်',
+                    textBack: '<i class="fas fa-camera"></i> နောက်ဘက်',
                     frontSubText: "ကတ်၏ ရှေ့ဘက်ဓာတ်ပုံကို တင်ပါ",
                     backSubText: "ကတ်၏ နောက်ဘက်ဓာတ်ပုံကို တင်ပါ",
                     requirementsTitle: "လိုအပ်ချက်များ",
@@ -444,20 +448,20 @@
                     submitButton: "တင်သွင်းမည်"
                 },
                 'th': {
-                    nav: ["แดชบอร์ด", "การซื้อขาย", "พอร์ตโฟลิโอ", "ประวัติ", "กระเป๋าสตางค์", "การตรวจสอบ KYC"],
+                    nav: ["แดชบอร์ด", "การซื้อขาย", "พอร์ตโฟลิโอ", "ประวัติ", "กระเป๋าสตางค์", "KYC", "สนับสนุนสด"],
                     pageTitle: "การตรวจสอบ KYC",
                     kycTitle: "ยืนยันตัวตน",
                     kycSubtitle: "การตรวจสอบ KYC ช่วยให้ข้อมูลของคุณปลอดภัยและเป็นไปตามมาตรฐานการเงิน",
                     docSectionTitle: "เลือกประเภทเอกสาร",
                     docOptions: [
-                        { value: "NRC Card", label: "✔ บัตรประชาชน" },
-                        { value: "Driving License", label: "🚗 ใบขับขี่" },
-                        { value: "Passport", label: "✈️ หนังสือเดินทาง" }
+                        { value: "NRC Card", label: "บัตรประชาชน" },
+                        { value: "Driving License", label: "ใบขับขี่" },
+                        { value: "Passport", label: "หนังสือเดินทาง" }
                     ],
                     uploadSectionTitle: "อัปโหลดเอกสาร",
                     uploadHelpText: "โปรดอัปโหลดภาพเอกสารที่ชัดเจน รองรับ JPG/PNG เท่านั้น",
-                    textFront: "📷 ด้านหน้า",
-                    textBack: "📷 ด้านหลัง",
+                    textFront: '<i class="fas fa-camera"></i> ด้านหน้า',
+                    textBack: '<i class="fas fa-camera"></i> ด้านหลัง',
                     frontSubText: "อัปโหลดรูปด้านหน้าของเอกสาร",
                     backSubText: "อัปโหลดรูปด้านหลังของเอกสาร",
                     requirementsTitle: "ข้อกำหนด",
@@ -472,7 +476,7 @@
             };
 
             const navItems = document.querySelectorAll('.nav-item');
-            const icons = ["fa-th-large", "fa-chart-line", "fa-briefcase", "fa-history", "fa-wallet", "fa-id-card"];
+            const icons = ["fa-th-large", "fa-chart-line", "fa-briefcase", "fa-history", "fa-wallet", "fa-user-check", "fa-headset"];
             navItems.forEach((item, i) => {
                 if(item && texts[lang].nav[i]) {
                     item.innerHTML = `<i class="fas ${icons[i]}"></i> ${texts[lang].nav[i]}`;
@@ -485,8 +489,8 @@
             document.getElementById('docSectionTitle').innerText = texts[lang].docSectionTitle;
             document.getElementById('uploadSectionTitle').innerText = texts[lang].uploadSectionTitle;
             document.getElementById('uploadHelpText').innerText = texts[lang].uploadHelpText;
-            document.getElementById('textFront').innerText = texts[lang].textFront;
-            document.getElementById('textBack').innerText = texts[lang].textBack;
+            document.getElementById('textFront').innerHTML = texts[lang].textFront;
+            document.getElementById('textBack').innerHTML = texts[lang].textBack;
             document.getElementById('frontSubText').innerText = texts[lang].frontSubText;
             document.getElementById('backSubText').innerText = texts[lang].backSubText;
             document.getElementById('requirementsTitle').innerText = texts[lang].requirementsTitle;
@@ -529,12 +533,12 @@
             const file = e.target.files[0];
             if (file) {
                 const uploadArea = document.querySelector('.upload-grid > div:nth-child(1)');
-                document.getElementById('textFront').innerText = "â³ á€œá€¯á€•á€ºá€†á€±á€¬á€„á€ºá€”á€±á€žá€Šá€º...";
+                document.getElementById('textFront').innerHTML = "â³ á€œá€¯á€•á€ºá€†á€±á€¬á€„á€ºá€”á€±á€žá€Šá€º...";
                 frontBase64 = await compressImage(file);
                 previewFront.src = frontBase64;
                 previewFront.style.display = 'block';
                 document.getElementById('placeholderFront').style.display = 'none';
-                document.getElementById('textFront').innerText = "âœ“ á€¡á€›á€¾á€±á€·á€˜á€€á€º á€›á€½á€±á€¸á€á€»á€šá€ºá€•á€¼á€®á€¸á€•á€«á€•á€¼á€®";
+                document.getElementById('textFront').innerHTML = "âœ“ á€¡á€›á€¾á€±á€·á€˜á€€á€º á€›á€½á€±á€¸á€á€»á€šá€ºá€•á€¼á€®á€¸á€•á€«á€•á€¼á€®";
                 uploadArea.style.borderColor = 'var(--color-gold-accent)';
             }
         };
@@ -543,12 +547,12 @@
             const file = e.target.files[0];
             if (file) {
                 const uploadArea = document.querySelector('.upload-grid > div:nth-child(2)');
-                document.getElementById('textBack').innerText = "â³ á€œá€¯á€•á€ºá€†á€±á€¬á€„á€ºá€”á€±á€žá€Šá€º...";
+                document.getElementById('textBack').innerHTML = "â³ á€œá€¯á€•á€ºá€†á€±á€¬á€„á€ºá€”á€±á€žá€Šá€º...";
                 backBase64 = await compressImage(file);
                 previewBack.src = backBase64;
                 previewBack.style.display = 'block';
                 document.getElementById('placeholderBack').style.display = 'none';
-                document.getElementById('textBack').innerText = "âœ“ á€¡á€”á€±á€¬á€€á€ºá€˜á€€á€º á€›á€½á€±á€¸á€á€»á€šá€ºá€•á€¼á€®á€¸á€•á€«á€•á€¼á€®";
+                document.getElementById('textBack').innerHTML = "âœ“ á€¡á€”á€±á€¬á€€á€ºá€˜á€€á€º á€›á€½á€±á€¸á€á€»á€šá€ºá€•á€¼á€®á€¸á€•á€«á€•á€¼á€®";
                 uploadArea.style.borderColor = 'var(--color-gold-accent)';
             }
         };
@@ -603,5 +607,50 @@
             }
         };
     </script>
+
+<script>
+/* ═══ YLG Language Sync — v2 ═══ */
+(function(){
+    console.log('[YLG Sync] Initialising language sync');
+    function triggerApply(lang){
+        const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                     'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                     'applyTradingLanguage','applyAccountLanguage','applyLang'];
+        let foundAny = false;
+        for (const fn of fns) {
+            if (typeof window[fn] === 'function') {
+                foundAny = true;
+                console.log('[YLG Sync] Calling window.' + fn + '(' + lang + ')');
+                try { window[fn](lang); } catch(e) { console.error('[YLG Sync]', e); }
+            }
+        }
+        if (!foundAny) console.warn('[YLG Sync] No apply function found on window for lang=' + lang);
+    }
+    window.addEventListener('storage', function(e){
+        if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+    });
+    function initialApply(){
+        const lang = localStorage.getItem('selectedLang') || 'en';
+        console.log('[YLG Sync] Initial apply for lang=' + lang);
+        triggerApply(lang);
+    }
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', function(){ setTimeout(initialApply, 50); });
+    } else {
+        setTimeout(initialApply, 50);
+    }
+    setTimeout(initialApply, 500);
+    setTimeout(initialApply, 1500);
+})();
+</script>
+
+<script src="mobile-nav.js"></script>
+<script src="sidebar-user.js"></script>
+<script src="/toast.js"></script>
+<script type="module" src="notifications-bell.js"></script>
 </body>
 </html>
+
+
+
+

@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-dark-bg: #0C0D0F;
+            --color-card-bg: #111318;
+            --color-gold-accent: #C9A84C;
+            --color-text-light: #EDF0F7;
+            --color-text-fade: #7A8196;
+            --color-border: rgba(255,255,255,0.07);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--color-dark-bg);
+            color: var(--color-text-light);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* ── Topbar ── */
+        .about-topbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 20px;
+            background: rgba(12,13,15,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .about-back {
+            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(201,168,76,0.12);
+            border: 1px solid rgba(201,168,76,0.3);
+            color: var(--color-gold-accent);
+            text-decoration: none; font-size: 14px;
+            transition: background .2s;
+            flex-shrink: 0;
+        }
+        .about-back:hover { background: rgba(201,168,76,0.22); }
+        .about-topbar-logo {
+            width: 32px; height: 32px; object-fit: contain;
+        }
+        .about-topbar-title {
+            font-size: 16px; font-weight: 700;
+            color: var(--color-text-light); flex: 1;
+        }
+
+        /* ── Hero ── */
+        .about-hero {
+            background: linear-gradient(135deg, #111318 0%, #0C0D0F 100%);
+            border-bottom: 1px solid rgba(201,168,76,0.15);
+            padding: 48px 20px 36px;
+            text-align: center;
+        }
+        .about-hero-badge {
+            display: inline-block;
+            padding: 5px 14px; border-radius: 99px;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.3);
+            color: var(--color-gold-accent);
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .about-hero h1 {
+            font-size: 28px; font-weight: 800;
+            letter-spacing: -0.5px; margin-bottom: 10px;
+        }
+        .about-hero p {
+            color: var(--color-text-fade);
+            font-size: 14px; line-height: 1.7;
+            max-width: 480px; margin: 0 auto;
+        }
+
+        /* ── Cards ── */
+        .about-page { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+        .about-card {
+            background: var(--color-card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            padding: 28px 24px;
+            margin-top: 20px;
+        }
+        .about-card h2 {
+            font-size: 18px; font-weight: 700;
+            color: var(--color-text-light);
+            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .about-card h2 i { color: var(--color-gold-accent); font-size: 16px; }
+        .about-card p {
+            color: var(--color-text-fade);
+            font-size: 14px; line-height: 1.8;
+            margin-bottom: 12px;
+        }
+        .about-card p:last-child { margin-bottom: 0; }
+
+        /* ── Timeline ── */
+        .timeline { position: relative; padding-left: 28px; margin-top: 8px; }
+        .timeline::before {
+            content: '';
+            position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px;
+            background: linear-gradient(180deg, transparent, rgba(201,168,76,0.5), rgba(201,168,76,0.5), transparent);
+        }
+        .timeline-item { position: relative; margin-bottom: 32px; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-dot {
+            position: absolute; left: -24px; top: 4px;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--color-gold-accent);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.15), 0 0 14px rgba(201,168,76,0.4);
+        }
+        .timeline-year {
+            display: inline-block;
+            padding: 3px 10px; border-radius: 6px;
+            background: var(--color-gold-accent); color: #000;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .timeline-item h3 {
+            font-size: 16px; font-weight: 700;
+            color: var(--color-text-light); margin-bottom: 6px;
+        }
+        .timeline-item p {
+            font-size: 13.5px; color: var(--color-text-fade);
+            line-height: 1.7; margin: 0;
+        }
+        .timeline-img {
+            margin-top: 12px;
+            width: 100%; border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(201,168,76,0.2);
+            max-height: 180px;
+        }
+        .timeline-img img {
+            width: 100%; height: 180px; object-fit: cover; display: block;
+        }
+
+        /* ── Video ── */
+        .about-video {
+            margin-top: 16px; border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+        .about-video video { width: 100%; display: block; background: #000; }
+
+        /* ── Risk box ── */
+        .risk-box {
+            margin-top: 16px; padding: 16px;
+            background: rgba(201,168,76,0.05);
+            border: 1px solid rgba(201,168,76,0.15);
+            border-radius: 10px;
+            font-size: 11.5px; line-height: 1.7;
+            color: var(--color-text-fade);
+        }
+        .risk-box strong { color: var(--color-gold-accent); }
+
+        /* ── Address box ── */
+        .address-box {
+            padding: 20px;
+            background: rgba(255,215,0,0.04);
+            border-radius: 10px;
+            border-left: 4px solid var(--color-gold-accent);
+        }
+        .address-box p { margin-bottom: 8px; }
+        .address-box .addr-name {
+            font-size: 16px; font-weight: 600;
+            color: var(--color-text-light); margin-bottom: 12px;
+        }
+        .map-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-top: 14px; padding: 10px 18px;
+            background: var(--color-gold-accent); color: #000;
+            font-weight: 700; border-radius: 8px;
+            text-decoration: none; font-size: 14px;
+        }
+
+        /* ── Copyright ── */
+        .about-footer {
+            text-align: center; padding: 28px 20px 16px;
+            border-top: 1px solid var(--color-border);
+            margin-top: 28px;
+            color: var(--color-gold-accent);
+            font-size: 13px; font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+    </style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
+</head>
+<body>
+
+    <!-- Topbar -->
+    <div class="about-topbar">
+        <a href="index.html" class="about-back"><i class="fas fa-arrow-left"></i></a>
+        <img src="logo.png" alt="YLG" class="about-topbar-logo"
+             onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
+        <span class="about-topbar-title" id="page-title">About Us</span>
+    </div>
+
+    <!-- Hero -->
+    <div class="about-hero">
+        <div class="about-hero-badge"><i class="fas fa-award" style="margin-right:5px;"></i>EST. 1993</div>
+        <h1 id="about-title">About YLG Bullion</h1>
+        <p id="about-desc">YLG Bullion International is a globally renowned gold trading company providing excellent services to our clients.</p>
+    </div>
+
+    <!-- Content -->
+    <div class="about-page">
+
+        <!-- Company History -->
+        <div class="about-card">
+            <h2><i class="fas fa-history"></i><span id="history-header">Company History</span></h2>
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">1993</div>
+                    <h3 id="h-1993-t">The Beginning — Yollin</h3>
+                    <p id="h-1993-d">Founded as <strong style="color:#EDF0F7;">Yollin</strong>, a specialist precious metals company. A small team with a big vision — to build Thailand's most trusted name in bullion.</p>
+                    <div class="timeline-img">
+                        <img src="ylg-1993.PNG" alt="1993" onerror="this.parentElement.style.display='none'">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">2003</div>
+                    <h3 id="h-2003-t">Becoming YLG — Entering Gold</h3>
+                    <p id="h-2003-d">Rebranded from Yollin to <strong style="color:var(--color-gold-accent);">YLG</strong>, and stepped into the gold market. A decade of metals expertise became the foundation for our ascent into Thailand's fastest-growing bullion business.</p>
+                    <div class="timeline-img">
+                        <img src="ylg-2003.PNG" alt="2003" onerror="this.parentElement.style.display='none'">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">2009</div>
+                    <h3 id="h-2009-t">Entering the Trading World</h3>
+                    <p id="h-2009-d">Launched <strong style="color:#EDF0F7;">YLG Bullion and Futures</strong> — Thailand's SEC-licensed gold futures broker. Expanded from physical bullion into derivatives, equities, and global commodities trading.</p>
+                    <div class="timeline-img">
+                        <img src="ylg-2009.PNG" alt="2009" onerror="this.parentElement.style.display='none'">
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">2012</div>
+                    <h3 id="h-2012-t">Going Global — Singapore</h3>
+                    <p id="h-2012-d">Opened our first international branch in <strong style="color:#EDF0F7;">Singapore</strong> — Asia's financial hub. A decisive step in our global expansion, bringing YLG's expertise to investors across Southeast Asia and beyond.</p>
+                    <div class="timeline-img">
+                        <img src="ylg-2012.PNG" alt="2012" onerror="this.parentElement.style.display='none'">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- License & Video -->
+        <div class="about-card">
+            <h2><i class="fas fa-certificate"></i><span id="license-main-title">YLG Bullion and Futures Co., Ltd.</span></h2>
+            <div id="license-full-desc">
+                <p>YLG Bullion and Futures was established in 2009 as a broker for gold futures trading. The company holds a Full License, covering a wide range of products such as Precious Metals (Gold Online Futures, Gold Futures), Equity (SET50 Futures, Single Stock Futures), as well as Currencies and Agricultures.</p>
+                <p>YLG is certified by the Securities and Exchange Commission (SEC) and is a member of the Gold Traders Association. It operates in compliance with the Derivatives Act B.E. 2546 (2003).</p>
+                <p>In 2022, YLG expanded its market reach to Global Markets, offering world-class products such as COMEX, NYMEX, and S&P Dow Jones. Investors can trade 24/7 through leading platforms like CQG and MT5. Additionally, YLG became the first in Thailand to provide investor trading via TradingView, reaffirming its leadership in the Futures market both domestically and globally.</p>
+            </div>
+
+            <div class="about-video">
+                <video autoplay muted loop playsinline controls preload="metadata">
+                    <source src="ylgvideo.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="risk-box">
+                <p style="margin-bottom:8px;">
+                    <strong>YLG Bullion and Futures Co., Ltd. (License No. S1-0035-01)</strong>
+                    holds a license to provide services in exchange traded derivative products (futures and options) by The Securities and Exchange Commission of Thailand. Trading in financial markets involves substantial risk and may not be suitable for all investors as it can lead to losses exceeding the initial investment.
+                </p>
+                <p style="margin:0;">
+                    <strong style="color:var(--color-text-light);">Restricted Regions:</strong>
+                    YLG Bullion and Futures Co., Ltd. does not provide services to residents of certain countries identified by the FATF as high-risk or non-cooperative jurisdictions.
+                </p>
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div class="about-card">
+            <h2><i class="fas fa-map-marker-alt"></i><span id="loc-title">Our Location</span></h2>
+            <div class="address-box">
+                <p class="addr-name"><i class="fas fa-building" style="color:var(--color-gold-accent);margin-right:8px;"></i>YLG Bullion and Futures Co., Ltd.</p>
+                <p style="color:var(--color-text-fade);font-size:14px;line-height:1.8;">
+                    <strong style="color:var(--color-text-light);display:block;margin-bottom:4px;">Address:</strong>
+                    653/19 (Between Narathiwat Soi 7–9)<br>
+                    Thung Maha Mek, Sathon<br>
+                    Bangkok 10120, Thailand
+                </p>
+                <a href="https://maps.app.goo.gl/fndEJLkLqvoDmsMt9" target="_blank" class="map-btn">
+                    <i class="fas fa-external-link-alt"></i>View on Google Maps
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="about-footer">
+        &copy; Copyright 2023. YLG Bullion And Futures Co., Ltd.
+        <div style="margin-top:10px;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;">
+            <a href="terms.html"   style="color:var(--color-gold-accent);font-size:12px;text-decoration:none;">Terms &amp; Conditions</a>
+            <a href="privacy.html" style="color:var(--color-gold-accent);font-size:12px;text-decoration:none;">Privacy Policy</a>
+            <a href="risk.html"    style="color:var(--color-gold-accent);font-size:12px;text-decoration:none;">Risk Disclosure</a>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                'page-title': 'About Us',
+                'about-title': 'About YLG Bullion',
+                'about-desc': 'YLG Bullion International is a globally renowned gold trading company providing excellent services to our clients.',
+                'history-header': 'Company History',
+                'h-1993-t': 'The Beginning — Yollin',
+                'h-1993-d': 'Founded as <strong style="color:#EDF0F7;">Yollin</strong>, a specialist precious metals company. A small team with a big vision — to build Thailand\'s most trusted name in bullion.',
+                'h-2003-t': 'Becoming YLG — Entering Gold',
+                'h-2003-d': 'Rebranded from Yollin to <strong style="color:var(--color-gold-accent);">YLG</strong>, and stepped into the gold market. A decade of metals expertise became the foundation for our ascent into Thailand\'s fastest-growing bullion business.',
+                'h-2009-t': 'Entering the Trading World',
+                'h-2009-d': 'Launched <strong style="color:#EDF0F7;">YLG Bullion and Futures</strong> — Thailand\'s SEC-licensed gold futures broker. Expanded from physical bullion into derivatives, equities, and global commodities trading.',
+                'h-2012-t': 'Going Global — Singapore',
+                'h-2012-d': 'Opened our first international branch in <strong style="color:#EDF0F7;">Singapore</strong> — Asia\'s financial hub. A decisive step in our global expansion, bringing YLG\'s expertise to investors across Southeast Asia and beyond.',
+                'license-main-title': 'YLG Bullion and Futures Co., Ltd.',
+                'loc-title': 'Our Location'
+            },
+            mm: {
+                'page-title': 'ကျွန်ုပ်တို့အကြောင်း',
+                'about-title': 'ကျွန်ုပ်တို့အကြောင်း',
+                'about-desc': 'YLG Bullion International Co., Ltd. သည် ကမ္ဘာလုံးဆိုင်ရာ စံနှုန်းမြင့် ရွှေထုတ်ကုန် ကုန်သွယ်ရေး ကုမ္ပဏီဖြစ်ပြီး သာယာကောင်းမွန်သော ဝန်ဆောင်မှုများကို ဖောက်သည်များအား ပေးဆောင်သည်။',
+                'history-header': 'ကုမ္ပဏီ သမိုင်း',
+                'h-1993-t': 'အစပြုခြင်း — Yollin',
+                'h-1993-d': '<strong style="color:#EDF0F7;">Yollin</strong> အမည်ဖြင့် အဖိုးတန်သတ္တု အထူးပြု ကုမ္ပဏီအဖြစ် စတင်တည်ထောင်ခဲ့သည်။ အစိတ်အပိုင်းငယ် အဖွဲ့နှင့် ကြီးမားသော အမြင်ဖြင့် — ထိုင်းနိုင်ငံ၏ ယုံကြည်စိတ်ချရဆုံး ရွှေတုံး ကုန်သွယ်မှု အမည်ကို တည်ဆောက်ရန် ရည်ရွယ်ခဲ့သည်။',
+                'h-2003-t': 'YLG သို့ ပြောင်းလဲ — ရွှေဈေးကွက်သို့',
+                'h-2003-d': 'Yollin ကနေ <strong style="color:var(--color-gold-accent);">YLG</strong> သို့ ပြောင်းလဲခဲ့ပြီး ရွှေဈေးကွက်ထဲသို့ ဝင်ရောက်လာခဲ့သည်။ ဆယ်စုနှစ်တစ်ခုတာ သတ္တုကုန်သွယ်ရေး အတွေ့အကြုံသည် ထိုင်းနိုင်ငံ၏ အလျင်မြန်ဆုံး ကြီးထွားလာသော ရွှေတုံးလုပ်ငန်း ၏ အခြေခံ ဖြစ်လာခဲ့သည်။',
+                'h-2009-t': 'ကုန်သွယ်မှု လောကထဲသို့ ဝင်ရောက်ခြင်း',
+                'h-2009-d': '<strong style="color:#EDF0F7;">YLG Bullion and Futures</strong> ကို စတင်တည်ထောင်ခဲ့သည် — ထိုင်းနိုင်ငံ SEC လိုင်စင်ရ ရွှေ Futures ဘရော်ကာ။ ရုပ်ပိုင်းဆိုင်ရာ ရွှေတုံးများမှ derivatives၊ equities နှင့် ကမ္ဘာလုံးဆိုင်ရာ ကုန်စည်ကုန်သွယ်ရေး သို့ တိုးချဲ့ခဲ့သည်။',
+                'h-2012-t': 'ကမ္ဘာလုံး ရောက် — စင်ကာပူ',
+                'h-2012-d': 'အာရှ၏ ငွေကြေးဗဟို — <strong style="color:#EDF0F7;">စင်ကာပူ</strong> တွင် ပထမဆုံး နိုင်ငံတကာ ရုံးခွဲကို ဖွင့်လှစ်ခဲ့သည်။ YLG ၏ ကျွမ်းကျင်မှုကို အရှေ့တောင်အာရှနှင့် ထို့ထက်ပိုသော ဒေသများရှိ ရင်းနှီးမြှုပ်နှံသူများသို့ ရောက်ရှိစေရန် ကမ္ဘာလုံးဆိုင်ရာ တိုးချဲ့မှု ၏ အရေးပါသော ခြေလှမ်း တစ်ခု ဖြစ်ခဲ့သည်။',
+                'license-main-title': 'YLG Bullion နှင့် Futures Co., Ltd.',
+                'loc-title': 'ကျွန်ုပ်တို့၏ တည်နေရာ'
+            },
+            th: {
+                'page-title': 'เกี่ยวกับเรา',
+                'about-title': 'เกี่ยวกับเรา',
+                'about-desc': 'YLG Bullion International Co., Ltd. เป็นบริษัทเทรดทองคำมาตรฐานสากล ให้บริการที่ปลอดภัยและเชื่อถือได้แก่ลูกค้าของเรา.',
+                'history-header': 'ประวัติบริษัท',
+                'h-1993-t': 'จุดเริ่มต้น — Yollin',
+                'h-1993-d': 'ก่อตั้งในชื่อ <strong style="color:#EDF0F7;">Yollin</strong> บริษัทผู้เชี่ยวชาญด้านโลหะมีค่า ด้วยทีมเล็กๆ และวิสัยทัศน์ยิ่งใหญ่ — มุ่งสร้างชื่อเสียงด้านทองคำที่น่าเชื่อถือที่สุดในประเทศไทย',
+                'h-2003-t': 'เปลี่ยนเป็น YLG — ก้าวสู่ตลาดทองคำ',
+                'h-2003-d': 'เปลี่ยนชื่อจาก Yollin เป็น <strong style="color:var(--color-gold-accent);">YLG</strong> และก้าวเข้าสู่ตลาดทองคำอย่างเต็มตัว ประสบการณ์ด้านโลหะมีค่ากว่าทศวรรษกลายเป็นรากฐานของธุรกิจทองคำที่เติบโตเร็วที่สุดในไทย',
+                'h-2009-t': 'ก้าวสู่โลกการเทรด',
+                'h-2009-d': 'เปิดตัว <strong style="color:#EDF0F7;">YLG Bullion and Futures</strong> — โบรกเกอร์ทองคำฟิวเจอร์สที่ได้รับใบอนุญาตจาก ก.ล.ต. ไทย ขยายจากทองคำแท่งสู่ตราสารอนุพันธ์ หุ้น และสินค้าโภคภัณฑ์ระดับโลก',
+                'h-2012-t': 'ศูนย์กลางสิงคโปร์',
+                'h-2012-d': 'เปิดตัว <strong style="color:#EDF0F7;">สิงคโปร์</strong> เพื่อเสริมความแข็งแกร่งในตลาดทองคำระดับโลก ก้าวที่สำคัญสู่การขยายตัวระดับนานาชาติ นำความเชี่ยวชาญของ YLG สู่นักลงทุนทั่วเอเชียตะวันออกเฉียงใต้',
+                'license-main-title': 'บริษัท YLG Bullion and Futures จำกัด',
+                'loc-title': 'ที่ตั้งของเรา'
+            }
+        };
+
+        const licenseDescriptions = {
+            en: `<p>YLG Bullion and Futures was established in 2009 as a broker for gold futures trading. The company holds a Full License, covering a wide range of products such as Precious Metals (Gold Online Futures, Gold Futures), Equity (SET50 Futures, Single Stock Futures), as well as Currencies and Agricultures.</p>
+                 <p>YLG is certified by the Securities and Exchange Commission (SEC) and is a member of the Gold Traders Association. It operates in compliance with the Derivatives Act B.E. 2546 (2003).</p>
+                 <p>In 2022, YLG expanded its market reach to Global Markets, offering world-class products such as COMEX, NYMEX, and S&P Dow Jones. Investors can trade 24/7 through leading platforms like CQG and MT5. Additionally, YLG became the first in Thailand to provide investor trading via TradingView, reaffirming its leadership in the Futures market both domestically and globally.</p>`,
+            mm: `<p>YLG Bullion and Futures သည် ၂၀၀၉ ခုနှစ်တွင် ရွှေ ဖျူးချန် ကုန်သွယ်ရေး ကုမ္ပဏီအဖြစ် စတင်တည်ထောင်ခဲ့ပြီး အရည်အသွေးမြင့် ဝန်ဆောင်မှုများကို ပေးဆောင်သည်။</p>
+                 <p>SEC မှ အတည်ပြုထားပြီး Gold Traders Association ၏ အဖွဲ့ဝင်ဖြစ်ပါသည်။</p>
+                 <p>၂၀၂၂ ခုနှစ်တွင် ကမ္ဘာ့စျေးကွက်သို့ ချဲ့ဖြန့်ပြီး COMEX, NYMEX သို့မဟုတ် S&P Dow Jones ကဲ့သို့ ကမ္ဘာမှ ရှေ့တန်းတကျ ထုတ်ကုန်များကို ပေးဆောင်သည်။ ရင်းနှီးမြုပ်နှံသူများသည် CQG နှင့် MT5 ကဲ့သို့ အင်္ဂါရပ် ပလက်ဖောင်းများမှတစ်ဆင့် နေ့စဉ် ၂၄ ယ ကုန်သွယ်ခွင့်ရှိသည်။</p>`,
+            th: `<p>YLG Bullion and Futures ก่อตั้งในปี 2009 ในฐานะผู้ให้บริการซื้อขายทองคำฟิวเจอร์ส โดยมีใบอนุญาตเต็มรูปแบบ ครอบคลุมผลิตภัณฑ์ทั้งทองคำออนไลน์ฟิวเจอร์ส ทองคำฟิวเจอร์ส SET50 Futures Single Stock Futures อัตราแลกเปลี่ยน และสินค้าเกษตร.</p>
+                 <p>YLG ได้รับการรับรองจากคณะกรรมการกำกับหลักทรัพย์และตลาดหลักทรัพย์ (ก.ล.ต.) และดำเนินงานตามพระราชบัญญัติว่าด้วยตลาดล่วงหน้า พ.ศ. 2546.</p>
+                 <p>ในปี 2022 YLG ขยายสู่ตลาดโลก โดยให้บริการผลิตภัณฑ์ระดับสากล เช่น COMEX, NYMEX และ S&P Dow Jones นักลงทุนสามารถซื้อขายได้ 24 ชั่วโมงผ่านแพลตฟอร์มชั้นนำอย่าง CQG และ MT5 พร้อมการใช้งาน TradingView ในประเทศไทย.</p>`
+        };
+
+        function applyAboutLanguage(lang) {
+            if (!translations[lang]) lang = 'en';
+            const t = translations[lang];
+            Object.keys(t).forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (id.startsWith('h-')) {
+                    el.innerHTML = t[id];
+                } else {
+                    el.textContent = t[id];
+                }
+            });
+            const licEl = document.getElementById('license-full-desc');
+            if (licEl && licenseDescriptions[lang]) licEl.innerHTML = licenseDescriptions[lang];
+        }
+
+        window.applyAboutLanguage = applyAboutLanguage;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const lang = localStorage.getItem('selectedLang') || 'en';
+            applyAboutLanguage(lang);
+        });
+
+        window.addEventListener('storage', e => {
+            if (e.key === 'selectedLang') applyAboutLanguage(e.newValue || 'en');
+        });
+    </script>
+
+<script src="/toast.js"></script>
+</body>
+</html>
+
+
+
+

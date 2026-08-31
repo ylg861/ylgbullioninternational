@@ -1,13 +1,25 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
+	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 	<meta charset="utf-8" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Login — YLG Bullion</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<title>YLG Bullion</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<style>
+	    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <link rel="stylesheet" href="theme.css">
+    <style>
 		:root{--bg:#0f1113;--card:#141516;--accent:#FFD700;--muted:#9aa0a6;--input:#1e1e1e}
 		*{box-sizing:border-box}
 		body{margin:0;font-family:'Noto Sans Myanmar','Noto Sans Thai','Inter',Segoe UI,Arial,system-ui,sans-serif;background:linear-gradient(180deg,#08090a 0%,#111214 100%);color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;padding:20px}
@@ -18,7 +30,9 @@
 		p.lead{margin:0 0 18px 0;color:var(--muted);font-size:13px}
 
 		label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-		input[type=email],input[type=password]{width:100%;padding:12px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--input);color:#fff;font-size:14px}
+		input[type=email],input[type=password],input[type=text]{width:100%;padding:12px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--input);color:#fff;font-size:14px;min-width:0;box-sizing:border-box}
+		.row input[type=password],.row input[type=text]{flex:1 1 0;width:0;min-width:0;box-sizing:border-box}
+		.show-pass{flex:0 0 auto;padding:8px 12px;font-size:18px;background:transparent;border:none;color:var(--muted);cursor:pointer;width:auto;height:auto}
 		.row{display:flex;gap:10px;align-items:center}
 		.actions{margin-top:14px}
 		button.primary{width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#111;font-weight:700;cursor:pointer;font-size:15px}
@@ -28,9 +42,11 @@
 		.small{font-size:12px;color:var(--muted)}
 		.error{margin-top:10px;padding:10px;background:#3a1b1b;color:#ffd3d3;border-radius:8px;display:none}
 		.debug{margin-top:10px;padding:10px;background:#0b1220;color:#9fefff;border-radius:8px;white-space:pre-wrap;display:none;font-size:12px}
-		.show-pass{background:transparent;border:none;color:var(--muted);cursor:pointer}
+		
 		@media (max-width:480px){.card{padding:18px;border-radius:10px}}
 	</style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
 	<main class="card" role="main">
@@ -82,10 +98,11 @@
 	</style>
 
 	<script type="module">
-		import { app } from './firebase-init.js';
-		import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { app, auth, db } from './firebase-init.js';
+				import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-		const auth = getAuth(app);
+		// Firebase config (kept same)
 
 		// Elements
 		const form = document.getElementById('loginForm');
@@ -99,12 +116,12 @@
 
 		// Small i18n support using localStorage.selectedLang (en/mm/th)
 		const texts = {
-			en: { title: 'Sign in to your account', subtitle: 'Secure access to trading and wallet', email:'Email', password:'Password', remember:'Remember me', forgot:'Forgot password?', login:'Login', errorRequired:'Please fill email and password.' },
-			mm: { title: 'သင့်အကောင့် ဝင်ပါ', subtitle: 'ရောင်းဝယ်မှုနှင့် ပိုက်ဆံလက်ခံရန်', email:'အီးမေးလ်', password:'စကားဝှက်', remember:'မှတ်ထားပါ', forgot:'စကားဝှက်မေ့လျှင်?', login:'လောဂ်အင်', errorRequired:'အီးမေးလ်နှင့် စကားဝှက် ထည့်ပါ။' },
-			th: { title: 'เข้าสู่ระบบบัญชีของคุณ', subtitle: 'การเข้าถึงการซื้อขายและกระเป๋าอย่างปลอดภัย', email:'อีเมล', password:'รหัสผ่าน', remember:'จดจำฉัน', forgot:'ลืมรหัสผ่าน?', login:'เข้าสู่ระบบ', errorRequired:'กรุณากรอกอีเมลและรหัสผ่าน.' }
+			en: { title: 'Sign in to your account', subtitle: 'Secure access to trading and wallet', email:'Email', password:'Password', remember:'Remember me', forgot:'Forgot password?', login:'Login', errorRequired:'Please fill email and password.', errorWrongPass:'Email or password is incorrect.', errorUserNotFound:'No account found with this email.', errorTooMany:'Too many failed attempts. Please try again later.', errorNetwork:'Network error. Please check your connection.', errorInvalidEmail:'Invalid email format.', errorGeneric:'Login failed. Please try again.' },
+			mm: { title: 'သင့်အကောင့် ဝင်ပါ', subtitle: 'ရောင်းဝယ်မှုနှင့် ပိုက်ဆံလက်ခံရန်', email:'အီးမေးလ်', password:'စကားဝှက်', remember:'မှတ်ထားပါ', forgot:'စကားဝှက်မေ့လျှင်?', login:'လောဂ်အင်', errorRequired:'အီးမေးလ်နှင့် စကားဝှက် ထည့်ပါ။', errorWrongPass:'အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေပါသည်။', errorUserNotFound:'ဤအီးမေးလ်ဖြင့် အကောင့် မရှိပါ။', errorTooMany:'အကြိမ်များစွာ မှားယွင်းပါသည်။ ခဏကြာမှ ပြန်ကြိုးစားပါ။', errorNetwork:'အင်တာနက် ချိတ်ဆက်မှု ပြဿနာရှိနေပါသည်။', errorInvalidEmail:'အီးမေးလ်ပုံစံ မမှန်ပါ။', errorGeneric:'လောဂ်အင် မအောင်မြင်ပါ။ ပြန်ကြိုးစားပါ။' },
+			th: { title: 'เข้าสู่ระบบบัญชีของคุณ', subtitle: 'การเข้าถึงการซื้อขายและกระเป๋าอย่างปลอดภัย', email:'อีเมล', password:'รหัสผ่าน', remember:'จดจำฉัน', forgot:'ลืมรหัสผ่าน?', login:'เข้าสู่ระบบ', errorRequired:'กรุณากรอกอีเมลและรหัสผ่าน.', errorWrongPass:'อีเมลหรือรหัสผ่านไม่ถูกต้อง', errorUserNotFound:'ไม่พบบัญชีที่ใช้อีเมลนี้', errorTooMany:'พยายามเข้าสู่ระบบบ่อยเกินไป กรุณาลองใหม่ภายหลัง', errorNetwork:'เครือข่ายขัดข้อง กรุณาตรวจสอบการเชื่อมต่อ', errorInvalidEmail:'รูปแบบอีเมลไม่ถูกต้อง', errorGeneric:'เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่' }
 		};
 
-		function applyLang(){
+		window.applyLang = function(){
 			const lang = localStorage.getItem('selectedLang') || 'en';
 			const t = texts[lang] || texts.en;
 			document.getElementById('title').textContent = t.title;
@@ -140,16 +157,47 @@
 				const cred = await signInWithEmailAndPassword(auth, email, password);
 				localStorage.setItem('userEmail', email);
 				localStorage.setItem('userName', cred.user.displayName || email.split('@')[0]);
+				// Record login history
+				try {
+					const ua = navigator.userAgent;
+					const browser = ua.includes('Chrome') ? 'Chrome' : ua.includes('Firefox') ? 'Firefox' : ua.includes('Safari') ? 'Safari' : ua.includes('Edge') ? 'Edge' : 'Browser';
+					const os = ua.includes('Windows') ? 'Windows' : ua.includes('Mac') ? 'macOS' : ua.includes('Android') ? 'Android' : ua.includes('iPhone') || ua.includes('iPad') ? 'iOS' : 'Unknown';
+					await addDoc(collection(db, 'users', cred.user.uid, 'loginHistory'), {
+						at: serverTimestamp(), browser, os,
+						device: /Mobi|Android/i.test(ua) ? 'Mobile' : 'Desktop'
+					});
+				} catch(_) {}
 				// preserve language
 				await new Promise(r=>setTimeout(r,300));
 				window.location.replace('index.html');
 			}catch(err){
 				console.error(err);
-				setError(err.message || 'Login error');
-				// show debug if query ?debug=1 or localStorage.debug=true
+				const lang = localStorage.getItem('selectedLang') || 'en';
+				const t = texts[lang] || texts.en;
+				
+				// Map Firebase error codes to friendly messages
+				let friendlyMsg = t.errorGeneric;
+				const code = err.code || '';
+				if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/invalid-login-credentials') {
+					friendlyMsg = t.errorWrongPass;
+				} else if (code === 'auth/user-not-found') {
+					friendlyMsg = t.errorUserNotFound;
+				} else if (code === 'auth/too-many-requests') {
+					friendlyMsg = t.errorTooMany;
+				} else if (code === 'auth/network-request-failed') {
+					friendlyMsg = t.errorNetwork;
+				} else if (code === 'auth/invalid-email') {
+					friendlyMsg = t.errorInvalidEmail;
+				} else if (code === 'auth/user-disabled') {
+					friendlyMsg = lang === 'mm' ? 'အကောင့် ပိတ်ထားပါသည်။' : lang === 'th' ? 'บัญชีถูกปิดใช้งาน' : 'Account has been disabled.';
+				}
+				
+				setError(friendlyMsg);
+				
+				// Debug mode shows raw error
 				const showDebug = location.search.includes('debug=1') || localStorage.getItem('debug') === 'true';
 				if (showDebug){ debugBox.style.display = 'block'; debugBox.textContent = `Error code: ${err.code || 'N/A'}\n${err.message || ''}`; }
-				submitBtn.disabled = false; submitBtn.textContent = texts[localStorage.getItem('selectedLang')||'en'].login;
+				submitBtn.disabled = false; submitBtn.textContent = t.login;
 			}
 		});
 
@@ -160,5 +208,47 @@
 		[emailEl, passEl].forEach(i=>i.addEventListener('input', ()=> setError('')));
 
 	</script>
+
+<script>
+/* ═══ YLG Language Sync — v2 ═══ */
+(function(){
+    console.log('[YLG Sync] Initialising language sync');
+    function triggerApply(lang){
+        const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                     'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                     'applyTradingLanguage','applyAccountLanguage','applyLang'];
+        let foundAny = false;
+        for (const fn of fns) {
+            if (typeof window[fn] === 'function') {
+                foundAny = true;
+                console.log('[YLG Sync] Calling window.' + fn + '(' + lang + ')');
+                try { window[fn](lang); } catch(e) { console.error('[YLG Sync]', e); }
+            }
+        }
+        if (!foundAny) console.warn('[YLG Sync] No apply function found on window for lang=' + lang);
+    }
+    window.addEventListener('storage', function(e){
+        if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+    });
+    function initialApply(){
+        const lang = localStorage.getItem('selectedLang') || 'en';
+        console.log('[YLG Sync] Initial apply for lang=' + lang);
+        triggerApply(lang);
+    }
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', function(){ setTimeout(initialApply, 50); });
+    } else {
+        setTimeout(initialApply, 50);
+    }
+    setTimeout(initialApply, 500);
+    setTimeout(initialApply, 1500);
+})();
+</script>
+
+<script src="/toast.js"></script>
 </body>
 </html>
+
+
+
+

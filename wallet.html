@@ -1,327 +1,675 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="my">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wallet - YLG Bullion</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-    
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
         :root {
-            --color-dark-bg: #111111;
-            --color-medium-dark: #1A1A1A;
-            --color-gold-accent: #FFD700;
-            --color-text-light: #E0E0E0;
-            --color-text-fade: #A0A0A0;
+            --gold: #C9A84C;
+            --gold-light: #FFD700;
+            --bg: #0e0e0e;
+            --card: #141414;
+            --card2: #1a1a1a;
+            --border: rgba(255,255,255,0.06);
+            --text: #E8E8E8;
+            --muted: #6B7280;
+            --green: #22c55e;
+            --red: #ef4444;
         }
+
+        * { box-sizing: border-box; }
 
         body {
-            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', sans-serif;
-            background-color: var(--color-dark-bg);
-            color: var(--color-text-light);
-            margin: 0; display: flex;
+            font-family: 'Outfit', 'Noto Sans Myanmar', 'Noto Sans Thai', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
         }
 
-        /* Sidebar Styling */
+        /* ── Sidebar ── */
         .sidebar {
             width: 260px; min-height: 100vh;
-            background-color: var(--color-medium-dark);
+            background: #111;
             display: flex; flex-direction: column;
-            position: fixed; z-index: 1000; border-right: 1px solid #333;
+            position: fixed; z-index: 1000;
+            border-right: 1px solid var(--border);
         }
-
-        .logo-section {
-            padding: 20px; border-bottom: 1px solid #3A3A3A;
-            display: flex; align-items: center; gap: 12px;
-        }
-        .logo-img {
-            width: 50px; height: 50px; border-radius: 50%;
-            border: 2px solid var(--color-gold-accent); object-fit: cover;
-        }
-        .logo-y-text { font-size: 24px; font-weight: 800; color: var(--color-gold-accent); line-height: 1; }
-        .logo-subtext { font-size: 16px; font-weight: 700; color: #FFFFFF; letter-spacing: 1px; }
-
+        .logo-section { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); flex-shrink: 0; }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text    { font-size: 20px; font-weight: 800; color: var(--gold); display: block; letter-spacing: 0.5px; }
+        .logo-subtext   { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 2px; display: block; margin-top: 2px; }
+        .logo-company   { font-size: 9px; color: var(--muted); display: block; margin-top: 3px; letter-spacing: 0.6px; }
         .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
         .nav-item {
-            display: flex; align-items: center; padding: 15px 20px;
-            color: var(--color-text-fade); text-decoration: none; transition: 0.3s;
+            display: flex; align-items: center; padding: 14px 20px;
+            color: var(--muted); text-decoration: none; transition: 0.2s;
+            font-size: 14px; font-weight: 500; gap: 12px;
         }
-        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
+        .nav-item i { width: 18px; text-align: center; font-size: 14px; }
         .nav-item:hover, .nav-item.active {
-            background-color: #252525; color: white;
-            border-left: 4px solid var(--color-gold-accent);
+            background: rgba(201,168,76,0.07); color: #fff;
+            border-left: 3px solid var(--gold);
+            padding-left: 17px;
         }
 
-        .side-profile { padding: 20px; border-top: 1px solid #333; }
-        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 20px; box-sizing: border-box; }
-        
+        /* ── Main ── */
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 28px 24px; }
+
         header {
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #333; padding-bottom: 15px;
+            border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 28px;
         }
+        header h2 { margin: 0; font-size: 22px; font-weight: 700; }
 
-        .wallet-container {
-            margin-top: 25px;
-            display: grid;
-            gap: 25px;
+        /* ── Balance Hero Card ── */
+        .balance-hero {
+            background: linear-gradient(135deg, #1a1610 0%, #141414 60%, #0e0e0e 100%);
+            border: 1px solid rgba(201,168,76,0.25);
+            border-radius: 20px;
+            padding: 28px 28px 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(201,168,76,0.06), 0 8px 32px rgba(0,0,0,0.4);
+            margin-bottom: 20px;
         }
-        .balance-card,
-        .tier-card {
-            background: linear-gradient(135deg, #1d1d1d 0%, #111111 100%);
-            padding: 30px;
-            border-radius: 18px;
-            border: 1px solid #272727;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+        .balance-hero::before {
+            content: '';
+            position: absolute; top: -60px; right: -60px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+            pointer-events: none;
         }
-        .balance-card h1,
-        .tier-card h3 {
-            margin-top: 0;
+        .balance-hero-top {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 20px;
         }
-        .wallet-actions {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+        .member-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(201,168,76,0.12);
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 20px; padding: 5px 14px;
+            font-size: 12px; font-weight: 600; color: var(--gold);
         }
-        .wallet-actions button {
-            border: none;
+        .member-badge i { font-size: 11px; }
+        .balance-label { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+        .balance-amount {
+            font-size: 42px; font-weight: 700; letter-spacing: -1px;
+            background: linear-gradient(90deg, #FFD700, #C9A84C);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1; margin-bottom: 4px;
+        }
+        .bonus-line {
+            font-size: 12px; color: var(--muted);
+            display: flex; align-items: center; gap: 6px; margin-top: 10px;
+        }
+        .bonus-line i { color: var(--gold); font-size: 11px; }
+        /* Level progress bar */
+        .level-progress-wrap {
+            margin-top: 14px;
+            background: rgba(255,255,255,0.04);
             border-radius: 10px;
-            padding: 14px 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
+            padding: 10px 14px;
+            border: 1px solid rgba(255,255,255,0.07);
         }
-        .wallet-actions button:hover {
-            transform: translateY(-1px);
+        .lp-header {
+            display: flex; justify-content: space-between;
+            font-size: 11px; color: var(--muted); margin-bottom: 7px;
         }
-        #dep-btn {
-            background: var(--color-gold-accent);
-            color: #111;
+        .lp-header span:last-child { color: var(--gold); font-weight: 600; }
+        .lp-track {
+            height: 6px; background: rgba(255,255,255,0.08);
+            border-radius: 3px; overflow: hidden;
         }
-        #with-btn {
-            background: transparent;
-            border: 1px solid #444;
+        .lp-fill {
+            height: 100%; border-radius: 3px;
+            background: linear-gradient(90deg, #C9A84C, #FFD700);
+            transition: width 0.6s ease;
+        }
+        /* Bonus countdown */
+        .bonus-countdown {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 14px;
+            background: rgba(201,168,76,0.06);
+            border: 1px solid rgba(201,168,76,0.18);
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        .bc-row { display: flex; justify-content: space-between; align-items: center; }
+        .bc-label { color: var(--muted); }
+        .bc-val { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
+        .balance-actions {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; margin-top: 22px;
+        }
+        .btn-deposit, .btn-withdraw {
+            border: none; border-radius: 12px;
+            padding: 14px 20px; font-size: 14px; font-weight: 700;
+            cursor: pointer; transition: 0.2s; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-deposit {
+            background: linear-gradient(135deg, #C9A84C, #FFD700);
+            color: #0e0e0e;
+        }
+        .btn-deposit:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,168,76,0.35); }
+        .btn-withdraw {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
             color: #fff;
         }
+        .btn-withdraw:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
 
-        .tier-card p {
-            margin: 8px 0;
-            padding: 12px 14px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03);
+        /* ── Stats Strip ── */
+        .stats-strip {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 14px; margin-bottom: 20px;
         }
-        .tier-card p strong {
-            color: var(--color-gold-accent);
+        .stat-pill {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 16px 18px;
+        }
+        .stat-pill .sp-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-pill .sp-value { font-size: 18px; font-weight: 700; color: #fff; }
+        .stat-pill .sp-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; margin-bottom: 10px;
         }
 
-        .history-section {
-            margin-top: 0;
+        /* ── Tiers ── */
+        .section-title {
+            font-size: 16px; font-weight: 700; color: #fff;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 14px;
         }
-        .history-card {
-            background: var(--color-medium-dark);
-            padding: 18px;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid var(--color-gold-accent);
+        .section-title i { color: var(--gold); }
+        .tiers-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: 10px; margin-bottom: 24px;
         }
-        .history-card .history-info {
-            max-width: 75%;
+        .tier-pill {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px; padding: 16px 12px;
+            text-align: center; transition: 0.2s;
         }
-        .history-card .status-badge {
-            min-width: 80px;
-            text-align: center;
+        .tier-pill.active-tier {
+            background: rgba(201,168,76,0.1);
+            border-color: rgba(201,168,76,0.4);
+            box-shadow: 0 0 20px rgba(201,168,76,0.1);
         }
-        .history-info p { margin: 2px 0; font-size: 13px; }
-        .status-badge { font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; background: #333; }
+        .tier-pill .tp-icon {
+            font-size: 22px; margin-bottom: 8px; display: block;
+        }
+        .tier-pill .tp-name {
+            font-size: 12px; font-weight: 700; color: var(--gold);
+            margin-bottom: 4px;
+        }
+        .tier-pill .tp-range {
+            font-size: 10px; color: var(--muted); margin-bottom: 6px; line-height: 1.4;
+        }
+        .tier-pill .tp-bonus {
+            font-size: 10px; color: var(--green); font-weight: 600;
+            background: rgba(34,197,94,0.1); border-radius: 6px;
+            padding: 3px 6px; display: inline-block;
+        }
+        .tier-pill.tier-no-bonus .tp-bonus {
+            color: var(--muted); background: rgba(107,114,128,0.1);
+        }
+        .tier-desc-text {
+            font-size: 13px; color: var(--muted); margin-bottom: 14px;
+        }
 
+        /* ── History ── */
+        .history-empty {
+            text-align: center; padding: 40px 0;
+            color: var(--muted); font-size: 13px;
+        }
+        .history-empty i { font-size: 32px; margin-bottom: 10px; display: block; opacity: 0.3; }
+        .history-row {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .history-row:last-child { margin-bottom: 0; }
+        .hr-left { display: flex; align-items: center; gap: 14px; }
+        .hr-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--gold); font-size: 14px; flex-shrink: 0;
+        }
+        .hr-amount { font-size: 16px; font-weight: 700; color: #fff; }
+        .hr-details { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .hr-date { font-size: 10px; color: #444; margin-top: 3px; }
+        .status-chip {
+            font-size: 11px; font-weight: 700; padding: 4px 12px;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .chip-pending  { background: rgba(251,191,36,0.12); color: #FBBF24; border: 1px solid rgba(251,191,36,0.25); }
+        .chip-approved { background: rgba(34,197,94,0.12);  color: #22c55e;  border: 1px solid rgba(34,197,94,0.25); }
+        .chip-rejected { background: rgba(239,68,68,0.12);  color: #ef4444;  border: 1px solid rgba(239,68,68,0.25); }
+
+        /* ── History Tabs ── */
+        .hist-tabs {
+            display:flex; gap:4px; margin-bottom:16px;
+            background:var(--card2); border:1px solid var(--border);
+            border-radius:12px; padding:4px;
+        }
+        .hist-tab {
+            flex:1; padding:10px 14px; border:none; border-radius:9px;
+            background:transparent; color:var(--muted);
+            font-size:13px; font-weight:600; cursor:pointer;
+            transition:0.18s; font-family:inherit; display:flex;
+            align-items:center; justify-content:center; gap:6px;
+        }
+        .hist-tab.active {
+            background:rgba(201,168,76,0.12); color:var(--gold);
+            border:1px solid rgba(201,168,76,0.2);
+        }
+        .hist-tab:not(.active):hover { color:#fff; background:rgba(255,255,255,0.04); }
+
+        /* ── Withdraw Modal ── */
         #withdrawModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+            z-index: 2000; align-items: center; justify-content: center;
         }
         .modal-content {
-            background: var(--color-medium-dark); padding: 25px; border-radius: 12px;
-            width: 90%; max-width: 400px; border: 1px solid #444;
+            background: #181818; padding: 28px; border-radius: 18px;
+            width: 92%; max-width: 420px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.6);
         }
-        .modal-content h3 { color: var(--color-gold-accent); margin-top: 0; }
-        .modal-content input {
-            width: 100%; padding: 12px; margin: 10px 0; background: #222;
-            border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box;
+        .modal-content h3 { color: var(--gold); margin: 0 0 20px; font-size: 18px; }
+        .modal-field { margin-bottom: 12px; }
+        .modal-field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+        .modal-field input {
+            width: 100%; padding: 12px 14px; background: #222;
+            border: 1px solid #333; color: #fff; border-radius: 10px;
+            font-size: 14px; transition: border-color 0.2s;
         }
-        .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-confirm { background: var(--color-gold-accent); color: #000; border: none; font-weight: bold; flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; }
-        .btn-cancel { background: #444; color: #fff; border: none; flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; }
+        .modal-field input:focus { outline: none; border-color: var(--gold); }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-confirm {
+            background: linear-gradient(135deg, #C9A84C, #FFD700);
+            color: #000; border: none; font-weight: 700; flex: 1;
+            padding: 13px; border-radius: 10px; cursor: pointer; font-size: 14px;
+        }
+        .btn-cancel {
+            background: rgba(255,255,255,0.05); color: #fff;
+            border: 1px solid rgba(255,255,255,0.1); flex: 1;
+            padding: 13px; border-radius: 10px; cursor: pointer; font-size: 14px;
+        }
 
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar { width: 100%; min-height: auto; position: relative; border-right: none; }
-            .sidebar nav { flex-direction: row; flex-wrap: wrap; justify-content: space-around; }
-            .main-content { margin-left: 0; width: 100%; padding: 15px; }
-            .nav-item { padding: 12px 10px; font-size: 12px; border-left: none !important; }
-            .nav-item.active { border-bottom: 3px solid var(--color-gold-accent); }
-            .wallet-container { gap: 18px; }
-            .wallet-actions { grid-template-columns: 1fr; }
-            .balance-card, .tier-card { padding: 22px; }
-            .history-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .history-card .status-badge { min-width: auto; width: 100%; text-align: center; }
+            .sidebar { width: 100%; min-height: auto; position: relative; border-right: none; display: none; }
+            .main-content { margin-left: 0; width: 100%; padding: 16px 14px 90px; }
+            .balance-amount { font-size: 34px; }
+            .stats-strip { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-pill { padding: 12px; }
+            .stat-pill .sp-value { font-size: 15px; }
+            .tiers-grid { grid-template-columns: repeat(2, 1fr); }
+            header { padding-bottom: 14px; margin-bottom: 18px; }
         }
     </style>
     <link rel="stylesheet" href="mobile-responsive.css">
+    <script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
 
     <aside class="sidebar">
         <div class="logo-section">
-            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
             <div class="logo-text-group">
                 <div class="logo-y-text">YLG</div>
                 <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
             </div>
         </div>
         <nav>
-            <a href="index.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="trading.html" class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
-            <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
-            <a href="history.html" class="nav-item"><i class="fas fa-history"></i> History</a>
-            <a href="wallet.html" class="nav-item active"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="index.html"    class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html"  class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
+            <a href="portfolio.html"class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="history.html"  class="nav-item"><i class="fas fa-history"></i> History</a>
+            <a href="wallet.html"   class="nav-item active"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="kyc.html"      class="nav-item"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="chat-user.html"class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
         </nav>
-        <div id="side-profile-box" class="side-profile" style="display: none;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-user-circle" style="font-size: 30px; color: var(--color-gold-accent);"></i>
-                <div style="display: flex; flex-direction: column;">
-                    <span id="side-user-name" style="font-size: 13px; font-weight: bold; color: white;">User</span>
-                    <span style="font-size: 10px; color: #888;">Member</span>
-                </div>
-            </div>
-        </div>
     </aside>
 
     <main class="main-content">
         <header>
-            <h2 id="page-title" style="margin:0;">My Wallet</h2>
-            <div id="head-user-display" style="color: var(--color-text-fade); font-size: 12px;">Loading Account...</div>
+            <h2 id="page-title">My Wallet</h2>
         </header>
 
-        <div class="wallet-container">
-            <div class="balance-card">
-                <div style="margin-bottom: 10px;">
-                    <span style="color: var(--color-gold-accent); font-weight: bold;">Member Level: <span id="display-member-level">Loading...</span></span><br>
-                    <span style="color: var(--color-text-fade); font-size: 12px;">Daily Bonus: <span id="display-daily-bonus">Loading...</span></span>
+        <!-- Balance Hero -->
+        <div class="balance-hero">
+            <div class="balance-hero-top">
+                <div>
+                    <div class="balance-label" id="total-balance-label">Total Balance</div>
+                    <div class="balance-amount" id="user-balance-text">$ 0.00</div>
+                    <div class="bonus-line">
+                        <i class="fas fa-gift"></i>
+                        <span id="daily-bonus-label">Daily Bonus:</span>&nbsp;
+                        <span id="display-daily-bonus" style="color:#fff;">—</span>
+                    </div>
                 </div>
-                <p id="total-balance-label" style="color: var(--color-text-fade); margin:0;">Total Balance</p>
-                <h1 id="user-balance-text" style="font-size: 36px; margin: 15px 0;">$ 0.00</h1>
-                <div class="wallet-actions">
-                    <button id="dep-btn" onclick="window.location.href='chat-user.html?action=deposit'">Deposit</button>
-                    <button id="with-btn" onclick="requestTransaction('WITHDRAW')">Withdraw</button>
+                <div class="member-badge">
+                    <i class="fas fa-crown"></i>
+                    <span id="member-level-label">Level:</span>&nbsp;<span id="display-member-level">—</span>
+                </div>
+            </div>
+            <!-- Level progress bar -->
+            <div class="level-progress-wrap" id="level-progress-wrap" style="display:none;">
+                <div class="lp-header">
+                    <span id="lp-current-tier">Silver</span>
+                    <span id="lp-next-label">Next: Gold</span>
+                </div>
+                <div class="lp-track"><div class="lp-fill" id="lp-fill" style="width:0%;"></div></div>
+                <div style="font-size:10px;color:var(--muted);margin-top:5px;text-align:right;" id="lp-needed"></div>
+            </div>
+
+            <!-- Daily bonus countdown -->
+            <div class="bonus-countdown" id="bonus-countdown">
+                <div class="bc-row" style="margin-bottom:5px;">
+                    <span class="bc-label"><i class="fas fa-calendar-check" style="color:var(--gold);margin-right:5px;"></i>Bonus Days</span>
+                    <span class="bc-val" id="bc-days-left">— days left</span>
+                </div>
+                <div class="bc-row">
+                    <span class="bc-label"><i class="fas fa-clock" style="color:var(--gold);margin-right:5px;"></i>Next bonus</span>
+                    <span class="bc-val" id="bc-next-timer">—</span>
                 </div>
             </div>
 
-            <div class="tier-card">
-                <h3 style="color: var(--color-gold-accent); margin-top: 0;">Membership Tiers</h3>
-                <p style="color: var(--color-text-fade); font-size: 14px; margin-bottom: 15px;">á€žá€„á€·á€ºá€›á€²á€· Deposit á€•á€™á€¬á€á€¡á€œá€­á€¯á€€á€º á€›á€›á€¾á€­á€™á€Šá€·á€º Level á€”á€²á€· Daily Bonus á€™á€»á€¬á€¸</p>
-                <div style="font-size: 14px; line-height: 1.6;">
-                    <p id="tier-silver"><strong style="color: var(--color-gold-accent);">Silver:</strong> Deposit < $10,000 â†’ No bonus</p>
-                    <p id="tier-gold"><strong style="color: var(--color-gold-accent);">Gold:</strong> $10,000 - $29,999 â†’ USD 100 daily for 5 days</p>
-                    <p id="tier-platinum"><strong style="color: var(--color-gold-accent);">Platinum:</strong> $30,000 - $99,999 â†’ USD 500 daily for 10 days</p>
-                    <p id="tier-diamond"><strong style="color: var(--color-gold-accent);">Diamond:</strong> $100,000 - $499,999 â†’ USD 1500 daily for 20 days</p>
-                    <p id="tier-supreme"><strong style="color: var(--color-gold-accent);">Supreme:</strong> $500,000+ â†’ USD 3000 daily for 30 days</p>
-                </div>
+            <div class="balance-actions">
+                <button class="btn-deposit" id="dep-btn" onclick="window.location.href='deposit.html'">
+                    <i class="fas fa-plus-circle"></i> Deposit
+                </button>
+                <button class="btn-withdraw" id="with-btn" onclick="requestTransaction('WITHDRAW')">
+                    <i class="fas fa-arrow-up-from-bracket"></i> Withdraw
+                </button>
             </div>
+        </div>
 
-            <div class="history-section">
-                <h3 id="history-title" style="font-size: 16px; color: var(--color-gold-accent); margin-bottom: 15px;">Withdrawal History</h3>
-                <div id="withdrawHistoryContainer">
-                    <p style="text-align:center; color:#555; font-size:13px;">Loading history...</p>
+        <!-- Stats Strip -->
+        <div class="stats-strip">
+            <div class="stat-pill">
+                <div class="sp-icon" style="background:rgba(201,168,76,0.1);color:var(--gold);">
+                    <i class="fas fa-piggy-bank"></i>
                 </div>
+                <div class="sp-label" id="stat-deposit-label">Deposit</div>
+                <div class="sp-value" id="stat-deposit-val">$ 0</div>
             </div>
+            <div class="stat-pill">
+                <div class="sp-icon" style="background:rgba(34,197,94,0.1);color:#22c55e;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="sp-label" id="stat-profit-label">Profit</div>
+                <div class="sp-value" id="stat-profit-val" style="color:#22c55e;">$ 0</div>
+            </div>
+            <div class="stat-pill">
+                <div class="sp-icon" style="background:rgba(99,102,241,0.1);color:#818cf8;">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="sp-label" id="stat-withdrawals-label">Withdrawals</div>
+                <div class="sp-value" id="stat-withdrawals-val">0</div>
+            </div>
+        </div>
+
+        <!-- Membership Tiers -->
+        <div class="section-title">
+            <i class="fas fa-layer-group"></i>
+            <span id="membership-tiers-title">Membership Tiers</span>
+        </div>
+        <p class="tier-desc-text" id="tier-desc">Deposit tier determines your daily bonus.</p>
+        <div class="tiers-grid">
+            <div class="tier-pill tier-no-bonus" id="tier-silver">
+                <span class="tp-icon">🥈</span>
+                <div class="tp-name">Silver</div>
+                <div class="tp-range" id="tier-range-silver">&lt; $10,000</div>
+                <div class="tp-bonus" id="tier-bonus-silver">No bonus</div>
+            </div>
+            <div class="tier-pill" id="tier-gold">
+                <span class="tp-icon">🥇</span>
+                <div class="tp-name">Gold</div>
+                <div class="tp-range" id="tier-range-gold">$10K – $30K</div>
+                <div class="tp-bonus" id="tier-bonus-gold">$100/day × 5d</div>
+            </div>
+            <div class="tier-pill" id="tier-platinum">
+                <span class="tp-icon">💎</span>
+                <div class="tp-name">Platinum</div>
+                <div class="tp-range" id="tier-range-platinum">$30K – $100K</div>
+                <div class="tp-bonus" id="tier-bonus-platinum">$500/day × 10d</div>
+            </div>
+            <div class="tier-pill" id="tier-diamond">
+                <span class="tp-icon">👑</span>
+                <div class="tp-name">Diamond</div>
+                <div class="tp-range" id="tier-range-diamond">$100K – $500K</div>
+                <div class="tp-bonus" id="tier-bonus-diamond">$1500/day × 20d</div>
+            </div>
+            <div class="tier-pill" id="tier-supreme">
+                <span class="tp-icon">🏆</span>
+                <div class="tp-name">Supreme</div>
+                <div class="tp-range" id="tier-range-supreme">$500K+</div>
+                <div class="tp-bonus" id="tier-bonus-supreme">$3000/day × 30d</div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="section-title" style="margin-top:8px;">
+            <i class="fas fa-clock-rotate-left"></i>
+            <span id="history-title">Transaction History</span>
+        </div>
+        <div class="hist-tabs">
+            <button class="hist-tab active" id="tab-withdraw" onclick="switchTab('withdraw')">
+                <i class="fas fa-arrow-up-from-bracket"></i><span id="tab-lbl-withdraw">Withdrawals</span>
+            </button>
+            <button class="hist-tab" id="tab-deposit" onclick="switchTab('deposit')">
+                <i class="fas fa-plus-circle"></i><span id="tab-lbl-deposit">Deposits</span>
+            </button>
+        </div>
+        <div id="withdrawHistoryContainer">
+            <div class="history-empty"><i class="fas fa-inbox"></i><p>Loading...</p></div>
+        </div>
+        <div id="depositHistoryContainer" style="display:none;">
+            <div class="history-empty"><i class="fas fa-inbox"></i><p>Loading...</p></div>
         </div>
     </main>
 
+    <!-- Withdraw Modal -->
     <div id="withdrawModal">
         <div class="modal-content">
-            <h3 id="modal-head">Withdraw Funds</h3>
-            <input type="text" id="bank-name" placeholder="Bank Name (KPay, KBZ, CB...)">
-            <input type="text" id="bank-acc" placeholder="Account Number">
-            <input type="text" id="bank-user" placeholder="Account Name">
-            <input type="number" id="with-amount-input" placeholder="Amount ($)">
+            <h3 id="modal-head"><i class="fas fa-arrow-up-from-bracket" style="margin-right:8px;"></i>Withdraw Funds</h3>
+            <div class="modal-field">
+                <label id="lbl-bank">Bank / Payment Method</label>
+                <input type="text" id="bank-name" placeholder="KPay, KBZ, CB...">
+            </div>
+            <div class="modal-field">
+                <label id="lbl-acc">Account Number</label>
+                <input type="text" id="bank-acc" placeholder="09xxxxxxxx">
+            </div>
+            <div class="modal-field">
+                <label id="lbl-name">Account Name</label>
+                <input type="text" id="bank-user" placeholder="Full name">
+            </div>
+            <div class="modal-field">
+                <label id="lbl-amount">Amount (USD)</label>
+                <input type="number" id="with-amount-input" placeholder="0.00">
+            </div>
+            <div id="pin-field-row" style="display:none;">
+                <div class="modal-field">
+                    <label><i class="fas fa-key" style="color:var(--gold);margin-right:4px;"></i><span id="lbl-pin">Withdrawal PIN</span></label>
+                    <input type="password" id="withdraw-pin-input" inputmode="numeric" maxlength="4"
+                        placeholder="• • • •"
+                        style="letter-spacing:8px;font-size:20px;text-align:center;">
+                </div>
+            </div>
             <div class="modal-btns">
-                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-                <button class="btn-confirm" onclick="submitWithdraw()">Confirm</button>
+                <button class="btn-cancel" onclick="closeModal()" id="btn-cancel-lbl">Cancel</button>
+                <button class="btn-confirm" onclick="submitWithdraw()" id="btn-confirm-lbl">Confirm</button>
             </div>
         </div>
     </div>
 
     <script type="module">
-        import { app } from './firebase-init.js';
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, addDoc, updateDoc, collection, serverTimestamp, query, where, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { app, auth, db } from './firebase-init.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, onSnapshot, addDoc, updateDoc, collection, serverTimestamp, query, where, orderBy, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Function to get member level based on deposit
         function getMemberLevel(deposit) {
-            if (deposit < 10000) return { level: 'Silver', bonus: 'No bonus' };
-            if (deposit < 30000) return { level: 'Gold', bonus: 'USD 100 daily for 5 days' };
+            if (deposit < 10000)  return { level: 'Silver',   bonus: 'No bonus' };
+            if (deposit < 30000)  return { level: 'Gold',     bonus: 'USD 100 daily for 5 days' };
             if (deposit < 100000) return { level: 'Platinum', bonus: 'USD 500 daily for 10 days' };
-            if (deposit < 500000) return { level: 'Diamond', bonus: 'USD 1500 daily for 20 days' };
-            return { level: 'Supreme', bonus: 'USD 3000 daily for 30 days' };
+            if (deposit < 500000) return { level: 'Diamond',  bonus: 'USD 1500 daily for 20 days' };
+            return                       { level: 'Supreme',  bonus: 'USD 3000 daily for 30 days' };
+        }
+
+        // Level progress bar
+        function updateLevelProgress(deposit) {
+            const wrap  = document.getElementById('level-progress-wrap');
+            const fill  = document.getElementById('lp-fill');
+            const cur   = document.getElementById('lp-current-tier');
+            const next  = document.getElementById('lp-next-label');
+            const need  = document.getElementById('lp-needed');
+            if (!wrap) return;
+            const tiers = [
+                { name:'Silver',   min:0,      max:10000  },
+                { name:'Gold',     min:10000,  max:30000  },
+                { name:'Platinum', min:30000,  max:100000 },
+                { name:'Diamond',  min:100000, max:500000 },
+                { name:'Supreme',  min:500000, max:null   },
+            ];
+            const idx = tiers.findIndex((t,i) =>
+                deposit >= t.min && (t.max === null || deposit < t.max)
+            );
+            const tier = tiers[idx];
+            if (!tier || tier.max === null) {
+                wrap.style.display = 'none'; return;
+            }
+            const pct   = Math.min(((deposit - tier.min) / (tier.max - tier.min)) * 100, 100);
+            const left  = tier.max - deposit;
+            wrap.style.display = 'block';
+            if (cur)  cur.textContent  = tier.name;
+            if (next) next.textContent = 'Next: ' + tiers[idx + 1].name;
+            if (fill) fill.style.width = pct.toFixed(1) + '%';
+            if (need) need.textContent = '$' + left.toLocaleString() + ' to ' + tiers[idx + 1].name;
+        }
+
+        // Daily bonus countdown
+        let _bonusTimer = null;
+        function updateBonusCountdown(data) {
+            const box  = document.getElementById('bonus-countdown');
+            if (!box) return;
+            const activated = data.bonusActivatedAt;
+            const total     = data.bonusDaysTotal     || 0;
+            const credited  = data.bonusDaysCredited  || 0;
+            const lastCred  = data.bonusLastCredited;
+            if (!activated || total === 0 || credited >= total) {
+                box.style.display = 'none';
+                if (_bonusTimer) { clearInterval(_bonusTimer); _bonusTimer = null; }
+                return;
+            }
+            box.style.display = 'block';
+            const remaining = total - credited;
+            const daysEl = document.getElementById('bc-days-left');
+            if (daysEl) daysEl.textContent = remaining + ' day' + (remaining !== 1 ? 's' : '') + ' left';
+
+            // Countdown to next bonus (24h after last credited)
+            const timerEl = document.getElementById('bc-next-timer');
+            function tick() {
+                if (!timerEl) return;
+                if (!lastCred) { timerEl.textContent = 'Today'; return; }
+                const lastMs  = (lastCred.seconds || 0) * 1000;
+                const nextMs  = lastMs + 86400000;
+                const diff    = nextMs - Date.now();
+                if (diff <= 0) { timerEl.textContent = 'Due now'; return; }
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                timerEl.textContent = h + 'h ' + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's';
+            }
+            tick();
+            if (_bonusTimer) clearInterval(_bonusTimer);
+            _bonusTimer = setInterval(tick, 1000);
         }
 
         let currentUid = null;
         let currentUserEmail = null;
         let currentBalance = 0;
 
-        // --- Auth & Profile Logic ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUid = user.uid;
                 currentUserEmail = user.email;
-                document.getElementById('side-profile-box').style.display = 'block';
+                localStorage.setItem('userShortUID', user.uid.slice(0, 8).toUpperCase());
 
-                // Firestore Listener for Live Data (Fix Guest Mode)
                 onSnapshot(doc(db, "users", user.uid), (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        
-                        // Update UI - Remove Guest Mode
-                        document.getElementById('side-user-name').innerText = data.fullname || localStorage.getItem('userName') || 'Member';
-                        document.getElementById('head-user-display').innerText = data.fullname || localStorage.getItem('userName') || 'Member';
-                        
-                        // Live Balance
-                        currentBalance = data.balance || 0;
-                        document.getElementById('user-balance-text').innerText = "$ " + currentBalance.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    if (!docSnap.exists()) return;
+                    const data = docSnap.data();
 
-                        // Member Level based on deposit
-                        const deposit = data.depositBalance || 0;
-                        const levelData = getMemberLevel(deposit);
-                        document.getElementById('display-member-level').innerText = levelData.level;
-                        document.getElementById('display-daily-bonus').innerText = levelData.bonus;
+                    currentBalance = data.balance || 0;
+                    const deposit  = Number(data.depositBalance) || 0;
+                    const profit   = data.profit != null ? Number(data.profit) : Math.max(0, currentBalance - deposit);
 
-                        // Highlight current tier
-                        document.querySelectorAll('[id^="tier-"]').forEach(p => {
-                            p.style.backgroundColor = 'transparent';
-                            p.style.borderLeft = 'none';
-                            p.style.paddingLeft = '0';
-                        });
-                        const currentTier = document.getElementById('tier-' + levelData.level.toLowerCase());
-                        if (currentTier) {
-                            currentTier.style.backgroundColor = 'rgba(255, 215, 0, 0.1)';
-                            currentTier.style.borderLeft = '3px solid var(--color-gold-accent)';
-                            currentTier.style.paddingLeft = '10px';
-                        }
-                    }
+                    const fmt = (n) => '$ ' + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const el = (id) => document.getElementById(id);
+
+                    if (el('user-balance-text'))  el('user-balance-text').textContent  = fmt(currentBalance);
+                    if (el('stat-deposit-val'))   el('stat-deposit-val').textContent   = '$ ' + deposit.toLocaleString();
+                    if (el('stat-profit-val'))    el('stat-profit-val').textContent    = (profit >= 0 ? '+ $ ' : '- $ ') + Math.abs(profit).toLocaleString();
+                    if (profit < 0 && el('stat-profit-val')) el('stat-profit-val').style.color = 'var(--red)';
+
+                    const levelData = getMemberLevel(deposit);
+                    if (el('display-member-level')) el('display-member-level').textContent = levelData.level;
+                    if (el('display-daily-bonus'))  el('display-daily-bonus').textContent  = levelData.bonus;
+
+                    // Member ID & name
+                    const userIndex = data.userIndex || 0;
+                    const mId = 'YLG-2026' + String(userIndex).padStart(4, '0');
+                    localStorage.setItem('memberId', mId);
+                    localStorage.setItem('memberName', data.fullname || '');
+
+                    // Highlight active tier
+                    document.querySelectorAll('.tier-pill').forEach(p => p.classList.remove('active-tier'));
+                    const activeTier = document.getElementById('tier-' + levelData.level.toLowerCase());
+                    if (activeTier) activeTier.classList.add('active-tier');
+
+                    // Level progress bar
+                    updateLevelProgress(deposit);
+
+                    // Daily bonus countdown
+                    updateBonusCountdown(data);
                 });
 
-                // Load History
                 loadHistory(user.email);
+                loadDepositHistory(user.email);
             } else {
-                window.location.href = "login.html";
+                window.location.href = 'login.html';
             }
         });
 
@@ -329,131 +677,262 @@
             const q = query(collection(db, "withdrawals"), where("email", "==", email), orderBy("timestamp", "desc"));
             onSnapshot(q, (snapshot) => {
                 const container = document.getElementById('withdrawHistoryContainer');
-                container.innerHTML = "";
+                container.innerHTML = '';
                 if (snapshot.empty) {
-                    container.innerHTML = `<p style="text-align:center; color:#555; font-size:12px;">No withdrawal history found.</p>`;
+                    container.innerHTML = '<div class="history-empty"><i class="fas fa-inbox"></i>No withdrawal history yet.</div>';
+                    return;
+                }
+                let count = 0;
+                snapshot.forEach((docSnap) => {
+                    count++;
+                    const d = docSnap.data();
+                    const chipClass = d.status === 'APPROVED' ? 'chip-approved' : (d.status === 'REJECTED' ? 'chip-rejected' : 'chip-pending');
+                    const row = document.createElement('div');
+                    row.className = 'history-row';
+                    row.innerHTML = `
+                        <div class="hr-left">
+                            <div class="hr-icon"><i class="fas fa-arrow-up-from-bracket"></i></div>
+                            <div>
+                                <div class="hr-amount">$ ${Number(d.amount).toLocaleString()}</div>
+                                <div class="hr-details">${d.details || '—'}</div>
+                                <div class="hr-date">${d.date || ''}</div>
+                            </div>
+                        </div>
+                        <span class="status-chip ${chipClass}">${d.status || 'PENDING'}</span>
+                    `;
+                    container.appendChild(row);
+                });
+                if (document.getElementById('stat-withdrawals-val'))
+                    document.getElementById('stat-withdrawals-val').textContent = count;
+            });
+        }
+
+        window.requestTransaction = async function(type) {
+            if (type !== 'WITHDRAW') return;
+            const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+            const userData = userDoc.exists() ? userDoc.data() : {};
+            if (userData.frozen) {
+                Swal.fire({ icon: 'error', title: 'Account Frozen', text: 'Your account has been frozen. Please contact support.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+            const hasPIN = !!userData.withdrawPin;
+            document.getElementById('pin-field-row').style.display = hasPIN ? 'block' : 'none';
+            const pinInput = document.getElementById('withdraw-pin-input');
+            if (pinInput) { pinInput.value = ''; pinInput.dataset.savedPin = hasPIN ? userData.withdrawPin : ''; }
+            document.getElementById('withdrawModal').style.display = 'flex';
+        };
+
+        window.closeModal = function() { document.getElementById('withdrawModal').style.display = 'none'; };
+
+        window.switchTab = function(tab) {
+            document.getElementById('tab-withdraw').classList.toggle('active', tab === 'withdraw');
+            document.getElementById('tab-deposit').classList.toggle('active', tab === 'deposit');
+            document.getElementById('withdrawHistoryContainer').style.display = tab === 'withdraw' ? '' : 'none';
+            document.getElementById('depositHistoryContainer').style.display = tab === 'deposit' ? '' : 'none';
+        };
+
+        function loadDepositHistory(email) {
+            const q = query(collection(db, "deposits"), where("email", "==", email), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const container = document.getElementById('depositHistoryContainer');
+                container.innerHTML = '';
+                if (snapshot.empty) {
+                    container.innerHTML = '<div class="history-empty"><i class="fas fa-inbox"></i><p>No deposit history yet.</p></div>';
                     return;
                 }
                 snapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    const card = document.createElement('div');
-                    card.className = "history-card";
-                    card.innerHTML = `
-                        <div class="history-info">
-                            <p style="color:var(--color-gold-accent); font-weight:bold;">$ ${data.amount.toLocaleString()}</p>
-                            <p style="color:#aaa; font-size:11px;">${data.details || 'N/A'}</p>
-                            <p style="color:#555; font-size:10px;">${data.date || ''}</p>
+                    const d = docSnap.data();
+                    const chipClass = d.status === 'APPROVED' ? 'chip-approved' : (d.status === 'REJECTED' ? 'chip-rejected' : 'chip-pending');
+                    const row = document.createElement('div');
+                    row.className = 'history-row';
+                    row.innerHTML = `
+                        <div class="hr-left">
+                            <div class="hr-icon" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:#22c55e;">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <div>
+                                <div class="hr-amount" style="color:#22c55e;">+ $ ${Number(d.amount).toLocaleString()}</div>
+                                <div class="hr-details">${d.method || d.details || '—'}</div>
+                                <div class="hr-date">${d.date || ''}</div>
+                            </div>
                         </div>
-                        <div style="text-align:right;">
-                            <span class="status-badge" style="color:${data.status === 'APPROVED' ? '#00B050' : (data.status === 'REJECTED' ? '#FF4B4B' : '#FFA500')}">${data.status || 'PENDING'}</span>
-                        </div>
+                        <span class="status-chip ${chipClass}">${d.status || 'PENDING'}</span>
                     `;
-                    container.appendChild(card);
+                    container.appendChild(row);
                 });
             });
         }
 
-        // --- Transaction Logic ---
-        window.requestTransaction = async function(type) {
-            if (type === 'WITHDRAW') {
-                // Check if user account is frozen
-                const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
-                const userData = userDoc.exists() ? userDoc.data() : {};
-                if (userData.frozen) {
-                    Swal.fire({ icon: 'error', title: 'Account Frozen', text: 'Your account has been frozen. Please contact support.', background: '#1a1a1a', color: '#fff' });
-                    return;
-                }
-                document.getElementById('withdrawModal').style.display = 'flex';
-            }
-        };
-
-        window.closeModal = function() {
-            document.getElementById('withdrawModal').style.display = 'none';
-        };
-
         window.submitWithdraw = async function() {
-            const bank = document.getElementById('bank-name').value.trim();
-            const acc = document.getElementById('bank-acc').value.trim();
-            const user = document.getElementById('bank-user').value.trim();
+            const bank   = document.getElementById('bank-name').value.trim();
+            const acc    = document.getElementById('bank-acc').value.trim();
+            const user   = document.getElementById('bank-user').value.trim();
             const amount = parseFloat(document.getElementById('with-amount-input').value);
 
-            // Validation
             if (!bank || !acc || !user || isNaN(amount) || amount <= 0) {
                 Swal.fire({ icon: 'error', title: 'Oops...', text: 'Please fill all details correctly.', background: '#1a1a1a', color: '#fff' });
                 return;
             }
-
-            // [PROMPT FIX 1]: á€¡á€€á€±á€¬á€„á€·á€ºá€‘á€²á€€á€›á€¾á€­á€á€²á€·á€„á€½á€±á€‘á€€á€º á€•á€­á€¯á€‘á€¯á€á€ºá€œá€­á€¯á€·á€™á€›á€¡á€±á€¬á€„á€º á€…á€…á€ºá€†á€±á€¸á€á€¼á€„á€ºá€¸
             if (amount > currentBalance) {
-                Swal.fire({ icon: 'warning', title: 'Insufficient Balance', text: 'You do not have enough funds for this withdrawal!', background: '#1a1a1a', color: '#fff' });
+                Swal.fire({ icon: 'warning', title: 'Insufficient Balance', text: 'You do not have enough funds.', background: '#1a1a1a', color: '#fff' });
                 return;
             }
 
-            const details = `Bank: ${bank}, Acc: ${acc}, Name: ${user}`;
-            
+            const pinInput = document.getElementById('withdraw-pin-input');
+            const savedPin = pinInput ? pinInput.dataset.savedPin : '';
+            if (savedPin && pinInput.value !== savedPin) {
+                pinInput.style.borderColor = '#ef4444';
+                pinInput.value = '';
+                setTimeout(() => { pinInput.style.borderColor = ''; }, 2000);
+                return;
+            }
+
             try {
-                // [PROMPT FIX 2]: á€„á€½á€±á€•á€™á€¬á€á€€á€­á€¯ Database á€‘á€²á€™á€¾ á€á€…á€ºá€á€«á€á€Šá€ºá€¸ á€”á€¾á€¯á€á€ºá€šá€°á€á€¼á€„á€ºá€¸ (Auto-deduct)
-                const userRef = doc(db, "users", currentUid);
-                await updateDoc(userRef, {
-                    balance: increment(-amount)
-                });
-
-                // Add to Withdrawal Collection
+                await updateDoc(doc(db, "users", currentUid), { balance: increment(-amount) });
                 await addDoc(collection(db, "withdrawals"), {
-                    uid: currentUid,
-                    email: currentUserEmail,
-                    amount: amount,
-                    details: details,
-                    method: bank,
-                    status: "PENDING",
-                    timestamp: serverTimestamp(),
-                    date: new Date().toLocaleString()
+                    uid: currentUid, email: currentUserEmail,
+                    amount, details: `Bank: ${bank}, Acc: ${acc}, Name: ${user}`,
+                    method: bank, status: 'PENDING',
+                    timestamp: serverTimestamp(), date: new Date().toLocaleString()
                 });
-                
-                Swal.fire({
-                    title: 'Success!',
-                    text: `Withdraw request sent. $${amount} has been deducted from your wallet.`,
-                    icon: 'success',
-                    confirmButtonColor: '#FFD700',
-                    background: '#1a1a1a', color: '#fff'
-                });
-
-                // Reset & Close
-                document.getElementById('with-amount-input').value = "";
+                Swal.fire({ icon: 'success', title: 'Success!', text: `Withdraw request sent. $${amount} deducted.`, confirmButtonColor: '#FFD700', background: '#1a1a1a', color: '#fff' });
+                document.getElementById('with-amount-input').value = '';
                 closeModal();
-
             } catch (e) {
-                console.error(e);
-                Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong. Please try again.', background: '#1a1a1a', color: '#fff' });
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong.', background: '#1a1a1a', color: '#fff' });
             }
         };
 
-        // --- Language Logic ---
+        // ── Language ──
         window.applyWalletLanguage = function(lang) {
-            const texts = {
-                'en': { nav: ["Dashboard", "Trading", "Portfolio", "History", "Wallet"], title: "My Wallet", total: "Total Balance", dep: "Deposit", with: "Withdraw", mod: "Withdraw Funds", hist: "Withdrawal History" },
-                'mm': { nav: ["ဒက်ရှ်ဘုတ်", "ရောင်းဝယ်ရေး", "ပို့ဖိုလီယို", "သမိုင်း", "ငွေထည်"], title: "ငွေထည်", total: "စုစုပေါင်း ကျန်ငွေ", dep: "ထည့်ငွေ", with: "ထုတ်ငွေ", mod: "ငွေ ထုတ်ယူမည်", hist: "ငွေထုတ်သမိုင်း" },
-                'th': { nav: ["แดชบอร์ด", "การซื้อขาย", "พอร์ตโฟลิโอ", "ประวัติ", "กระเป๋าสตางค์"], title: "กระเป๋าสตางค์ของฉัน", total: "ยอดรวม", dep: "ฝาก", with: "ถอน", mod: "ถอนเงิน", hist: "ประวัติการถอน" }
+            const T = {
+                en: {
+                    nav: ["Dashboard","Trading","Portfolio","History","Wallet","KYC","Live Support"],
+                    title: "My Wallet", total: "Total Balance", dep: "Deposit", with: "Withdraw",
+                    mod: "Withdraw Funds", hist: "Transaction History",
+                    tabWithdraw: "Withdrawals", tabDeposit: "Deposits",
+                    membershipTiers: "Membership Tiers",
+                    tierDesc: "Deposit tier determines your daily bonus.",
+                    memberLevel: "Level", dailyBonus: "Daily Bonus",
+                    statDeposit: "Deposit", statProfit: "Profit", statWithdrawals: "Withdrawals",
+                    tierRanges: ["< $10,000","$10K – $30K","$30K – $100K","$100K – $500K","$500K+"],
+                    tierBonuses: ["No bonus","$100/day × 5d","$500/day × 10d","$1500/day × 20d","$3000/day × 30d"],
+                    lblBank: "Bank / Payment Method", lblAcc: "Account Number",
+                    lblName: "Account Name", lblAmount: "Amount (USD)", lblPin: "Withdrawal PIN",
+                    cancel: "Cancel", confirm: "Confirm"
+                },
+                mm: {
+                    nav: ["ပင်မစာမျက်နှာ","ရွှေရောင်းဝယ်မှု","ပိုင်ဆိုင်မှုစာရင်း","အရောင်းအဝယ်မှတ်တမ်း","ကျွန်ုပ်၏ ပိုက်ဆံအိတ်","KYC စစ်ဆေးခြင်း","တိုက်ရိုက် အထောက်အပံ့"],
+                    title: "ပိုက်ဆံအိတ်", total: "စုစုပေါင်း ကျန်ငွေ", dep: "ထည့်ငွေ", with: "ထုတ်ငွေ",
+                    mod: "ငွေ ထုတ်ယူမည်", hist: "ငွေသွားလာမှု မှတ်တမ်း",
+                    tabWithdraw: "ငွေထုတ်မှု", tabDeposit: "ငွေဖြည့်မှု",
+                    membershipTiers: "အသင်းဝင် အဆင့်များ",
+                    tierDesc: "အပ်နှံငွေ အဆင့်အရ နေ့စဉ် ဘောနပ်စ် သတ်မှတ်သည်။",
+                    memberLevel: "အဆင့်", dailyBonus: "နေ့စဉ် ဘောနပ်စ်",
+                    statDeposit: "အပ်ငွေ", statProfit: "အမြတ်", statWithdrawals: "ငွေထုတ်မှု",
+                    tierRanges: ["< $10,000","$10K – $30K","$30K – $100K","$100K – $500K","$500K+"],
+                    tierBonuses: ["ဘောနပ်စ် မရှိ","$100/ရက် × ၅","$500/ရက် × ၁၀","$1500/ရက် × ၂၀","$3000/ရက် × ၃၀"],
+                    lblBank: "ဘဏ် / ငွေပေးချေမှု", lblAcc: "အကောင့်နံပါတ်",
+                    lblName: "အကောင့်အမည်", lblAmount: "ပမာဏ (USD)", lblPin: "ငွေထုတ် PIN",
+                    cancel: "မလုပ်တော့", confirm: "အတည်ပြုမည်"
+                },
+                th: {
+                    nav: ["แดชบอร์ด","การซื้อขาย","พอร์ตโฟลิโอ","ประวัติ","กระเป๋าสตางค์","KYC","สนับสนุนสด"],
+                    title: "กระเป๋าสตางค์", total: "ยอดรวม", dep: "ฝากเงิน", with: "ถอนเงิน",
+                    mod: "ถอนเงิน", hist: "ประวัติธุรกรรม",
+                    tabWithdraw: "การถอน", tabDeposit: "การฝาก",
+                    membershipTiers: "ระดับสมาชิก",
+                    tierDesc: "ระดับการฝากเงินกำหนดโบนัสรายวันของคุณ",
+                    memberLevel: "ระดับ", dailyBonus: "โบนัสรายวัน",
+                    statDeposit: "เงินฝาก", statProfit: "กำไร", statWithdrawals: "การถอน",
+                    tierRanges: ["< $10,000","$10K – $30K","$30K – $100K","$100K – $500K","$500K+"],
+                    tierBonuses: ["ไม่มีโบนัส","$100/วัน × 5","$500/วัน × 10","$1500/วัน × 20","$3000/วัน × 30"],
+                    lblBank: "ธนาคาร / วิธีชำระเงิน", lblAcc: "หมายเลขบัญชี",
+                    lblName: "ชื่อบัญชี", lblAmount: "จำนวนเงิน (USD)", lblPin: "PIN ถอนเงิน",
+                    cancel: "ยกเลิก", confirm: "ยืนยัน"
+                }
             };
 
+            const t = T[lang] || T.en;
+            const s = (id, txt) => { const e = document.getElementById(id); if (e && txt !== undefined) e.textContent = txt; };
+
+            // Nav
             const navItems = document.querySelectorAll('.nav-item');
-            const icons = ["fa-th-large", "fa-chart-line", "fa-briefcase", "fa-history", "fa-wallet"];
+            const icons = ["fa-th-large","fa-chart-line","fa-briefcase","fa-history","fa-wallet","fa-user-check","fa-headset"];
             navItems.forEach((item, i) => {
-                if(item && texts[lang].nav[i]) {
-                    item.innerHTML = `<i class="fas ${icons[i]}"></i> ${texts[lang].nav[i]}`;
-                }
+                if (t.nav[i]) item.innerHTML = `<i class="fas ${icons[i]}"></i> ${t.nav[i]}`;
             });
 
-            document.getElementById('page-title').innerText = texts[lang].title;
-            document.getElementById('total-balance-label').innerText = texts[lang].total;
-            document.getElementById('dep-btn').innerText = texts[lang].dep;
-            document.getElementById('with-btn').innerText = texts[lang].with;
-            document.getElementById('modal-head').innerText = texts[lang].mod;
-            document.getElementById('history-title').innerText = texts[lang].hist;
-        }
+            s('page-title', t.title);
+            s('total-balance-label', t.total);
+            s('dep-btn', null); // keep icon — rebuild
+            s('with-btn', null);
+            document.getElementById('dep-btn').innerHTML  = `<i class="fas fa-plus-circle"></i> ${t.dep}`;
+            document.getElementById('with-btn').innerHTML = `<i class="fas fa-arrow-up-from-bracket"></i> ${t.with}`;
+            s('modal-head', null);
+            document.getElementById('modal-head').innerHTML = `<i class="fas fa-arrow-up-from-bracket" style="margin-right:8px;"></i>${t.mod}`;
+            s('history-title', t.hist);
+            s('tab-lbl-withdraw', t.tabWithdraw);
+            s('tab-lbl-deposit', t.tabDeposit);
+            s('membership-tiers-title', t.membershipTiers);
+            s('tier-desc', t.tierDesc);
+            s('member-level-label', t.memberLevel + ':');
+            s('daily-bonus-label', t.dailyBonus + ':');
+            s('stat-deposit-label', t.statDeposit);
+            s('stat-profit-label', t.statProfit);
+            s('stat-withdrawals-label', t.statWithdrawals);
+
+            // Tier ranges + bonuses
+            const tierKeys = ['silver','gold','platinum','diamond','supreme'];
+            tierKeys.forEach((key, i) => {
+                s('tier-range-' + key, t.tierRanges[i]);
+                s('tier-bonus-' + key, t.tierBonuses[i]);
+            });
+
+            // Modal labels
+            s('lbl-bank', t.lblBank); s('lbl-acc', t.lblAcc);
+            s('lbl-name', t.lblName); s('lbl-amount', t.lblAmount);
+            s('lbl-pin', t.lblPin);
+            s('btn-cancel-lbl', t.cancel); s('btn-confirm-lbl', t.confirm);
+        };
 
         const savedLang = localStorage.getItem('selectedLang') || 'en';
         applyWalletLanguage(savedLang);
     </script>
+
+    <script>
+    /* ═══ YLG Language Sync — v2 ═══ */
+    (function(){
+        function triggerApply(lang){
+            const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                         'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                         'applyTradingLanguage','applyAccountLanguage','applyLang'];
+            for (const fn of fns) {
+                if (typeof window[fn] === 'function') {
+                    try { window[fn](lang); } catch(e) {}
+                }
+            }
+        }
+        window.addEventListener('storage', function(e){
+            if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+        });
+        function initialApply(){
+            const lang = localStorage.getItem('selectedLang') || 'en';
+            triggerApply(lang);
+        }
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', function(){ setTimeout(initialApply, 50); });
+        } else {
+            setTimeout(initialApply, 50);
+        }
+        setTimeout(initialApply, 500);
+        setTimeout(initialApply, 1500);
+    })();
+    </script>
+
+    <script src="mobile-nav.js"></script>
+    <script src="sidebar-user.js"></script>
+    <script src="/toast.js"></script>
+<script type="module" src="notifications-bell.js"></script>
 </body>
 </html>

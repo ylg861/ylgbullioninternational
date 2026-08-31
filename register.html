@@ -1,13 +1,17 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Register — YLG Bullion</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <title>YLG Bullion</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <style>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
+    <style>
     :root{--bg:#0f1113;--panel:#151617;--accent:#E5B800;--muted:#9aa0a6;--input:#1e1e1e}
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -32,12 +36,50 @@
     .small{font-size:12px;color:var(--muted)}
     .error{margin-top:10px;padding:10px;background:#3a1b1b;color:#ffd3d3;border-radius:8px;display:none}
     .debug{margin-top:10px;padding:10px;background:#071017;color:#9fefff;border-radius:8px;white-space:pre-wrap;display:none;font-size:13px}
-    .inline-row{display:flex;gap:10px;align-items:center}
+    .inline-row{display:flex;gap:8px;align-items:center;cursor:pointer}
+    input[type="checkbox"]{
+        appearance:none!important;-webkit-appearance:none!important;
+        width:15px!important;height:15px!important;
+        min-width:15px!important;max-width:15px!important;
+        min-height:15px!important;max-height:15px!important;
+        padding:0!important;margin:0!important;
+        box-sizing:border-box!important;
+        border:1.5px solid #555!important;border-radius:3px!important;
+        background:#1a1a1a!important;cursor:pointer;
+        transition:border-color 0.2s,background 0.2s;
+        position:relative;flex-shrink:0;display:inline-block!important;
+    }
+    input[type="checkbox"]:checked{
+        background:var(--accent)!important;border-color:var(--accent)!important;
+    }
+    input[type="checkbox"]:checked::after{
+        content:'✓';position:absolute;
+        font-size:10px;font-weight:800;color:#000;line-height:1;
+        top:50%;left:50%;transform:translate(-50%,-50%);
+    }
   </style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
   <div id="ylg-auth-wrapper">
     <main class="card" role="main">
+
+    <!-- ── Email Verification Screen (shown after registration) ── -->
+    <div id="verify-screen" style="display:none;text-align:center;padding:12px 0;">
+      <div style="width:72px;height:72px;border-radius:50%;background:rgba(229,184,0,0.1);border:2px solid rgba(229,184,0,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <i class="fas fa-envelope-circle-check" style="font-size:28px;color:var(--accent);"></i>
+      </div>
+      <h2 id="vfy-title" style="margin:0 0 8px;font-size:20px;">Check your email</h2>
+      <p id="vfy-sub" style="color:var(--muted);font-size:14px;margin:0 0 6px;">We sent a verification link to</p>
+      <p id="vfy-email" style="color:var(--accent);font-weight:700;font-size:15px;margin:0 0 20px;word-break:break-all;"></p>
+      <p id="vfy-note" style="color:var(--muted);font-size:12px;line-height:1.6;margin:0 0 24px;">Click the link in the email to activate your account. Check your spam folder if you don't see it.</p>
+      <a href="login.html" id="vfy-btn-login" style="display:block;padding:12px;border-radius:10px;background:var(--accent);color:#111;font-weight:700;text-decoration:none;font-size:14px;margin-bottom:10px;">Go to Login</a>
+      <button id="vfy-btn-resend" onclick="resendVerification()" style="width:100%;padding:11px;border-radius:10px;border:1px solid rgba(229,184,0,0.25);background:transparent;color:var(--accent);font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;">Resend Email</button>
+      <div id="vfy-resend-msg" style="display:none;margin-top:10px;font-size:12px;color:#22c55e;"></div>
+    </div>
+
+    <div id="register-form-wrap">
     <div class="brand">
       <div class="logo">YLG</div>
       <div>
@@ -74,7 +116,7 @@
         </div>
       </div>
 
-      <p style="margin-top:12px"><label class="inline-row"><input id="terms" type="checkbox" /> <span id="labelTerms" class="small">I agree to Terms and Privacy</span></label></p>
+      <p style="margin-top:12px"><label class="inline-row"><input id="terms" type="checkbox" /> <span id="labelTerms" class="small">I agree to the <a href="terms.html" target="_blank" style="color:var(--accent);text-decoration:underline;">Terms &amp; Conditions</a></span></label></p>
 
       <div class="actions">
         <button id="submitBtn" class="primary" type="submit"><i class="fa-solid fa-user-plus" style="margin-right:8px"></i> <span id="btnText">Register</span></button>
@@ -85,6 +127,7 @@
 
       <p class="small" style="margin-top:14px">Already have an account? <a href="login.html" style="color:var(--accent);text-decoration:none">Login</a></p>
     </form>
+    </div><!-- /#register-form-wrap -->
     </main>
   </div>
 
@@ -95,13 +138,14 @@
     #ylg-auth-wrapper{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2147483647;padding:24px;background:transparent}
   </style>
 
-    <script type="module">
-    import { app } from './firebase-init.js';
-    import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, doc, setDoc, runTransaction } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+  <script type="module">
+        import { app, auth, db } from './firebase-init.js';
+        import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification }
+            from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { doc, setDoc, runTransaction }
+            from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        let _verifyUser = null;
 
     const form = document.getElementById('registerForm');
     const fullname = document.getElementById('fullname');
@@ -135,6 +179,24 @@
       btnText.textContent = t.register;
     }
     applyLang();
+
+    window.resendVerification = async function() {
+        if (!_verifyUser) return;
+        const btn = document.getElementById('vfy-btn-resend');
+        const msg = document.getElementById('vfy-resend-msg');
+        btn.disabled = true;
+        try {
+            await sendEmailVerification(_verifyUser);
+            msg.style.display = 'block';
+            msg.textContent = window._vfyResent || 'Verification email resent!';
+            setTimeout(() => { msg.style.display = 'none'; btn.disabled = false; }, 4000);
+        } catch(e) {
+            msg.style.display = 'block';
+            msg.style.color = '#ef4444';
+            msg.textContent = 'Please wait before requesting another email.';
+            setTimeout(() => { msg.style.display = 'none'; msg.style.color = '#22c55e'; btn.disabled = false; }, 4000);
+        }
+    };
 
     function setError(msg){ errorBox.style.display = msg ? 'block' : 'none'; errorBox.textContent = msg || ''; }
 
@@ -178,17 +240,105 @@
           userIndex: newIndex, ylgId: customYlgId, tradeControl: 'NORMAL', kycStatus: 'pending', createdAt: new Date().toISOString()
         });
 
-        await Swal.fire({ icon:'success', title:t.register, text:`Account created. ID: ${customYlgId}`, timer:1800 });
-        window.location.href = 'login.html';
+        // Send verification email & show verify screen
+        _verifyUser = cred.user;
+        try { await sendEmailVerification(cred.user); } catch(_) {}
+
+        document.getElementById('register-form-wrap').style.display = 'none';
+        const vs = document.getElementById('verify-screen');
+        vs.style.display = 'block';
+        document.getElementById('vfy-email').textContent = emailVal;
+
+        // Apply language to verify screen
+        const vT = {
+          en: { title:'Check your email', sub:'We sent a verification link to', note:'Click the link in the email to activate your account. Check spam if you don\'t see it.', login:'Go to Login', resend:'Resend Email', resent:'Verification email resent!' },
+          mm: { title:'အီးမေးလ် စစ်ဆေးပါ', sub:'ဤလိပ်စာသို့ link ပေးပို့ပြီးပါပြီ', note:'အကောင့် ဖွင့်ရန် အီးမေးလ်ထဲက link ကို နှိပ်ပါ။ spam folder စစ်ဆေးပါ။', login:'Login ဝင်ရန်', resend:'အီးမေးလ် ပြန်ပို့', resent:'အီးမေးလ် ပြန်ပို့ပြီးပါပြီ!' },
+          th: { title:'ตรวจสอบอีเมลของคุณ', sub:'เราส่งลิงก์ยืนยันไปที่', note:'คลิกลิงก์ในอีเมลเพื่อเปิดใช้บัญชีของคุณ ตรวจสอบสแปมหากไม่เห็น', login:'ไปที่ Login', resend:'ส่งอีเมลอีกครั้ง', resent:'ส่งอีเมลยืนยันแล้ว!' }
+        };
+        const vt = vT[lang] || vT.en;
+        document.getElementById('vfy-title').textContent = vt.title;
+        document.getElementById('vfy-sub').textContent   = vt.sub;
+        document.getElementById('vfy-note').textContent  = vt.note;
+        document.getElementById('vfy-btn-login').textContent  = vt.login;
+        document.getElementById('vfy-btn-resend').textContent = vt.resend;
+        window._vfyResent = vt.resent;
       }catch(err){
         console.error(err);
-        submitBtn.disabled = false; btnText.textContent = texts[localStorage.getItem('selectedLang')||'en'].register;
-        let msg = err.message || 'Register error';
-        if (err.code === 'auth/email-already-in-use') msg = 'Email already in use';
-        if (location.search.includes('debug=1') || localStorage.getItem('debug')==='true'){ debugBox.style.display='block'; debugBox.textContent = `Error code: ${err.code || 'N/A'}\n${err.message || ''}`; }
+        const lang = localStorage.getItem('selectedLang') || 'en';
+        const t = texts[lang] || texts.en;
+        submitBtn.disabled = false; btnText.textContent = t.register;
+        
+        // Map Firebase error codes to friendly messages
+        const errMessages = {
+          en: {
+            emailUsed: 'This email is already registered. Try logging in instead.',
+            weakPass: 'Password is too weak. Use at least 6 characters.',
+            invalidEmail: 'Invalid email format.',
+            network: 'Network error. Please check your connection.',
+            tooMany: 'Too many attempts. Please try again later.',
+            generic: 'Registration failed. Please try again.'
+          },
+          mm: {
+            emailUsed: 'ဤအီးမေးလ်ဖြင့် မှတ်ပုံတင်ထားပြီးဖြစ်သည်။ Login ဘက်က ဝင်ပါ။',
+            weakPass: 'စကားဝှက် အားနည်းသည်။ အနည်းဆုံး ၆ လုံး ထည့်ပါ။',
+            invalidEmail: 'အီးမေးလ်ပုံစံ မမှန်ပါ။',
+            network: 'အင်တာနက် ချိတ်ဆက်မှု ပြဿနာရှိနေပါသည်။',
+            tooMany: 'အကြိမ်များစွာ မှားယွင်းပါသည်။ ခဏကြာမှ ပြန်ကြိုးစားပါ။',
+            generic: 'မှတ်ပုံတင်ခြင်း မအောင်မြင်ပါ။ ပြန်ကြိုးစားပါ။'
+          },
+          th: {
+            emailUsed: 'อีเมลนี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบแทน',
+            weakPass: 'รหัสผ่านอ่อนเกินไป ใช้อย่างน้อย 6 ตัวอักษร',
+            invalidEmail: 'รูปแบบอีเมลไม่ถูกต้อง',
+            network: 'เครือข่ายขัดข้อง กรุณาตรวจสอบการเชื่อมต่อ',
+            tooMany: 'พยายามมากเกินไป กรุณาลองใหม่ภายหลัง',
+            generic: 'การลงทะเบียนไม่สำเร็จ กรุณาลองใหม่'
+          }
+        };
+        const em = errMessages[lang] || errMessages.en;
+        
+        let msg = em.generic;
+        const code = err.code || '';
+        if (code === 'auth/email-already-in-use') msg = em.emailUsed;
+        else if (code === 'auth/weak-password') msg = em.weakPass;
+        else if (code === 'auth/invalid-email') msg = em.invalidEmail;
+        else if (code === 'auth/network-request-failed') msg = em.network;
+        else if (code === 'auth/too-many-requests') msg = em.tooMany;
+        
         setError(msg);
+        
+        // Debug mode (when ?debug=1)
+        if (location.search.includes('debug=1') || localStorage.getItem('debug')==='true') {
+          if (typeof debugBox !== 'undefined' && debugBox) {
+            debugBox.style.display = 'block';
+            debugBox.textContent = (err.code || '') + '\n' + (err.message || '');
+          }
+        }
       }
     });
   </script>
+
+<script>
+(function(){
+    function triggerApply(lang){
+        const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                     'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                     'applyTradingLanguage','applyAccountLanguage','applyLang'];
+        for (const fn of fns) {
+            if (typeof window[fn] === 'function') try { window[fn](lang); } catch(e) {}
+        }
+    }
+    window.addEventListener('storage', function(e){
+        if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+    });
+    function init(){ triggerApply(localStorage.getItem('selectedLang') || 'en'); }
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', function(){ setTimeout(init, 50); });
+    } else { setTimeout(init, 50); }
+    setTimeout(init, 500);
+})();
+</script>
+
+<script src="/toast.js"></script>
 </body>
 </html>

@@ -1,172 +1,561 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="my">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YLG Bullion - Account Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        :root { 
-            --color-dark-bg: #111111; 
-            --color-medium-dark: #151920; 
-            --color-gold-accent: #FFD700; 
-            --color-text-light: #E6E9EE; 
-            --color-text-fade: #9aa0b3; 
-            --color-positive: #00B050; 
-            --color-negative: #D93025; 
+        :root {
+            --gold: #C9A84C; --gold-light: #FFD700;
+            --bg: #0e0e0e; --card: #141414; --card2: #1a1a1a; --border: rgba(255,255,255,0.06);
+            --text: #E8E8E8; --muted: #6B7280; --green: #22c55e; --red: #ef4444;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Outfit', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; }
 
-            --bg: var(--color-dark-bg);
-            --panel: var(--color-medium-dark);
-            --muted: var(--color-text-fade);
-            --text: var(--color-text-light);
-            --gold: var(--color-gold-accent);
-            --shadow: 0 18px 50px rgba(0,0,0,0.18);
-        }
-        
-        body { 
-            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            background: var(--color-dark-bg); 
-            color: var(--color-text-light); 
-            margin: 0; 
-            display: flex; 
-        }
-        
-        /* Sidebar Styling */
-        .sidebar { 
-            width: 240px; 
-            height: 100vh; 
-            background: var(--panel); 
-            border-right: 1px solid #333; 
-            position: fixed; 
-            display: flex;
-            flex-direction: column;
-            box-shadow: none;
-        }
-        
-        .main-content { 
-            margin-left: 240px; 
-            padding: 28px; 
-            width: calc(100% - 240px); 
-        }
-        
-        /* Branding Section */
-        .brand-header { 
-            padding: 25px 20px; 
-            border-bottom: 1px solid #333; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-        }
-        
-        .logo-img { 
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%; 
-            border: 2px solid var(--color-gold-accent); 
-            object-fit: cover; 
-        }
-        
-        .logo-text-group h2 {
-            margin: 0;
-            line-height: 1.1;
-        }
+        /* Sidebar */
+        .sidebar { width: 260px; height: 100vh; background: #111; border-right: 1px solid var(--border); position: fixed; display: flex; flex-direction: column; }
+        .logo-section { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); flex-shrink: 0; }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text  { font-size: 20px; font-weight: 800; color: var(--gold); display: block; letter-spacing: 0.5px; }
+        .logo-subtext { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 2px; display: block; margin-top: 2px; }
+        .logo-company { font-size: 9px; color: var(--muted); display: block; margin-top: 3px; letter-spacing: 0.6px; }
+        nav { padding: 8px 0; flex-grow: 1; overflow-y: auto; }
+        .nav-item { padding: 12px 18px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 11px; border-left: 3px solid transparent; transition: 0.2s; font-size: 13.5px; font-weight: 500; }
+        .nav-item i { width: 18px; text-align: center; font-size: 13px; }
+        .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+        .nav-item.active { color: var(--gold); background: rgba(201,168,76,0.07); border-left-color: var(--gold); }
+        #sidebar-auth-box { padding: 14px 16px; border-top: 1px solid var(--border); }
+        #sidebar-auth-box a { display: block; width: 100%; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px; text-align: center; margin-bottom: 8px; transition: 0.2s; }
+        .btn-login-side { background: var(--gold); color: #000 !important; }
+        .btn-register-side { background: #222; color: var(--text) !important; border: 1px solid #333; margin-bottom: 0 !important; }
+        #logged-in-sidebar { text-align: center; }
+        #sidebar-user-name { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+        #sidebar-logout-btn { width: 100%; padding: 9px; background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.25); border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; transition: 0.2s; }
+        #sidebar-logout-btn:hover { background: rgba(239,68,68,0.2); }
 
-        /* Navigation */
-        .nav-list {
-            margin-top: 20px;
-            padding: 0;
-            list-style: none;
-        }
+        /* Main */
+        .main-content { margin-left: 260px; padding: 28px 28px 60px; width: calc(100% - 260px); min-height: 100vh; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 18px; margin-bottom: 28px; }
+        header h2 { margin: 0; font-size: 22px; font-weight: 700; }
 
-        .nav-item { 
-            padding: 15px 20px; 
-            color: var(--color-text-fade); 
-            text-decoration: none; 
-            display: flex; 
-            align-items: center; 
-            transition: 0.3s;
+        /* Profile Hero */
+        .profile-hero {
+            background: linear-gradient(135deg, #1a1610 0%, #141414 60%, #0e0e0e 100%);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 20px; padding: 28px;
+            display: flex; align-items: center; gap: 24px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 0 40px rgba(201,168,76,0.05);
+            margin-bottom: 20px;
         }
-        
-        .nav-item i {
-            width: 20px;
-            margin-right: 15px;
-            text-align: center;
+        .profile-hero::before {
+            content: ''; position: absolute; top: -80px; right: -80px;
+            width: 250px; height: 250px;
+            background: radial-gradient(circle, rgba(201,168,76,0.1) 0%, transparent 70%);
+            pointer-events: none;
         }
+        .avatar-ring {
+            width: 76px; height: 76px; border-radius: 50%;
+            background: linear-gradient(135deg, #C9A84C, #FFD700);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; font-weight: 800; color: #000;
+            flex-shrink: 0; letter-spacing: -1px;
+        }
+        .profile-info { flex: 1; min-width: 0; }
+        .profile-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .profile-id { font-size: 13px; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+        .profile-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pbadge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .pbadge-level { background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+        .pbadge-active { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: var(--green); }
+        .pbadge-kyc    { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); color: #818cf8; }
 
-        .nav-item:hover, .nav-item.active { 
-            color: var(--color-gold-accent); 
-            background: #252525; 
-            border-left: 4px solid var(--color-gold-accent); 
-        }
+        /* Quick Actions */
+        .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .quick-btn { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 12px; text-align: center; text-decoration: none; color: var(--text); transition: 0.2s; }
+        .quick-btn:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.05); }
+        .quick-btn i { font-size: 22px; color: var(--gold); display: block; margin-bottom: 8px; }
+        .quick-btn span { font-size: 12px; font-weight: 600; color: var(--muted); }
 
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; width: 100%; }
+        /* Info Grid */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px; }
+        .info-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+        .info-card h3 { font-size: 14px; color: var(--gold); margin: 0 0 16px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .label { color: var(--muted); }
+        .info-row .value { font-weight: 600; }
+        .value-gold  { color: var(--gold); }
+        .value-green { color: var(--green); }
+
+        /* Logout */
+        .logout-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 400px; margin: 20px auto 0; padding: 13px; border-radius: 12px; background: rgba(239,68,68,0.07); color: var(--red); border: 1px solid rgba(239,68,68,0.2); cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; transition: 0.2s; }
+        .logout-btn:hover { background: rgba(239,68,68,0.15); }
+
+        /* Guest */
+        .guest-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 60px 30px; text-align: center; max-width: 420px; margin: 0 auto; }
+        .guest-card i { font-size: 48px; color: #2a2a2a; margin-bottom: 18px; display: block; }
+        .guest-card p { color: var(--muted); font-size: 14px; margin: 0 0 22px; line-height: 1.7; }
+        .btn-gold { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #C9A84C, #FFD700); color: #000; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); display: none; }
+            .main-content { margin-left: 0; width: 100%; padding: 16px 14px 90px; }
+            .profile-hero { flex-direction: column; text-align: center; }
+            .quick-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
     <link rel="stylesheet" href="mobile-responsive.css">
+    <script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="brand-header">
-            <img src="logo.png" class="logo-img" id="mainLogo" 
-                 onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
-            
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
             <div class="logo-text-group">
-                <h2>
-                    <span style="color: var(--gold); font-size: 24px; font-weight: bold; display: block;">YLG</span>
-                    <span style="color: #fff; font-size: 18px; font-weight: bold; display: block;">BULLION</span>
-                </h2>
-                <p style="margin: 3px 0 0 0; font-size: 9px; color: #888; letter-spacing: 0.5px;">INTERNATIONAL CO., LTD.</p>
+                <div class="logo-y-text">YLG</div>
+                <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
             </div>
         </div>
-
-        <nav class="nav-list">
-            <a href="index.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-            <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> My Wallet</a>
-            <a href="trading.html" class="nav-item"><i class="fas fa-chart-line"></i> Gold Trading</a>
-            <a href="account.html" class="nav-item active"><i class="fas fa-user-circle"></i> Account</a>
+        <nav>
+            <a href="index.html"     class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html"   class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
+            <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="history.html"   class="nav-item"><i class="fas fa-history"></i> History</a>
+            <a href="wallet.html"    class="nav-item"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="kyc.html"       class="nav-item"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="chat-user.html" class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
+            <a href="account.html"   class="nav-item active"><i class="fas fa-user-circle"></i> Account</a>
         </nav>
+        <div id="sidebar-auth-box">
+            <div id="sidebar-guest" style="display:none;">
+                <a href="login.html" class="btn-login-side">Login</a>
+                <a href="register.html" class="btn-register-side">Register</a>
+            </div>
+            <div id="logged-in-sidebar" style="display:none;">
+                <span id="sidebar-user-name">User</span>
+                <button id="sidebar-logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
     </aside>
 
     <main class="main-content">
-        <div style="background: var(--card); padding: 30px; border-radius: 12px; border-top: 3px solid var(--gold);">
-            <h1 id="welcome-text" style="margin-top: 0; color: var(--gold);">Loading...</h1>
-            <p style="color: #aaa; line-height: 1.6;">
-                YLG Bullion International �"ᬾ ᬬᬼᬭᬯ� ᬭᬯ�"ᬫ�~�`ᬺ�9 ᬤ�&ᬬ�"ᬻᬬᬺ�ᬾᬬᬐᬽ�ᬺ �~�ᬺ၏ ᬡᬬᬱᬬ�ᬷᬺᬡᬁᬻᬬᬺᬡ�Sᬬᬺ�"ᬻᬬᬸ�ᬾ�ᬷᬺ �:ᬱᬬ�ᬺᬸᬝ�aᬺ�"ᬾᬯ�"ᬾᬐᬺᬐ�"ᬺᬸ�"ᬻᬬᬸᬬᬭᬯ ᬬᬼ�`ᬷᬺ�:ᬾᬯ�ᬭᬯ�ᬺ�"ᬫ�~�`ᬺ�9
-            </p>
-            <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
-            <div id="user-info-status">
+        <header>
+            <h2 id="page-h2">My Account</h2>
+        </header>
+
+        <!-- Logged-in view -->
+        <div id="logged-in-view" style="display:none;">
+
+            <!-- Profile Hero -->
+            <div class="profile-hero">
+                <div class="avatar-ring" id="avatar-initials">—</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="hero-name">Loading...</div>
+                    <div class="profile-id" id="hero-id">YLG-2026—</div>
+                    <div class="profile-badges">
+                        <span class="pbadge pbadge-level"><i class="fas fa-crown"></i> <span id="hero-level">—</span></span>
+                        <span class="pbadge pbadge-active"><i class="fas fa-check-circle"></i> <span id="hero-status">Active</span></span>
+                        <span class="pbadge pbadge-kyc" id="hero-kyc-badge"><i class="fas fa-shield-alt"></i> KYC —</span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-grid">
+                <a href="portfolio.html" class="quick-btn"><i class="fas fa-briefcase"></i><span id="qa-portfolio">Portfolio</span></a>
+                <a href="history.html"   class="quick-btn"><i class="fas fa-history"></i><span id="qa-history">History</span></a>
+                <a href="wallet.html"    class="quick-btn"><i class="fas fa-wallet"></i><span id="qa-wallet">Wallet</span></a>
+                <a href="kyc.html"       class="quick-btn"><i class="fas fa-user-check"></i><span id="qa-kyc">KYC</span></a>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3 id="acc-card-title"><i class="fas fa-user-shield"></i> Account Details</h3>
+                    <div class="info-row"><span class="label" id="lbl-member-id">Member ID</span>     <span class="value value-gold" id="display-member-id">—</span></div>
+                    <div class="info-row"><span class="label" id="lbl-full-name">Full Name</span>     <span class="value" id="display-full-name">—</span></div>
+                    <div class="info-row"><span class="label" id="lbl-email">Email</span>             <span class="value" id="display-email" style="font-size:12px;">—</span></div>
+                    <div class="info-row"><span class="label" id="lbl-phone">Phone</span>             <span class="value" id="display-phone">—</span></div>
+                    <div class="info-row"><span class="label" id="lbl-kyc">KYC Status</span>         <span class="value" id="display-kyc">—</span></div>
+                    <div class="info-row"><span class="label" id="lbl-acc-status">Account Status</span><span class="value value-green" id="display-acc-status"><i class="fas fa-check-circle"></i> Active</span></div>
+                </div>
+                <div class="info-card">
+                    <h3 id="bal-card-title"><i class="fas fa-wallet"></i> Balance Overview</h3>
+                    <div class="info-row"><span class="label" id="lbl-total-bal">Total Balance</span> <span class="value value-gold" id="display-balance">$ 0.00</span></div>
+                    <div class="info-row"><span class="label" id="lbl-deposited">Deposited</span>    <span class="value" id="display-deposit">$ 0.00</span></div>
+                    <div class="info-row"><span class="label" id="lbl-mem-level">Member Level</span> <span class="value value-gold" id="display-level">—</span></div>
+                </div>
+            </div>
+
+            <!-- Login History -->
+            <div class="info-card" id="login-history-card" style="margin-top:16px;">
+                <h3><i class="fas fa-history" style="color:var(--gold-accent);margin-right:8px;"></i>Recent Logins</h3>
+                <div id="login-history-list">
+                    <div style="text-align:center;padding:20px;color:#555;font-size:13px;">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Change Password -->
+            <div class="info-card" style="margin-top:16px;">
+                <h3><i class="fas fa-lock"></i> Change Password</h3>
+                <div style="display:grid;gap:12px;margin-top:4px;">
+                    <div>
+                        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px;">Current Password</label>
+                        <div style="position:relative;">
+                            <input type="password" id="cp-current" placeholder="Enter current password"
+                                style="width:100%;padding:12px 42px 12px 14px;background:#1a1a1a;border:1px solid #2a2a2a;
+                                       color:#fff;border-radius:10px;font-size:13px;font-family:inherit;outline:none;
+                                       transition:border-color 0.2s;"
+                                onfocus="this.style.borderColor='rgba(201,168,76,0.4)'"
+                                onblur="this.style.borderColor='#2a2a2a'">
+                            <button type="button" onclick="togglePwVis('cp-current',this)"
+                                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+                                       background:none;border:none;color:#555;cursor:pointer;padding:0;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px;">New Password</label>
+                        <div style="position:relative;">
+                            <input type="password" id="cp-new" placeholder="Min 6 characters"
+                                style="width:100%;padding:12px 42px 12px 14px;background:#1a1a1a;border:1px solid #2a2a2a;
+                                       color:#fff;border-radius:10px;font-size:13px;font-family:inherit;outline:none;
+                                       transition:border-color 0.2s;"
+                                onfocus="this.style.borderColor='rgba(201,168,76,0.4)'"
+                                onblur="this.style.borderColor='#2a2a2a'">
+                            <button type="button" onclick="togglePwVis('cp-new',this)"
+                                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+                                       background:none;border:none;color:#555;cursor:pointer;padding:0;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px;">Confirm New Password</label>
+                        <div style="position:relative;">
+                            <input type="password" id="cp-confirm" placeholder="Re-enter new password"
+                                style="width:100%;padding:12px 42px 12px 14px;background:#1a1a1a;border:1px solid #2a2a2a;
+                                       color:#fff;border-radius:10px;font-size:13px;font-family:inherit;outline:none;
+                                       transition:border-color 0.2s;"
+                                onfocus="this.style.borderColor='rgba(201,168,76,0.4)'"
+                                onblur="this.style.borderColor='#2a2a2a'">
+                            <button type="button" onclick="togglePwVis('cp-confirm',this)"
+                                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);
+                                       background:none;border:none;color:#555;cursor:pointer;padding:0;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="cp-btn" onclick="doChangePassword()"
+                        style="padding:13px;background:linear-gradient(135deg,#C9A84C,#FFD700);
+                               color:#000;border:none;border-radius:10px;font-size:14px;font-weight:700;
+                               cursor:pointer;font-family:inherit;transition:0.2s;">
+                        <i class="fas fa-key" style="margin-right:7px;"></i>Change Password
+                    </button>
+                </div>
+            </div>
+
+            <!-- Legal links -->
+            <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid var(--border);">
+                <a href="terms.html"   style="color:var(--muted);font-size:12px;text-decoration:none;transition:0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-file-alt" style="margin-right:4px;"></i>Terms</a>
+                <a href="privacy.html" style="color:var(--muted);font-size:12px;text-decoration:none;transition:0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-shield-alt" style="margin-right:4px;"></i>Privacy Policy</a>
+                <a href="risk.html"    style="color:var(--muted);font-size:12px;text-decoration:none;transition:0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'"><i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>Risk Disclosure</a>
+            </div>
+
+            <button class="logout-btn" id="logout-main-btn">
+                <i class="fas fa-sign-out-alt"></i> <span id="lbl-logout">Logout</span>
+            </button>
+        </div>
+
+        <!-- Guest view -->
+        <div id="guest-view" style="display:none;">
+            <div class="guest-card">
+                <i class="fas fa-user-lock"></i>
+                <p id="guest-msg">You are not logged in. Please login to view your account details.</p>
+                <a href="login.html" class="btn-gold"><i class="fas fa-sign-in-alt"></i> <span id="guest-btn">Login Now</span></a>
+            </div>
         </div>
     </main>
 
-    <script>
-        window.onload = function() {
-            const userName = localStorage.getItem('userName');
-            const welcomeElement = document.getElementById('welcome-text');
-            const statusDiv = document.getElementById('user-info-status');
+    <script type="module">
+        import { auth, db } from './firebase-init.js';
+        import { onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-            if (userName) {
-                // ᬡᬬᬱᬬ�ᬷᬺᬝ�ᬺ�ᬬᬸ�Sᬻᬾ�ᬺ
-                welcomeElement.innerText = "Welcome back, " + userName + "!";
-                statusDiv.innerHTML = `<p style="color: #00B050;"><i class="fas fa-check-circle"></i> �~�ᬺ�~�`ᬺ ᬡᬬᬱᬬ�ᬷᬺᬝ�ᬺ�ᬬᬸ�"ᬼᬮᬸ �ᬼ�&ᬺ�"ᬫ�~�`ᬺ�9</p>`;
+        function getMemberLevel(d) {
+            if (d >= 500000) return 'Supreme'; if (d >= 100000) return 'Diamond';
+            if (d >= 30000)  return 'Platinum'; if (d >= 10000) return 'Gold';
+            return 'Silver';
+        }
+
+        function kycBadge(status) {
+            const m = {
+                verified: '<span style="color:#22c55e"><i class="fas fa-check-circle"></i> Verified</span>',
+                pending:  '<span style="color:#FFD700"><i class="fas fa-clock"></i> Pending</span>',
+                rejected: '<span style="color:#ef4444"><i class="fas fa-times-circle"></i> Rejected</span>'
+            };
+            return m[status] || '<span style="color:#555"><i class="fas fa-minus-circle"></i> Not Submitted</span>';
+        }
+
+        const s  = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+        const sh = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML  = v; };
+
+        onAuthStateChanged(auth, async (user) => {
+            const loggedInView  = document.getElementById('logged-in-view');
+            const guestView     = document.getElementById('guest-view');
+            const sidebarGuest  = document.getElementById('sidebar-guest');
+            const sidebarLogged = document.getElementById('logged-in-sidebar');
+
+            if (user) {
+                localStorage.setItem('userShortUID', user.uid.slice(0, 8).toUpperCase());
+                loggedInView.style.display  = 'block';
+                guestView.style.display     = 'none';
+                sidebarGuest.style.display  = 'none';
+                sidebarLogged.style.display = 'block';
+
+                const displayName = user.displayName || user.email.split('@')[0];
+                s('sidebar-user-name', displayName);
+                s('display-email', user.email);
+
+                try {
+                    const snap = await getDoc(doc(db, 'users', user.uid));
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        const userIndex = data.userIndex || 0;
+                        const mId = 'YLG-2026' + String(userIndex).padStart(4, '0');
+                        const fullName = data.fullname || data.name || displayName;
+                        const deposit = data.depositBalance || 0;
+                        const balance = data.balance || 0;
+                        const level = getMemberLevel(deposit);
+
+                        // Hero
+                        const initials = fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+                        s('avatar-initials', initials || '?');
+                        s('hero-name', fullName);
+                        s('hero-id',   mId);
+                        s('hero-level', level);
+
+                        // KYC badge
+                        const kycStatus = data.kycStatus || '';
+                        const kycLabel = kycStatus === 'verified' ? 'Verified' : (kycStatus === 'pending' ? 'Pending' : 'KYC');
+                        sh('hero-kyc-badge', `<i class="fas fa-shield-alt"></i> ${kycLabel}`);
+                        if (kycStatus === 'verified') document.getElementById('hero-kyc-badge').style.color = '#22c55e';
+
+                        // Cards
+                        s('display-member-id', mId);
+                        s('display-full-name', fullName);
+                        s('display-phone',     data.phone || 'Not Set');
+                        sh('display-kyc',      kycBadge(data.kycStatus));
+                        s('display-balance',   '$ ' + balance.toLocaleString(undefined, {minimumFractionDigits:2}));
+                        s('display-deposit',   '$ ' + deposit.toLocaleString(undefined, {minimumFractionDigits:2}));
+                        s('display-level',     level);
+                        s('sidebar-user-name', fullName);
+
+                        // Store for mobile header
+                        localStorage.setItem('memberId',   mId);
+                        localStorage.setItem('memberName', fullName);
+                    }
+                } catch(err) { console.error(err); }
+
+                // Load login history
+                loadLoginHistory(user.uid);
+
             } else {
-                // ᬡᬬᬱᬬ�ᬷᬺ�"ᬝ�ᬺ�ᬬᬸ�Sᬻᬾ�ᬺ
-                welcomeElement.innerText = "Welcome, Visitor!";
-                statusDiv.innerHTML = `
-                    <p style="color: #ff4d4d;"><i class="fas fa-exclamation-circle"></i> �~�ᬺ�~�`ᬺ ᬡᬬᬱᬬ�ᬷᬺᬝ�ᬺ�ᬬᬸᬁᬼ�ᬺᬸ �"�:ᬾᬭ�~ᬱᬸ�"ᬫ�9</p>
-                    <a href="login.html" style="display: inline-block; background: var(--gold); color: #000; padding: 10px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 10px;">Login Here</a>
-                `;
+                loggedInView.style.display  = 'none';
+                guestView.style.display     = 'block';
+                sidebarGuest.style.display  = 'block';
+                sidebarLogged.style.display = 'none';
+            }
+        });
+
+        async function loadLoginHistory(uid) {
+            const el = document.getElementById('login-history-list');
+            if (!el) return;
+            try {
+                const q    = query(collection(db, 'users', uid, 'loginHistory'), orderBy('at', 'desc'), limit(5));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    el.innerHTML = '<div style="text-align:center;padding:16px;color:#555;font-size:12px;">No login records yet.</div>';
+                    return;
+                }
+                const osIcons = { Windows:'fa-windows', macOS:'fa-apple', Android:'fa-android', iOS:'fa-apple', Unknown:'fa-globe' };
+                el.innerHTML = snap.docs.map(d => {
+                    const r  = d.data();
+                    const ms = r.at?.seconds ? r.at.seconds * 1000 : 0;
+                    const dt = ms ? new Date(ms).toLocaleString() : '—';
+                    const ico = osIcons[r.os] || 'fa-globe';
+                    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+                        <div style="width:34px;height:34px;border-radius:50%;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fab ${ico}" style="color:var(--gold-accent,#C9A84C);font-size:14px;"></i>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size:13px;color:#ddd;font-weight:600;">${r.browser || 'Browser'} · ${r.os || 'Unknown'}</div>
+                            <div style="font-size:11px;color:#666;margin-top:2px;">${r.device || 'Device'} · ${dt}</div>
+                        </div>
+                        <i class="fas fa-check-circle" style="color:#22c55e;font-size:14px;" title="Successful login"></i>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                el.innerHTML = '<div style="padding:12px;color:#555;font-size:12px;">Unable to load history.</div>';
+            }
+        }
+
+        function doLogout() {
+            signOut(auth).then(() => { localStorage.removeItem('userEmail'); window.location.href = 'login.html'; });
+        }
+        document.getElementById('sidebar-logout-btn').addEventListener('click', doLogout);
+        document.getElementById('logout-main-btn').addEventListener('click', doLogout);
+
+        /* ── Change Password ── */
+        window.togglePwVis = function(inputId, btn) {
+            const inp = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                inp.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        };
+
+        window.doChangePassword = async function() {
+            const current = document.getElementById('cp-current').value;
+            const newPw   = document.getElementById('cp-new').value;
+            const confirm = document.getElementById('cp-confirm').value;
+
+            if (!current || !newPw || !confirm) {
+                Swal.fire('Error', 'Please fill in all fields.', 'error'); return;
+            }
+            if (newPw.length < 6) {
+                Swal.fire('Error', 'New password must be at least 6 characters.', 'error'); return;
+            }
+            if (newPw !== confirm) {
+                Swal.fire('Error', 'New passwords do not match.', 'error'); return;
             }
 
-            // Logo Image Check (Optional but safe)
-            const imgElement = document.getElementById('mainLogo');
-            imgElement.style.display = "block"; 
+            const btn = document.getElementById('cp-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:7px;"></i>Updating...';
+
+            try {
+                const user = auth.currentUser;
+                const credential = EmailAuthProvider.credential(user.email, current);
+                await reauthenticateWithCredential(user, credential);
+                await updatePassword(user, newPw);
+
+                Swal.fire({ title: 'Password Changed!', text: 'Your password has been updated successfully.', icon: 'success' });
+                document.getElementById('cp-current').value = '';
+                document.getElementById('cp-new').value = '';
+                document.getElementById('cp-confirm').value = '';
+            } catch(err) {
+                const msg = err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential'
+                    ? 'Current password is incorrect.'
+                    : err.code === 'auth/too-many-requests'
+                    ? 'Too many attempts. Please try again later.'
+                    : err.message;
+                Swal.fire('Error', msg, 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-key" style="margin-right:7px;"></i>Change Password';
         };
     </script>
+
+    <script>
+    window.applyAccountLanguage = function(lang) {
+        const T = {
+            en: { pageTitle:'My Account', accCard:'Account Details', balCard:'Balance Overview',
+                  memberId:'Member ID', fullName:'Full Name', email:'Email', phone:'Phone',
+                  kycStatus:'KYC Status', accStatus:'Account Status', active:'<i class="fas fa-check-circle"></i> Active',
+                  totalBal:'Total Balance', deposited:'Deposited', memLevel:'Member Level',
+                  logout:'Logout', heroStatus:'Active',
+                  qaPortfolio:'Portfolio', qaHistory:'History', qaWallet:'Wallet', qaKyc:'KYC',
+                  guestMsg:'You are not logged in. Please login to view your account details.',
+                  guestBtn:'Login Now',
+                  nav:['Dashboard','Trading','Portfolio','History','Wallet','KYC','Live Support','Account'] },
+            mm: { pageTitle:'ကျွန်ုပ်၏ အကောင့်', accCard:'အကောင့် အချက်အလက်', balCard:'လက်ကျန်ငွေ အကျဉ်းချုပ်',
+                  memberId:'အဖွဲ့ဝင် ID', fullName:'အမည်အပြည့်အစုံ', email:'အီးမေးလ်', phone:'ဖုန်းနံပါတ်',
+                  kycStatus:'KYC အခြေအနေ', accStatus:'အကောင့် အခြေအနေ', active:'<i class="fas fa-check-circle"></i> အသုံးပြုနေဆဲ',
+                  totalBal:'စုစုပေါင်း လက်ကျန်ငွေ', deposited:'အပ်ငွေ', memLevel:'အဖွဲ့ဝင် အဆင့်',
+                  logout:'ထွက်မည်', heroStatus:'အသုံးပြုနေဆဲ',
+                  qaPortfolio:'ပိုင်ဆိုင်မှု', qaHistory:'မှတ်တမ်း', qaWallet:'ပိုက်ဆံအိတ်', qaKyc:'KYC',
+                  guestMsg:'မဝင်ရောက်ရသေး။ Account ကြည့်ရန် Login ဝင်ပါ။',
+                  guestBtn:'Login ဝင်ရန်',
+                  nav:['ပင်မစာမျက်နှာ','ရွှေရောင်းဝယ်မှု','ပိုင်ဆိုင်မှုစာရင်း','အရောင်းအဝယ်မှတ်တမ်း','ကျွန်ုပ်၏ ပိုက်ဆံအိတ်','KYC စစ်ဆေးခြင်း','တိုက်ရိုက် အထောက်အပံ့','အကောင့်'] },
+            th: { pageTitle:'บัญชีของฉัน', accCard:'รายละเอียดบัญชี', balCard:'ภาพรวมยอดคงเหลือ',
+                  memberId:'รหัสสมาชิก', fullName:'ชื่อ-นามสกุล', email:'อีเมล', phone:'เบอร์โทร',
+                  kycStatus:'สถานะ KYC', accStatus:'สถานะบัญชี', active:'<i class="fas fa-check-circle"></i> ใช้งานอยู่',
+                  totalBal:'ยอดคงเหลือรวม', deposited:'ฝากเงิน', memLevel:'ระดับสมาชิก',
+                  logout:'ออกจากระบบ', heroStatus:'ใช้งานอยู่',
+                  qaPortfolio:'พอร์ต', qaHistory:'ประวัติ', qaWallet:'กระเป๋า', qaKyc:'KYC',
+                  guestMsg:'คุณยังไม่ได้เข้าสู่ระบบ กรุณาล็อกอินเพื่อดูข้อมูลบัญชี',
+                  guestBtn:'เข้าสู่ระบบ',
+                  nav:['แดชบอร์ด','การซื้อขาย','พอร์ตโฟลิโอ','ประวัติ','กระเป๋าสตางค์','KYC','สนับสนุนสด','บัญชี'] }
+        };
+        const t = T[lang] || T.en;
+        const icons = ['fa-th-large','fa-chart-line','fa-briefcase','fa-history','fa-wallet','fa-user-check','fa-headset','fa-user-circle'];
+        document.querySelectorAll('.nav-item').forEach((item, i) => {
+            if (t.nav[i]) item.innerHTML = `<i class="fas ${icons[i]}"></i> ${t.nav[i]}`;
+        });
+        const s  = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+        const sh = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML  = v; };
+        s('page-h2', t.pageTitle);
+        sh('acc-card-title', `<i class="fas fa-user-shield"></i> ${t.accCard}`);
+        sh('bal-card-title', `<i class="fas fa-wallet"></i> ${t.balCard}`);
+        s('lbl-member-id', t.memberId); s('lbl-full-name', t.fullName);
+        s('lbl-email', t.email);        s('lbl-phone', t.phone);
+        s('lbl-kyc', t.kycStatus);      s('lbl-acc-status', t.accStatus);
+        sh('display-acc-status', t.active);
+        s('lbl-total-bal', t.totalBal); s('lbl-deposited', t.deposited);
+        s('lbl-mem-level', t.memLevel); s('lbl-logout', t.logout);
+        s('hero-status', t.heroStatus);
+        s('qa-portfolio', t.qaPortfolio); s('qa-history', t.qaHistory);
+        s('qa-wallet', t.qaWallet);       s('qa-kyc', t.qaKyc);
+        s('guest-msg', t.guestMsg);       s('guest-btn', t.guestBtn);
+    };
+    </script>
+
+    <script>
+    /* ═══ YLG Language Sync — v2 ═══ */
+    (function(){
+        function triggerApply(lang){
+            const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage','applyKycLanguage',
+                         'applyWalletLanguage','applyPortfolioLanguage','applyTradingLanguage','applyAccountLanguage','applyLang'];
+            for (const fn of fns) if (typeof window[fn]==='function') try { window[fn](lang); } catch(e) {}
+        }
+        window.addEventListener('storage', e => { if (e.key==='selectedLang' && e.newValue) triggerApply(e.newValue); });
+        function init(){ triggerApply(localStorage.getItem('selectedLang') || 'en'); }
+        if (document.readyState==='loading') window.addEventListener('DOMContentLoaded', ()=>setTimeout(init,50));
+        else setTimeout(init, 50);
+        setTimeout(init, 500); setTimeout(init, 1500);
+    })();
+    </script>
+
+    <script src="mobile-nav.js"></script>
+    <script src="sidebar-user.js"></script>
+    <script src="/toast.js"></script>
+<script type="module" src="notifications-bell.js"></script>
 </body>
 </html>

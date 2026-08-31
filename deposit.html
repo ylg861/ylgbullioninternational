@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
+    <style>
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #FFD700;
+            --bg: #0e0e0e;
+            --card: #141414;
+            --card2: #1a1a1a;
+            --border: rgba(255,255,255,0.06);
+            --text: #E8E8E8;
+            --muted: #6B7280;
+            --green: #22c55e;
+            --red: #ef4444;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 260px; min-height: 100vh;
+            background: #111;
+            display: flex; flex-direction: column;
+            position: fixed; z-index: 1000;
+            border-right: 1px solid var(--border);
+        }
+        .logo-section {
+            padding: 24px 20px;
+            display: flex; align-items: center; gap: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+        .logo-text-group { display: flex; flex-direction: column; }
+        .logo-y-text  { font-size: 16px; font-weight: 800; color: var(--gold); letter-spacing: 2px; }
+        .logo-subtext { font-size: 10px; color: #888; letter-spacing: 1px; margin-top: -2px; }
+        .logo-company { font-size: 8px; color: #555; letter-spacing: 0.5px; margin-top: 1px; }
+        nav { padding: 16px 0; flex: 1; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 20px; color: var(--muted);
+            text-decoration: none; font-size: 14px; font-weight: 500;
+            transition: 0.15s; border-left: 3px solid transparent;
+        }
+        .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+        .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(201,168,76,0.06); }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 28px 32px 100px;
+            flex: 1; min-height: 100vh;
+        }
+
+        header {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 24px; padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        header h2 { margin: 0; font-size: 22px; font-weight: 700; }
+        .header-back {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--card); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted); cursor: pointer; text-decoration: none;
+            transition: 0.15s;
+        }
+        .header-back:hover { color: var(--gold); border-color: rgba(201,168,76,0.3); }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 14px; font-weight: 700;
+            color: var(--gold); margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-title i { font-size: 13px; }
+
+        /* ── Payment methods ── */
+        .method-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+        }
+        .method-card {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 16px;
+        }
+        .method-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+        .method-value { font-size: 14px; font-weight: 700; color: #fff; }
+        .method-name  { font-size: 12px; color: var(--gold); margin-top: 2px; }
+
+        /* ── Form ── */
+        .form-row { margin-bottom: 14px; }
+        .form-label {
+            display: block; font-size: 12px; color: var(--muted);
+            font-weight: 500; margin-bottom: 6px;
+        }
+        .form-input {
+            width: 100%; padding: 13px 16px;
+            background: var(--card2); border: 1px solid #2a2a2a;
+            color: #fff; border-radius: 12px;
+            font-size: 14px; transition: border-color 0.2s;
+            font-family: inherit; outline: none;
+        }
+        .form-input:focus { border-color: rgba(201,168,76,0.4); }
+        .form-select {
+            width: 100%; padding: 13px 16px;
+            background: var(--card2); border: 1px solid #2a2a2a;
+            color: #fff; border-radius: 12px;
+            font-size: 14px; font-family: inherit; outline: none;
+            cursor: pointer;
+        }
+        .form-select:focus { border-color: rgba(201,168,76,0.4); }
+
+        /* ── Upload area ── */
+        .upload-area {
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 14px; padding: 28px 20px;
+            text-align: center; cursor: pointer;
+            transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .upload-area:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.03); }
+        .upload-area.has-img { border-color: rgba(34,197,94,0.3); padding: 8px; }
+        .upload-area img { max-width: 100%; max-height: 220px; border-radius: 10px; display: block; margin: 0 auto; }
+        .upload-placeholder i { font-size: 36px; color: #333; margin-bottom: 10px; display: block; }
+        .upload-placeholder p { margin: 0; font-size: 13px; color: var(--muted); }
+        .upload-placeholder small { font-size: 11px; color: #444; }
+
+        .btn-submit {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, #C9A84C, #FFD700);
+            color: #000; border: none; border-radius: 12px;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            font-family: inherit; transition: 0.2s; margin-top: 4px;
+        }
+        .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(201,168,76,0.35); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ── Request history ── */
+        .req-row {
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+        }
+        .req-row:last-child { margin-bottom: 0; }
+        .req-amount { font-size: 18px; font-weight: 700; color: #fff; }
+        .req-meta   { font-size: 11px; color: var(--muted); margin-top: 3px; }
+        .req-date   { font-size: 10px; color: #444; margin-top: 4px; }
+        .status-chip {
+            font-size: 11px; font-weight: 700; padding: 4px 12px;
+            border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .chip-pending  { background: rgba(251,191,36,0.12); color: #FBBF24; border: 1px solid rgba(251,191,36,0.25); }
+        .chip-approved { background: rgba(34,197,94,0.12);  color: #22c55e;  border: 1px solid rgba(34,197,94,0.25); }
+        .chip-rejected { background: rgba(239,68,68,0.12);  color: #ef4444;  border: 1px solid rgba(239,68,68,0.25); }
+
+        .empty-state {
+            text-align: center; padding: 40px 0;
+            color: var(--muted); font-size: 13px;
+        }
+        .empty-state i { font-size: 30px; display: block; margin-bottom: 10px; opacity: 0.25; }
+
+        .notice-box {
+            background: rgba(201,168,76,0.07);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px; padding: 14px 18px;
+            font-size: 13px; color: #bbb; line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .notice-box i { color: var(--gold); margin-right: 6px; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 16px 14px 90px; }
+            .method-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
+            <div class="logo-text-group">
+                <div class="logo-y-text">YLG</div>
+                <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
+            </div>
+        </div>
+        <nav>
+            <a href="index.html"     class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html"   class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
+            <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="history.html"   class="nav-item"><i class="fas fa-history"></i> History</a>
+            <a href="wallet.html"    class="nav-item active"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="kyc.html"       class="nav-item"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="chat-user.html" class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <a href="wallet.html" class="header-back"><i class="fas fa-arrow-left"></i></a>
+            <h2><i class="fas fa-plus-circle" style="color:var(--gold);margin-right:8px;font-size:18px;"></i>Deposit Request</h2>
+        </header>
+
+        <!-- Notice -->
+        <div class="notice-box">
+            <i class="fas fa-info-circle"></i>
+            Transfer your payment to one of the accounts below, then upload the proof screenshot.
+            Your balance will be credited after admin approval (usually within 1 business day).
+        </div>
+
+        <!-- Payment accounts -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-university"></i> Payment Accounts</div>
+            <div class="method-grid" id="payment-accounts-grid">
+                <div style="color:#555;font-size:13px;padding:10px 0;">
+                    <i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i>Loading...
+                </div>
+            </div>
+        </div>
+
+        <!-- Deposit form -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-paper-plane"></i> Submit Request</div>
+
+            <div class="form-row">
+                <label class="form-label">Amount (USD)</label>
+                <input type="number" id="dep-amount" class="form-input"
+                    placeholder="e.g. 500" min="1" step="0.01">
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Payment Method</label>
+                <select id="dep-method" class="form-select">
+                    <option value="KBZ Pay">KBZ Pay</option>
+                    <option value="AYA Pay">AYA Pay</option>
+                    <option value="Wave Pay">Wave Pay</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label class="form-label">Payment Proof (Screenshot)</label>
+                <div class="upload-area" id="upload-area" onclick="document.getElementById('proof-input').click()">
+                    <img id="proof-preview" style="display:none;">
+                    <div class="upload-placeholder" id="upload-placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>Tap to upload proof screenshot</p>
+                        <small>JPG, PNG — max 5MB</small>
+                    </div>
+                </div>
+                <input type="file" id="proof-input" accept="image/*" style="display:none;" onchange="handleProofFile(this)">
+            </div>
+
+            <button class="btn-submit" id="submit-btn" onclick="submitDepositRequest()">
+                <i class="fas fa-paper-plane" style="margin-right:8px;"></i>Submit Deposit Request
+            </button>
+        </div>
+
+        <!-- History -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-history"></i> My Deposit Requests</div>
+            <div id="req-list">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>No requests yet
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, db } from './firebase-init.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import {
+            collection, addDoc, query, where,
+            onSnapshot, serverTimestamp
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        let currentUser = null;
+        let proofBase64 = null;
+
+        onAuthStateChanged(auth, user => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            currentUser = user;
+            loadRequests();
+        });
+
+        /* ── Load payment accounts from Firestore ── */
+        (function loadPaymentAccounts() {
+            const q = query(collection(db, 'paymentAccounts'));
+            onSnapshot(q, snap => {
+                const grid = document.getElementById('payment-accounts-grid');
+                const accounts = snap.docs
+                    .map(d => ({ id: d.id, ...d.data() }))
+                    .filter(a => a.active !== false)
+                    .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+                if (!accounts.length) {
+                    grid.innerHTML = '<div style="color:#555;font-size:13px;padding:10px 0;">No payment accounts set up yet. Please contact support.</div>';
+                    return;
+                }
+
+                // Also populate the payment method select
+                const sel = document.getElementById('dep-method');
+                sel.innerHTML = accounts.map(a =>
+                    `<option value="${a.label}">${a.label}</option>`
+                ).join('');
+
+                grid.innerHTML = accounts.map(a => `
+                    <div class="method-card">
+                        <div class="method-label">${a.label}</div>
+                        <div class="method-value" style="display:flex;align-items:center;gap:8px;">
+                            <span id="num-${a.id}">${a.number}</span>
+                            <button onclick="copyAccNum('${a.id}','${a.number}')"
+                                style="background:none;border:none;color:#555;cursor:pointer;padding:0;font-size:12px;"
+                                title="Copy">
+                                <i id="copy-icon-${a.id}" class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="method-name">${a.accountName}</div>
+                    </div>`
+                ).join('');
+            });
+        })();
+
+        window.copyAccNum = function(id, number) {
+            navigator.clipboard.writeText(number).catch(() => {});
+            const icon = document.getElementById('copy-icon-' + id);
+            if (icon) {
+                icon.className = 'fas fa-check';
+                icon.style.color = '#22c55e';
+                setTimeout(() => { icon.className = 'fas fa-copy'; icon.style.color = ''; }, 1400);
+            }
+        };
+
+        /* ── File handling ── */
+        window.handleProofFile = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                Swal.fire('Error', 'Image too large (max 5MB)', 'error');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const max = 1200;
+                    let w = img.width, h = img.height;
+                    if (w > max) { h = Math.round(h * max / w); w = max; }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    proofBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    const prev = document.getElementById('proof-preview');
+                    prev.src = proofBase64;
+                    prev.style.display = 'block';
+                    document.getElementById('upload-placeholder').style.display = 'none';
+                    document.getElementById('upload-area').classList.add('has-img');
+                };
+            };
+            reader.readAsDataURL(file);
+        };
+
+        /* ── Submit ── */
+        window.submitDepositRequest = async function() {
+            if (!currentUser) return;
+            const amount = parseFloat(document.getElementById('dep-amount').value);
+            const method = document.getElementById('dep-method').value;
+
+            if (!amount || amount <= 0) {
+                Swal.fire('Error', 'Please enter a valid amount.', 'error'); return;
+            }
+            if (!proofBase64) {
+                Swal.fire('Error', 'Please upload your payment proof screenshot.', 'error'); return;
+            }
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Submitting...';
+
+            try {
+                const userName = localStorage.getItem('memberName') || localStorage.getItem('userName') || '';
+                const ylgId    = localStorage.getItem('memberId') || '';
+
+                await addDoc(collection(db, 'depositRequests'), {
+                    uid:           currentUser.uid,
+                    userEmail:     currentUser.email,
+                    userName,
+                    ylgId,
+                    amount,
+                    paymentMethod: method,
+                    proofBase64,
+                    status:        'pending',
+                    createdAt:     serverTimestamp()
+                });
+
+                Swal.fire({
+                    title: 'Request Submitted!',
+                    html: 'Your deposit request for <b>$' + amount.toLocaleString() + '</b> has been submitted.<br><small style="color:#888;">Admin will review and credit your balance within 1 business day.</small>',
+                    icon: 'success'
+                });
+
+                // Reset form
+                document.getElementById('dep-amount').value = '';
+                document.getElementById('proof-input').value = '';
+                document.getElementById('proof-preview').style.display = 'none';
+                document.getElementById('proof-preview').src = '';
+                document.getElementById('upload-placeholder').style.display = 'block';
+                document.getElementById('upload-area').classList.remove('has-img');
+                proofBase64 = null;
+            } catch (err) {
+                Swal.fire('Error', err.message || 'Failed to submit request.', 'error');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right:8px;"></i>Submit Deposit Request';
+        };
+
+        /* ── Load history ── */
+        function loadRequests() {
+            const q = query(
+                collection(db, 'depositRequests'),
+                where('uid', '==', currentUser.uid)
+            );
+            onSnapshot(q, snap => {
+                const list = document.getElementById('req-list');
+                if (snap.empty) {
+                    list.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>No requests yet</div>';
+                    return;
+                }
+                const sorted = snap.docs.slice().sort((a, b) =>
+                    (b.data().createdAt?.seconds || 0) - (a.data().createdAt?.seconds || 0)
+                );
+                list.innerHTML = sorted.map(d => {
+                    const r = d.data();
+                    const ts = r.createdAt?.seconds ? new Date(r.createdAt.seconds * 1000) : null;
+                    const dateStr = ts ? ts.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '—';
+                    const chipClass = r.status === 'approved' ? 'chip-approved' : r.status === 'rejected' ? 'chip-rejected' : 'chip-pending';
+                    return `
+                    <div class="req-row">
+                        <div>
+                            <div class="req-amount">+ $${parseFloat(r.amount || 0).toLocaleString()}</div>
+                            <div class="req-meta">${r.paymentMethod || '—'}</div>
+                            <div class="req-date">${dateStr}</div>
+                            ${r.status === 'rejected' && r.note ? `<div style="font-size:11px;color:var(--red);margin-top:4px;"><i class="fas fa-times-circle" style="margin-right:4px;"></i>${r.note}</div>` : ''}
+                        </div>
+                        <span class="status-chip ${chipClass}">${r.status}</span>
+                    </div>`;
+                }).join('');
+            });
+        }
+    </script>
+
+    <script src="mobile-nav.js"></script>
+    <script type="module" src="notifications-bell.js"></script>
+</body>
+</html>

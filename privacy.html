@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0C0D0F; --card: #111318; --gold: #C9A84C;
+            --text: #EDF0F7; --muted: #7A8196; --border: rgba(255,255,255,0.07);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; padding-bottom: 80px; }
+
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 20px;
+            background: rgba(12,13,15,0.96); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .topbar a {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted); text-decoration: none; transition: 0.15s; flex-shrink: 0;
+        }
+        .topbar a:hover { color: var(--gold); border-color: rgba(201,168,76,0.3); }
+        .topbar h1 { font-size: 16px; font-weight: 700; color: var(--text); }
+
+        .content { max-width: 760px; margin: 0 auto; padding: 32px 20px; }
+
+        .hero {
+            text-align: center; padding: 36px 20px 28px;
+            border-bottom: 1px solid var(--border); margin-bottom: 32px;
+        }
+        .hero-icon {
+            width: 64px; height: 64px; border-radius: 18px;
+            background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; font-size: 26px; color: var(--gold);
+        }
+        .hero h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .hero p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        .section { margin-bottom: 32px; }
+        .section-title {
+            font-size: 15px; font-weight: 700; color: var(--gold);
+            margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title i { font-size: 13px; opacity: 0.8; }
+        p { font-size: 13.5px; color: #ccc; line-height: 1.8; margin-bottom: 12px; }
+        ul { padding-left: 20px; margin-bottom: 12px; }
+        ul li { font-size: 13.5px; color: #ccc; line-height: 1.8; margin-bottom: 4px; }
+
+        .highlight-box {
+            background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.18);
+            border-radius: 12px; padding: 16px 18px; margin-bottom: 20px;
+        }
+        .highlight-box p { margin: 0; color: #bbb; }
+
+        .updated { font-size: 12px; color: var(--muted); text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+        @media (max-width: 600px) {
+            .hero h2 { font-size: 18px; }
+            .content { padding: 20px 16px; }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <script src="/pwa-register.js" defer></script>
+</head>
+<body>
+
+    <div class="topbar">
+        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+        <h1><i class="fas fa-shield-alt" style="color:var(--gold);margin-right:8px;"></i>Privacy Policy</h1>
+    </div>
+
+    <div class="content">
+        <div class="hero">
+            <div class="hero-icon"><i class="fas fa-user-shield"></i></div>
+            <h2>Privacy Policy</h2>
+            <p>YLG Bullion International Co., Ltd. is committed to protecting your personal information and your right to privacy.</p>
+        </div>
+
+        <div class="highlight-box">
+            <p><i class="fas fa-info-circle" style="color:var(--gold);margin-right:8px;"></i>
+            This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform. Please read this carefully.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-database"></i> 1. Information We Collect</div>
+            <p>We may collect the following types of information when you register and use our platform:</p>
+            <ul>
+                <li><strong>Personal Identification:</strong> Full name, email address, phone number, date of birth, and national ID / passport details (for KYC verification).</li>
+                <li><strong>Financial Information:</strong> Deposit and withdrawal records, trading history, and account balances.</li>
+                <li><strong>Technical Data:</strong> IP address, browser type, operating system, device type, and login timestamps.</li>
+                <li><strong>Communications:</strong> Messages sent through our live support or complaints system.</li>
+                <li><strong>KYC Documents:</strong> Photos of identity documents submitted for verification purposes.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-cogs"></i> 2. How We Use Your Information</div>
+            <p>We use the information we collect to:</p>
+            <ul>
+                <li>Create and manage your trading account</li>
+                <li>Process deposits, withdrawals, and trades</li>
+                <li>Verify your identity (KYC/AML compliance)</li>
+                <li>Send important account notifications and updates</li>
+                <li>Provide customer support</li>
+                <li>Detect and prevent fraud or unauthorized activity</li>
+                <li>Comply with legal and regulatory obligations</li>
+                <li>Improve our platform and user experience</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-share-alt"></i> 3. Information Sharing</div>
+            <p>We do <strong>not</strong> sell, trade, or rent your personal information to third parties. We may share information only in the following circumstances:</p>
+            <ul>
+                <li><strong>Legal Compliance:</strong> When required by law, court order, or regulatory authority.</li>
+                <li><strong>Service Providers:</strong> Trusted third-party services that assist us in operating our platform (e.g., payment processors, cloud storage), bound by confidentiality agreements.</li>
+                <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your data may be transferred with appropriate notice.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-lock"></i> 4. Data Security</div>
+            <p>We implement industry-standard security measures to protect your personal data, including:</p>
+            <ul>
+                <li>Encrypted data transmission (HTTPS/TLS)</li>
+                <li>Secure Firebase cloud infrastructure with access controls</li>
+                <li>Regular security reviews and monitoring</li>
+                <li>KYC documents stored with restricted access</li>
+            </ul>
+            <p>However, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security and encourage you to use strong passwords and enable additional security features.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-cookie"></i> 5. Cookies & Local Storage</div>
+            <p>We use browser local storage to remember your language preference, login session, and notification read status. We do not use tracking cookies for advertising purposes.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-user-edit"></i> 6. Your Rights</div>
+            <p>You have the right to:</p>
+            <ul>
+                <li><strong>Access</strong> the personal data we hold about you</li>
+                <li><strong>Correct</strong> inaccurate or incomplete information</li>
+                <li><strong>Delete</strong> your account and associated data (subject to legal retention requirements)</li>
+                <li><strong>Object</strong> to processing of your data in certain circumstances</li>
+                <li><strong>Withdraw consent</strong> at any time where processing is based on consent</li>
+            </ul>
+            <p>To exercise any of these rights, please contact us through the Live Support or Complaints section.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-clock"></i> 7. Data Retention</div>
+            <p>We retain your personal data for as long as your account is active or as needed to provide our services. Financial records may be retained for up to 7 years to comply with applicable laws and regulations.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-child"></i> 8. Minors</div>
+            <p>Our platform is not intended for individuals under 18 years of age. We do not knowingly collect personal information from minors. If you believe a minor has provided us with personal data, please contact us immediately.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-sync"></i> 9. Changes to This Policy</div>
+            <p>We may update this Privacy Policy from time to time. We will notify you of significant changes through our notification system or by email. Continued use of the platform after changes constitutes acceptance of the updated policy.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-envelope"></i> 10. Contact Us</div>
+            <p>If you have any questions or concerns about this Privacy Policy, please contact us through:</p>
+            <ul>
+                <li>Live Support chat on our platform</li>
+                <li>Complaints &amp; Feedback section</li>
+                <li>YLG Bullion International Co., Ltd. — official contact channels</li>
+            </ul>
+        </div>
+
+        <div class="updated">
+            <i class="fas fa-calendar-alt" style="color:var(--gold);margin-right:6px;"></i>
+            Last updated: May 2026 &nbsp;·&nbsp;
+            <a href="terms.html" style="color:var(--gold);text-decoration:none;">Terms &amp; Conditions</a>
+            &nbsp;·&nbsp;
+            <a href="risk.html" style="color:var(--gold);text-decoration:none;">Risk Disclosure</a>
+        </div>
+    </div>
+
+    <script src="mobile-nav.js"></script>
+</body>
+</html>

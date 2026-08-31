@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html lang="my">
+<head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <style>
+        :root {
+            --bg:   #111111;
+            --card: #1A1A1A;
+            --gold: #C9A84C;
+            --text: #E0E0E0;
+            --muted:#A0A0A0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px; min-height: 100vh;
+            background: var(--card);
+            display: flex; flex-direction: column;
+            position: fixed; z-index: 1000;
+            border-right: 1px solid #333;
+        }
+        .logo-section {
+            padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); flex-shrink: 0; }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text   { font-size: 20px; font-weight: 800; color: var(--gold); display: block; letter-spacing: 0.5px; }
+        .logo-subtext  { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 2px; display: block; margin-top: 2px; }
+        .logo-company  { font-size: 9px; color: #7A8196; display: block; margin-top: 3px; letter-spacing: 0.6px; }
+
+        .sidebar nav { display: flex; flex-direction: column; flex-grow: 1; }
+        .nav-item {
+            display: flex; align-items: center; padding: 15px 20px;
+            color: var(--muted); text-decoration: none; transition: 0.3s;
+        }
+        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
+        .nav-item:hover, .nav-item.active {
+            background: #252525; color: #fff;
+            border-left: 4px solid var(--gold);
+        }
+
+        /* ── Main ── */
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 24px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex; align-items: center;
+            border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 24px;
+        }
+        header h2 { margin: 0; font-size: 20px; color: #fff; }
+
+        /* ── Complaint Card ── */
+        .complaint-card {
+            max-width: 640px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid #2a2a2a;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        /* Office banner */
+        .office-banner {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+        .office-banner img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            filter: brightness(0.55);
+        }
+        .office-banner .overlay-logo {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .office-banner .overlay-logo img {
+            width: 56px; height: 56px;
+            object-fit: contain;
+            filter: none;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .office-title {
+            background: #111;
+            text-align: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .office-title span {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+
+        /* Form */
+        .form-body { padding: 28px 28px 32px; }
+
+        .field-group { margin-bottom: 20px; }
+        .field-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .field-group label .req { color: #e55; margin-left: 2px; }
+
+        .field-group input,
+        .field-group textarea,
+        .field-group select {
+            width: 100%;
+            padding: 13px 15px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .field-group input:focus,
+        .field-group textarea:focus,
+        .field-group select:focus { border-color: var(--gold); }
+        .field-group input::placeholder,
+        .field-group textarea::placeholder { color: #555; }
+        .field-group textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+
+        .field-hint {
+            font-size: 11px;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #C9A84C, #FFD700);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s, transform 0.15s;
+            margin-top: 6px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,168,76,0.35); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .spinner-sm {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; width: 100%; padding: 16px; padding-bottom: 80px; }
+            .office-banner { height: 140px; }
+            .form-body { padding: 20px; }
+        }
+    </style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
+            <div class="logo-text-group">
+                <span class="logo-y-text">YLG</span>
+                <span class="logo-subtext">BULLION</span>
+                <span class="logo-company">INTERNATIONAL CO., LTD.</span>
+            </div>
+        </div>
+        <nav>
+            <a href="index.html"      class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html"    class="nav-item"><i class="fas fa-chart-line"></i> Trading</a>
+            <a href="portfolio.html"  class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="history.html"    class="nav-item"><i class="fas fa-history"></i> History</a>
+            <a href="wallet.html"     class="nav-item"><i class="fas fa-wallet"></i> Wallet</a>
+            <a href="kyc.html"        class="nav-item"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="complaints.html" class="nav-item active"><i class="fas fa-flag"></i> Complaints</a>
+            <a href="chat-user.html"  class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <h2><i class="fas fa-flag" style="color:var(--gold);margin-right:10px;"></i>Complaints &amp; Reports</h2>
+        </header>
+
+        <div class="complaint-card">
+
+            <!-- Banner -->
+            <div class="office-banner">
+                <img src="office.jpg" alt="OITP Office" onerror="this.style.background='#1a2a4a'">
+                <div class="overlay-logo">
+                    <img src="logo.png" alt="YLG" onerror="this.style.display='none'">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="office-title">
+                <span>OFFICE OF INTERNATIONAL TRADE PROMOTION (OITP)</span>
+            </div>
+
+            <!-- Form -->
+            <div class="form-body">
+                <div class="field-group">
+                    <label><span id="lbl-name">Name</span> <span class="req">*</span></label>
+                    <input type="text" id="comp-name" placeholder="Please enter your name">
+                </div>
+
+                <div class="field-group">
+                    <label><span id="lbl-contact">Contact Details</span> <span class="req">*</span></label>
+                    <input type="text" id="comp-contact" placeholder="WhatsApp / Line / Facebook">
+                    <p class="field-hint" id="lbl-hint">We will contact you through this channel.</p>
+                </div>
+
+                <div class="field-group">
+                    <label><span id="lbl-complaint">Complaints and Reports</span> <span class="req">*</span></label>
+                    <textarea id="comp-message" placeholder="Please describe your complaint or report in detail..."></textarea>
+                </div>
+
+                <button class="btn-submit" id="comp-submit-btn" onclick="submitComplaint()">
+                    <i class="fas fa-paper-plane"></i> <span id="lbl-submit">Submit</span>
+                </button>
+
+                <!-- Report image -->
+                <div style="margin-top:24px;border-radius:10px;overflow:hidden;border:1px solid #2a2a2a;">
+                    <img src="report.jpg" alt="Report" style="width:100%;display:block;object-fit:cover;" onerror="this.parentElement.style.display='none'">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, db } from './firebase-init.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                // Pre-fill name if available
+                const saved = localStorage.getItem('memberName') || user.displayName || '';
+                if (saved && !document.getElementById('comp-name').value) {
+                    document.getElementById('comp-name').value = saved;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        window.submitComplaint = async function () {
+            const name    = document.getElementById('comp-name').value.trim();
+            const contact = document.getElementById('comp-contact').value.trim();
+            const message = document.getElementById('comp-message').value.trim();
+
+            if (!name) {
+                Swal.fire({ icon: 'warning', title: 'Name required', text: 'Please enter your name.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#C9A84C' });
+                return;
+            }
+            if (!contact) {
+                Swal.fire({ icon: 'warning', title: 'Contact required', text: 'Please enter your contact details.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#C9A84C' });
+                return;
+            }
+            if (!message || message.length < 10) {
+                Swal.fire({ icon: 'warning', title: 'Too short', text: 'Please describe your complaint in more detail.', background: '#1a1a1a', color: '#fff', confirmButtonColor: '#C9A84C' });
+                return;
+            }
+
+            const btn = document.getElementById('comp-submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner-sm"></div> Submitting...';
+
+            try {
+                await addDoc(collection(db, 'complaints'), {
+                    uid:       currentUser ? currentUser.uid   : null,
+                    email:     currentUser ? currentUser.email : null,
+                    name,
+                    contact,
+                    message,
+                    status:    'pending',
+                    timestamp: serverTimestamp()
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Submitted!',
+                    text: 'Your complaint has been received. We will contact you shortly.',
+                    confirmButtonColor: '#C9A84C',
+                    background: '#1a1a1a',
+                    color: '#fff'
+                }).then(() => {
+                    document.getElementById('comp-name').value    = '';
+                    document.getElementById('comp-contact').value = '';
+                    document.getElementById('comp-message').value = '';
+                });
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to submit. Please try again.', background: '#1a1a1a', color: '#fff' });
+            } finally {
+                btn.disabled = false;
+                const submitLang = localStorage.getItem('selectedLang') || 'en';
+                const submitLabel = {en:'Submit', mm:'တင်သွင်းမည်', th:'ส่งคำร้อง'};
+                btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${submitLabel[submitLang] || 'Submit'}`;
+            }
+        };
+    </script>
+
+    <script>
+    window.applyComplaintsLanguage = function(lang) {
+        var t = {
+            en: {
+                pageTitle:  'Complaints & Reports',
+                name:       'Name',
+                contact:    'Contact Details',
+                hint:       'We will contact you through this channel.',
+                complaint:  'Complaints and Reports',
+                namePh:     'Please enter your name',
+                contactPh:  'WhatsApp / Line / Facebook',
+                msgPh:      'Please describe your complaint or report in detail...',
+                submit:     'Submit',
+                navItems:   ['Dashboard','Trading','Portfolio','History','Wallet','KYC','Complaints','Live Support']
+            },
+            mm: {
+                pageTitle:  'တိုင်ကြားစာနှင့် အစီရင်ခံစာ',
+                name:       'အမည်',
+                contact:    'ဆက်သွယ်ရေး အသေးစိတ်',
+                hint:       'ဤ channel မှတဆင့် ကျွန်ုပ်တို့ ဆက်သွယ်ပါမည်။',
+                complaint:  'တိုင်ကြားချက်နှင့် အစီရင်ခံချက်',
+                namePh:     'အမည်ထည့်ပါ',
+                contactPh:  'WhatsApp / Line / Facebook',
+                msgPh:      'တိုင်ကြားချက်ကို အသေးစိတ်ဖော်ပြပါ...',
+                submit:     'တင်သွင်းမည်',
+                navItems:   ['ပင်မ','ရောင်းဝယ်','ပိုင်ဆိုင်မှု','မှတ်တမ်း','ပိုက်ဆံအိတ်','KYC','တိုင်ကြားစာ','ဝန်ဆောင်မှု']
+            },
+            th: {
+                pageTitle:  'ร้องเรียนและรายงาน',
+                name:       'ชื่อ',
+                contact:    'รายละเอียดการติดต่อ',
+                hint:       'เราจะติดต่อคุณผ่านช่องทางนี้',
+                complaint:  'ร้องเรียนและรายงาน',
+                namePh:     'กรุณาใส่ชื่อของคุณ',
+                contactPh:  'WhatsApp / Line / Facebook',
+                msgPh:      'กรุณาอธิบายรายละเอียดคำร้องเรียนของคุณ...',
+                submit:     'ส่ง',
+                navItems:   ['แดชบอร์ด','เทรด','พอร์ตโฟลิโอ','ประวัติ','กระเป๋า','KYC','ร้องเรียน','ซัพพอร์ต']
+            }
+        };
+        var d = t[lang] || t.en;
+        var $ = function(id) { return document.getElementById(id); };
+
+        // Header
+        var hdr = document.querySelector('header h2');
+        if (hdr) hdr.innerHTML = '<i class="fas fa-flag" style="color:var(--gold);margin-right:10px;"></i>' + d.pageTitle;
+
+        // Labels
+        if ($('lbl-name'))      $('lbl-name').textContent      = d.name;
+        if ($('lbl-contact'))   $('lbl-contact').textContent   = d.contact;
+        if ($('lbl-hint'))      $('lbl-hint').textContent      = d.hint;
+        if ($('lbl-complaint')) $('lbl-complaint').textContent = d.complaint;
+        if ($('lbl-submit'))    $('lbl-submit').textContent    = d.submit;
+
+        // Placeholders
+        if ($('comp-name'))    $('comp-name').placeholder    = d.namePh;
+        if ($('comp-contact')) $('comp-contact').placeholder = d.contactPh;
+        if ($('comp-message')) $('comp-message').placeholder = d.msgPh;
+
+        // Sidebar nav
+        var navItems = document.querySelectorAll('.nav-item');
+        var icons = ['fa-th-large','fa-chart-line','fa-briefcase','fa-history','fa-wallet','fa-user-check','fa-flag','fa-headset'];
+        navItems.forEach(function(item, i) {
+            if (d.navItems[i]) item.innerHTML = '<i class="fas ' + icons[i] + '"></i> ' + d.navItems[i];
+        });
+    };
+
+    window.addEventListener('DOMContentLoaded', function() {
+        var lang = localStorage.getItem('selectedLang') || 'en';
+        applyComplaintsLanguage(lang);
+    });
+    </script>
+
+    <script>
+    /* YLG Language Sync */
+    (function(){
+        function triggerApply(lang){
+            if (typeof window.applyComplaintsLanguage === 'function') {
+                try { window.applyComplaintsLanguage(lang); } catch(e) {}
+            }
+        }
+        window.addEventListener('storage', function(e){
+            if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+        });
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', function(){ triggerApply(localStorage.getItem('selectedLang') || 'en'); });
+        } else {
+            triggerApply(localStorage.getItem('selectedLang') || 'en');
+        }
+    })();
+    </script>
+
+    <script src="mobile-nav.js"></script>
+    <script src="sidebar-user.js"></script>
+<script src="/toast.js"></script>
+</body>
+</html>
+
+
+
+

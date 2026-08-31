@@ -1,0 +1,31 @@
+/* ═══════════════════════════════════════════
+   skeleton.css — YLG Bullion
+   Shimmer skeleton loading placeholders
+   ═══════════════════════════════════════════ */
+
+@keyframes ylg-shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+
+.skel {
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.10) 50%,
+        rgba(255,255,255,0.04) 75%);
+    background-size: 800px 100%;
+    animation: ylg-shimmer 1.4s infinite linear;
+    border-radius: 6px;
+    display: block;
+}
+
+/* Preset sizes */
+.skel-text    { height: 14px; margin-bottom: 8px; }
+.skel-text-sm { height: 11px; margin-bottom: 6px; }
+.skel-title   { height: 22px; margin-bottom: 12px; }
+.skel-val     { height: 32px; width: 60%; margin-bottom: 4px; }
+.skel-full    { width: 100%; }
+.skel-w60     { width: 60%; }
+.skel-w40     { width: 40%; }
+.skel-w30     { width: 30%; }
+.skel-circle  { border-radius: 50%; }

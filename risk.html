@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0C0D0F; --card: #111318; --gold: #C9A84C;
+            --text: #EDF0F7; --muted: #7A8196; --border: rgba(255,255,255,0.07);
+            --red: #ef4444; --orange: #F59E0B;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; padding-bottom: 80px; }
+
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 20px;
+            background: rgba(12,13,15,0.96); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .topbar a {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted); text-decoration: none; transition: 0.15s; flex-shrink: 0;
+        }
+        .topbar a:hover { color: var(--gold); border-color: rgba(201,168,76,0.3); }
+        .topbar h1 { font-size: 16px; font-weight: 700; color: var(--text); }
+
+        .content { max-width: 760px; margin: 0 auto; padding: 32px 20px; }
+
+        .hero {
+            text-align: center; padding: 36px 20px 28px;
+            border-bottom: 1px solid var(--border); margin-bottom: 32px;
+        }
+        .hero-icon {
+            width: 64px; height: 64px; border-radius: 18px;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px; font-size: 26px; color: var(--red);
+        }
+        .hero h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .hero p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        .warning-box {
+            background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.25);
+            border-radius: 12px; padding: 18px 20px; margin-bottom: 28px;
+            display: flex; gap: 14px; align-items: flex-start;
+        }
+        .warning-box i { color: var(--red); font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .warning-box p { font-size: 13.5px; color: #e0e0e0; line-height: 1.7; margin: 0; }
+
+        .section { margin-bottom: 32px; }
+        .section-title {
+            font-size: 15px; font-weight: 700; color: var(--gold);
+            margin-bottom: 14px; padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .section-title i { font-size: 13px; opacity: 0.8; }
+        p  { font-size: 13.5px; color: #ccc; line-height: 1.8; margin-bottom: 12px; }
+        ul { padding-left: 20px; margin-bottom: 12px; }
+        ul li { font-size: 13.5px; color: #ccc; line-height: 1.8; margin-bottom: 4px; }
+        strong { color: #fff; }
+
+        .risk-item {
+            background: #111318; border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+            border-left: 3px solid var(--orange);
+        }
+        .risk-item h4 { font-size: 14px; font-weight: 700; color: var(--orange); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .risk-item p  { margin: 0; font-size: 13px; }
+
+        .accept-box {
+            background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 12px; padding: 20px; text-align: center; margin-top: 32px;
+        }
+        .accept-box p { color: #bbb; font-size: 13px; margin-bottom: 14px; }
+        .accept-box a {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 24px; background: linear-gradient(135deg, #C9A84C, #FFD700);
+            color: #000; border-radius: 10px; text-decoration: none;
+            font-weight: 700; font-size: 13px;
+        }
+
+        .updated { font-size: 12px; color: var(--muted); text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+        @media (max-width: 600px) {
+            .hero h2 { font-size: 18px; }
+            .content { padding: 20px 16px; }
+        }
+    </style>
+    <link rel="stylesheet" href="mobile-responsive.css">
+    <script src="/pwa-register.js" defer></script>
+</head>
+<body>
+
+    <div class="topbar">
+        <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i></a>
+        <h1><i class="fas fa-exclamation-triangle" style="color:#ef4444;margin-right:8px;"></i>Risk Disclosure</h1>
+    </div>
+
+    <div class="content">
+        <div class="hero">
+            <div class="hero-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h2>Risk Disclosure Statement</h2>
+            <p>Trading gold and precious metals involves significant risk. Please read this disclosure carefully before trading.</p>
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-circle"></i>
+            <p><strong>Important Warning:</strong> Gold and precious metal trading carries a high level of risk and may not be suitable for all investors. You may lose some or all of your invested capital. Only invest funds you can afford to lose.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-chart-line"></i> 1. Market Risk</div>
+            <div class="risk-item">
+                <h4><i class="fas fa-arrow-down"></i> Price Volatility</h4>
+                <p>Gold and precious metal prices can be highly volatile, fluctuating significantly within short time periods due to global economic events, geopolitical developments, currency movements, and market sentiment.</p>
+            </div>
+            <div class="risk-item">
+                <h4><i class="fas fa-globe"></i> Global Market Factors</h4>
+                <p>Prices are influenced by factors beyond any single entity's control, including central bank policies, inflation rates, US dollar strength, geopolitical tensions, and supply-demand dynamics in global markets.</p>
+            </div>
+            <div class="risk-item">
+                <h4><i class="fas fa-random"></i> Past Performance</h4>
+                <p>Historical price performance of gold or any precious metal is not indicative of future results. Past profits do not guarantee future profits.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-money-bill-wave"></i> 2. Financial Risk</div>
+            <p>You should be aware of the following financial risks:</p>
+            <ul>
+                <li><strong>Capital Loss:</strong> You may lose your entire investment. Never invest money you cannot afford to lose.</li>
+                <li><strong>Liquidity Risk:</strong> Under certain market conditions, it may be difficult to execute trades at the desired price or time.</li>
+                <li><strong>Currency Risk:</strong> If your local currency differs from USD (the platform's base currency), exchange rate movements may affect the value of your account.</li>
+                <li><strong>Fee Impact:</strong> Trading fees and spreads may reduce overall returns and can accumulate over time with frequent trading.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-server"></i> 3. Platform & Technical Risk</div>
+            <p>Use of our digital trading platform carries the following technical risks:</p>
+            <ul>
+                <li><strong>System Downtime:</strong> The platform may experience interruptions due to maintenance, technical failures, or factors outside our control, which may prevent you from executing trades.</li>
+                <li><strong>Internet Connectivity:</strong> Trading requires a stable internet connection. Connectivity issues may affect trade execution.</li>
+                <li><strong>Cybersecurity:</strong> Despite our security measures, digital platforms may be subject to unauthorized access, hacking, or data breaches. You are responsible for keeping your login credentials secure.</li>
+                <li><strong>Force Majeure:</strong> We are not liable for losses caused by events beyond our control, including natural disasters, government actions, or network infrastructure failures.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-balance-scale"></i> 4. Regulatory Risk</div>
+            <p>The regulatory environment for gold trading may change. New regulations or changes to existing laws may affect your ability to trade or the terms under which trading is conducted. YLG Bullion International operates in compliance with applicable laws and regulations, but regulatory changes may impact our services.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-user-graduate"></i> 5. No Investment Advice</div>
+            <p>YLG Bullion International does <strong>not</strong> provide investment advice, financial planning, or recommendations on whether to buy or sell any asset. All trading decisions are made solely by you. You should seek independent financial advice from a qualified professional before making investment decisions.</p>
+            <p>Any market information, price data, charts, or analysis provided on our platform are for informational purposes only and should not be construed as trading recommendations.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-user-check"></i> 6. Suitability</div>
+            <p>Gold trading may not be suitable for everyone. You should only trade if you:</p>
+            <ul>
+                <li>Understand the risks involved and are willing to accept them</li>
+                <li>Have sufficient financial resources and can sustain losses</li>
+                <li>Are 18 years of age or older</li>
+                <li>Have completed KYC verification as required</li>
+                <li>Are not trading under the influence of legal or financial duress</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title"><i class="fas fa-file-contract"></i> 7. Acknowledgement</div>
+            <p>By using the YLG Bullion platform and placing trades, you acknowledge that:</p>
+            <ul>
+                <li>You have read and understood this Risk Disclosure Statement</li>
+                <li>You accept full responsibility for your trading decisions</li>
+                <li>You understand that YLG Bullion International is not liable for trading losses</li>
+                <li>You agree to our <a href="terms.html" style="color:var(--gold);">Terms &amp; Conditions</a> and <a href="privacy.html" style="color:var(--gold);">Privacy Policy</a></li>
+            </ul>
+        </div>
+
+        <div class="accept-box">
+            <p>By continuing to use our platform, you confirm that you have read, understood, and accepted this Risk Disclosure Statement.</p>
+            <a href="javascript:history.back()"><i class="fas fa-check-circle"></i> I Understand & Accept</a>
+        </div>
+
+        <div class="updated">
+            <i class="fas fa-calendar-alt" style="color:var(--gold);margin-right:6px;"></i>
+            Last updated: May 2026 &nbsp;·&nbsp;
+            <a href="terms.html"   style="color:var(--gold);text-decoration:none;">Terms &amp; Conditions</a>
+            &nbsp;·&nbsp;
+            <a href="privacy.html" style="color:var(--gold);text-decoration:none;">Privacy Policy</a>
+        </div>
+    </div>
+
+    <script src="mobile-nav.js"></script>
+</body>
+</html>

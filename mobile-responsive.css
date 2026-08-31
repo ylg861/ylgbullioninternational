@@ -1,186 +1,725 @@
-:root {
-    --responsive-gap: 16px;
-}
+/* ═══════════════════════════════════════════════════════════
+   YLG Bullion — Mobile Responsive CSS
+   Shared across all pages via:
+     <link rel="stylesheet" href="mobile-responsive.css">
 
-* {
-    box-sizing: border-box;
-}
+   Breakpoints:
+     992px  — tablet landscape / small desktop
+     768px  — tablet portrait
+     600px  — large mobile
+     480px  — small mobile
+   ═══════════════════════════════════════════════════════════ */
 
-html {
-    min-width: 320px;
-    scroll-behavior: smooth;
-}
 
-body {
-    min-height: 100vh;
-    word-break: break-word;
-    overflow-x: hidden;
-}
+/* ══════════════════════════════════
+   1. MOBILE BASE (≤ 768px)
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
 
-img, video, iframe, svg, canvas {
-    max-width: 100%;
-    height: auto;
-}
-
-button, input, select, textarea {
-    min-width: 0;
-}
-
-a {
-    word-break: break-word;
-}
-
-/* Make form cards, modals and panels adapt on smaller screens */
-.login-card,
-.register-card,
-.card,
-.chart-card,
-.order-box,
-.wallet-card,
-.wallet-actions,
-.balance-card,
-.tier-card,
-.modal-content,
-.profile-card,
-.section-card,
-.history-card,
-.timeline-content,
-.timeline-img-box {
-    max-width: 100% !important;
-    width: 100% !important;
-}
-
-@media (max-width: 992px) {
-    .sidebar {
-        width: 100% !important;
-        position: relative !important;
-        border-right: none !important;
-        border-bottom: 1px solid #333 !important;
-        min-height: auto !important;
-    }
-
-    .main-content,
-    .content-wrapper,
-    .page-container,
-    .dashboard-container {
-        margin: 0 !important;
-        width: 100% !important;
-        padding: 16px !important;
-    }
-
-    .trading-grid,
-    .wallet-actions,
-    .trade-action-row,
-    .history-grid,
-    .card-grid,
-    .balance-grid,
-    .grid-two,
-    .grid-three {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
-    }
-
-    .nav-item {
-        border-left: none !important;
-        border-bottom: 2px solid transparent !important;
-        padding: 12px 10px !important;
-        font-size: 13px !important;
-    }
-
-    .nav-item.active {
-        border-bottom-color: var(--color-gold-accent) !important;
-    }
-
-    header,
-    .main-header,
-    .section-title,
-    .trade-box-header,
-    .topbar,
-    .hero-content,
-    .header-actions {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        text-align: left !important;
-        gap: 12px !important;
-    }
-
-    .timeline-item,
-    .timeline-item.reverse {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        padding-left: 0 !important;
-    }
-
-    .timeline-line {
-        left: 12px !important;
-        height: auto !important;
-    }
-
-    .timeline-img-box,
-    .timeline-content {
-        width: 100% !important;
-        margin-bottom: 18px !important;
-    }
-
-    .sidebar-nav,
-    .sidebar nav {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 6px !important;
-    }
-
-    .sidebar .nav-item,
-    .sidebar-nav .nav-item {
-        flex: 1 1 45% !important;
-        justify-content: center !important;
-        text-align: center !important;
-    }
-
-    .sidebar .logo-section,
-    .sidebar-lang-box,
-    .auth-control-box,
-    .side-profile {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
-    }
-
-    .sidebar { overflow: visible !important; }
     body {
         flex-direction: column !important;
+        overflow-x: hidden;
+    }
+
+    /* Footer */
+    .site-footer {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 14px 16px !important;
+        align-items: center !important;
+        text-align: center;
+    }
+
+    .site-footer .links {
+        justify-content: center !important;
+        gap: 12px !important;
+    }
+}
+
+
+/* ══════════════════════════════════
+   2. HEADER
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    header,
+    .page-header,
+    .main-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding-bottom: 14px !important;
+    }
+
+    header h2,
+    .page-header h2,
+    .main-header h2,
+    .header-title-group h2 {
+        font-size: 20px !important;
+    }
+
+    #header-auth,
+    .header-actions {
+        width: 100%;
+    }
+
+    /* Hide in-page language switcher — language is controlled via dashboard */
+    .lang-switcher,
+    .lang-btn-trigger {
+        display: none !important;
+    }
+}
+
+
+/* ══════════════════════════════════
+   3. CARDS & GRIDS
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+
+    /* Dashboard grid → single column */
+    .dashboard-grid,
+    .info-grid,
+    .account-info-grid,
+    .ylg-stats-grid,
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    /* Card padding */
+    .dashboard-card,
+    .ylg-card,
+    .portfolio-card,
+    .history-card,
+    .info-card,
+    .withdraw-card,
+    .welcome-card,
+    .tier-card {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+
+    /* Stat cards */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr !important; }
+}
+
+
+/* ══════════════════════════════════
+   4. TRADING PAGE
+   ══════════════════════════════════ */
+@media (max-width: 992px) {
+    .trading-grid,
+    .trading-layout {
+        grid-template-columns: 1fr !important;
+        padding: 16px !important;
+        gap: 16px !important;
     }
 }
 
 @media (max-width: 768px) {
-    .sidebar .nav-item,
-    .sidebar-nav .nav-item {
-        flex: 1 1 100% !important;
+    /* Chart height reduced on mobile */
+    #chart-area,
+    .chart-card > div:last-child,
+    .tradingview-chart-container {
+        height: 320px !important;
+        min-height: 320px !important;
     }
 
-    .header-actions .btn-login,
-    .header-actions .btn-register,
-    .btn-sidebar-login,
-    .btn-logout-sidebar,
-    .trade-btn,
-    .modal-content button,
-    .wallet-actions button {
-        width: 100% !important;
+    .trade-action-row {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .trade-btn { padding: 12px 8px !important; font-size: 13px !important; }
+}
+
+
+/* ══════════════════════════════════
+   5. WALLET PAGE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    .wallet-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    #user-balance-text {
+        font-size: 32px !important;
+    }
+
+    .balance-breakdown {
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .tier-list { gap: 6px !important; }
+    .tier-item { font-size: 12px !important; }
+}
+
+@media (max-width: 480px) {
+    .balance-breakdown { grid-template-columns: 1fr !important; }
+}
+
+
+/* ══════════════════════════════════
+   6. HISTORY / TABLE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    /* Responsive table → card view */
+    .history-card {
+        overflow-x: visible !important;
+    }
+
+    .history-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .stats-summary {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    /* Hide thead, show data as label:value rows */
+    table thead { display: none !important; }
+
+    table tbody tr {
+        display: block !important;
+        margin-bottom: 12px !important;
+        border: 1px solid #2a2a2a !important;
+        border-radius: 10px !important;
+        padding: 12px !important;
+        background: #1a1a1a;
+    }
+
+    table tbody td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 8px 0 !important;
+        border-bottom: 1px solid #2a2a2a !important;
+        font-size: 13px !important;
+    }
+
+    table tbody td:last-child { border-bottom: none !important; }
+
+    table tbody td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-gold-accent, #FFD700);
+    }
+}
+
+
+/* ══════════════════════════════════
+   7. KYC PAGE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    .kyc-container  { max-width: 100% !important; }
+    .kyc-header     { padding: 18px !important; }
+    .kyc-header h2  { font-size: 18px !important; }
+    .kyc-card       { padding: 20px 16px !important; }
+
+    .upload-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .upload-area { min-height: 140px !important; }
+}
+
+
+/* ══════════════════════════════════
+   8. PORTFOLIO PAGE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    #total-assets-main { font-size: 30px !important; }
+    .portfolio-hero    { padding: 20px !important; }
+    .actions-row       { flex-direction: column !important; }
+    .action-btn        { justify-content: center !important; width: 100% !important; }
+}
+
+
+/* ══════════════════════════════════
+   9. CHAT / SUPPORT PAGE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    .chat-container,
+    #chatMessages {
+        height: 400px !important;
+        min-height: 400px !important;
+    }
+
+    .message { max-width: 88% !important; }
+}
+
+
+/* ══════════════════════════════════
+   10. MODALS
+   ══════════════════════════════════ */
+@media (max-width: 600px) {
+    .modal-content,
+    .ylg-modal {
+        width: 95% !important;
+        padding: 20px 16px !important;
+        border-radius: 12px !important;
+    }
+}
+
+
+/* ══════════════════════════════════
+   11. TIMELINE (index/dashboard)
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    .timeline-row {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+
+    .timeline-row.reverse .timeline-img-wrap,
+    .timeline-row.reverse .timeline-content,
+    .timeline-row.reverse .timeline-spine {
+        order: unset !important;
+    }
+
+    .timeline-row.reverse .timeline-content {
+        text-align: left !important;
+    }
+
+    .timeline-img {
         max-width: 100% !important;
+        height: 160px !important;
     }
 
-    .sidebar { padding-bottom: 12px !important; }
+    .timeline-spine {
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+    }
+}
 
-    .main-content,
-    .content-wrapper,
-    .page-container {
-        padding-left: 14px !important;
-        padding-right: 14px !important;
+
+/* ══════════════════════════════════
+   12. FORMS (login / register)
+   ══════════════════════════════════ */
+@media (max-width: 480px) {
+    .card {
+        padding: 20px 16px !important;
+        border-radius: 10px !important;
     }
 
-    .modal-content {
-        margin: 16px !important;
+    .brand { gap: 10px !important; }
+    .brand h1, .brand-text h1 { font-size: 18px !important; }
+}
+
+
+/* ══════════════════════════════════
+   13. WITHDRAW PAGE
+   ══════════════════════════════════ */
+@media (max-width: 768px) {
+    .withdraw-card { max-width: 100% !important; }
+    .balance-bar   { flex-direction: row; }
+    .modal-btns    { flex-direction: column !important; }
+}
+
+
+/* ══════════════════════════════════
+   14. UTILITIES
+   ══════════════════════════════════ */
+
+/* Touch-friendly tap targets */
+@media (max-width: 768px) {
+    button, a, select, input[type="checkbox"] {
+        min-height: 40px;
+    }
+}
+
+/* Prevent text overflow on small screens */
+@media (max-width: 600px) {
+    .info-email,
+    #display-email,
+    [style*="font-size:12px"] {
+        word-break: break-all;
+        font-size: 11px !important;
+    }
+}
+
+/* Safe area padding for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    body {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   15. MOBILE APP-STYLE NAVIGATION
+       — Fixed top header + fixed bottom nav (≤ 768px)
+   ══════════════════════════════════════════════════════════ */
+
+/* Hidden on desktop */
+.mobile-top-header,
+.mobile-bottom-nav {
+    display: none;
+}
+
+/* Overlay + panel always in DOM but off-screen until toggled */
+.mobile-assets-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.mobile-assets-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 700;
+    background: #1a1a1a;
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 20px calc(28px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Open states — work on any screen size */
+.mobile-assets-overlay.open {
+    opacity: 1 !important;
+    pointer-events: all !important;
+}
+
+.mobile-assets-panel.open {
+    transform: translateY(0) !important;
+}
+
+@media (max-width: 768px) {
+
+    /* ── No double safe-area on body (handled by nav + content) ── */
+    body {
+        padding-bottom: 0 !important;
     }
 
-    .trade-action-row { grid-template-columns: 1fr !important; }
+    /* ── Hide desktop sidebar ── */
+    .sidebar {
+        display: none !important;
+    }
+
+    /* ── Hide trading-page account chip & sidebar auth on mobile ── */
+    #user-account-chip,
+    #side-profile-box,
+    #sidebar-logout-btn {
+        display: none !important;
+    }
+
+    /* ── Main content — room for bottom bar (all pages) ── */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 14px 14px 80px !important;
+        padding-top: calc(14px + env(safe-area-inset-top, 0px)) !important;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        min-height: 100dvh;
+    }
+
+    /* ── Extra top padding only when mobile header is visible (dashboard) ── */
+    .has-mobile-header .main-content {
+        padding-top: calc(74px + env(safe-area-inset-top, 0px)) !important;
+    }
+
+    /* ═══════════════════════════════════════
+       FIXED TOP HEADER
+       ═══════════════════════════════════════ */
+    .mobile-top-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 500;
+        background: #1a1a1a;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px;
+        height: calc(62px + env(safe-area-inset-top, 0px));
+        box-sizing: border-box;
+    }
+
+    .mobile-left-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .mobile-user-section {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    /* Logo badge */
+    .mobile-user-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--color-gold-accent, #FFD700);
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-user-badge img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .mobile-user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .mobile-user-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #EDF0F7;
+        line-height: 1.2;
+        margin-bottom: 2px;
+    }
+
+    .mobile-uid-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--color-gold-accent, #FFD700);
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .mobile-copy-btn {
+        background: none;
+        border: none;
+        color: var(--color-gold-accent, #FFD700);
+        cursor: pointer;
+        padding: 0 2px;
+        font-size: 12px;
+        min-height: auto !important;
+        line-height: 1;
+    }
+
+    .mobile-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+    }
+
+    .mobile-hdr-btn {
+        width: 34px;
+        height: 34px;
+        min-height: 34px !important;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+        border: none;
+        color: #bbb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 15px;
+        text-decoration: none;
+        transition: background 0.2s, color 0.2s;
+        position: relative;
+    }
+
+    .mobile-hdr-btn:hover,
+    .mobile-hdr-btn:active {
+        background: rgba(255, 215, 0, 0.12);
+        color: var(--color-gold-accent, #FFD700);
+    }
+
+    /* Language dropdown */
+    .mobile-lang-dropdown {
+        position: fixed;
+        top: calc(64px + env(safe-area-inset-top, 0px));
+        right: 16px;
+        background: #252525;
+        border: 1px solid #3a3a3a;
+        border-radius: 10px;
+        overflow: hidden;
+        z-index: 800;
+        min-width: 155px;
+        display: none;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .mobile-lang-dropdown.open {
+        display: block;
+    }
+
+    .mobile-lang-dropdown .mlang-item {
+        padding: 12px 16px;
+        color: #ddd;
+        cursor: pointer;
+        font-size: 14px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 40px !important;
+        transition: background 0.15s;
+    }
+
+    .mobile-lang-dropdown .mlang-item:last-child {
+        border-bottom: none;
+    }
+
+    .mobile-lang-dropdown .mlang-item:hover {
+        background: rgba(255, 215, 0, 0.08);
+        color: #fff;
+    }
+
+    /* ═══════════════════════════════════════
+       FIXED BOTTOM NAV
+       ═══════════════════════════════════════ */
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 500;
+        background: #1a1a1a;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .mbn-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0 8px;
+        color: #555;
+        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 10px;
+        font-family: inherit;
+        gap: 5px;
+        transition: color 0.2s;
+        min-height: auto !important;
+    }
+
+    .mbn-item i {
+        font-size: 20px;
+        display: block;
+    }
+
+    .mbn-item span {
+        display: block;
+        font-weight: 500;
+    }
+
+    .mbn-item.active {
+        color: #00C853;
+    }
+
+    .mbn-item:not(.active):hover {
+        color: #aaa;
+    }
+
+    /* ═══════════════════════════════════════
+       ASSETS SLIDE-UP PANEL
+       ═══════════════════════════════════════ */
+    .assets-panel-handle {
+        width: 40px;
+        height: 4px;
+        background: #3a3a3a;
+        border-radius: 2px;
+        margin: 0 auto 18px;
+    }
+
+    .assets-panel-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #EDF0F7;
+        margin-bottom: 20px;
+        padding: 0 4px;
+    }
+
+    /* ── Assets panel — vertical list ── */
+    .assets-panel-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .assets-list-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px 16px;
+        background: #252525;
+        border-radius: 12px;
+        color: #ddd;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .assets-list-item > i:first-child {
+        font-size: 18px;
+        color: var(--color-gold-accent, #FFD700);
+        width: 22px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .assets-list-item span {
+        flex: 1;
+    }
+
+    .ap-arrow {
+        font-size: 12px;
+        color: #555;
+        flex-shrink: 0;
+    }
+
+    .assets-list-item:hover,
+    .assets-list-item:active {
+        background: rgba(255, 215, 0, 0.08);
+        color: #fff;
+        border-color: rgba(255, 215, 0, 0.15);
+    }
+
+    .assets-list-item:hover .ap-arrow,
+    .assets-list-item:active .ap-arrow {
+        color: var(--color-gold-accent, #FFD700);
+    }
 }

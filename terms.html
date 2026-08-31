@@ -1,0 +1,534 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:   #0f0f0f;
+            --card: #1a1a1a;
+            --gold: #C9A84C;
+            --text: #E0E0E0;
+            --muted:#888;
+            --border:#2a2a2a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* ── Top bar ── */
+        .topbar {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .topbar-brand img {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            object-fit: cover;
+        }
+        .topbar-brand .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+        .topbar-brand .brand-sub {
+            font-size: 10px;
+            color: var(--muted);
+            display: block;
+            letter-spacing: 1.5px;
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(135deg, #1a1400 0%, #0f0f0f 60%);
+            border-bottom: 1px solid var(--border);
+            padding: 56px 32px 48px;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.25);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: clamp(26px, 4vw, 40px);
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .hero p {
+            font-size: 14px;
+            color: var(--muted);
+            max-width: 540px;
+            margin: 0 auto 20px;
+        }
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .hero-meta span {
+            font-size: 12px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hero-meta i { color: var(--gold); font-size: 11px; }
+
+        /* ── Layout ── */
+        .page-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 48px 32px 80px;
+        }
+
+        /* ── TOC ── */
+        .toc-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--gold);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 48px;
+        }
+        .toc-card h4 {
+            font-size: 13px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+        .toc-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 6px 24px;
+        }
+        .toc-list li a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .toc-list li a:hover { color: var(--gold); }
+        .toc-list li a::before {
+            content: '';
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+        }
+
+        /* ── Sections ── */
+        .section {
+            margin-bottom: 48px;
+            scroll-margin-top: 80px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-num {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            background: rgba(201,168,76,0.12);
+            border: 1px solid rgba(201,168,76,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+        .section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .section p {
+            font-size: 14px;
+            color: #bbb;
+            margin-bottom: 12px;
+        }
+        .section ul {
+            padding-left: 0;
+            list-style: none;
+            margin-bottom: 12px;
+        }
+        .section ul li {
+            font-size: 14px;
+            color: #bbb;
+            padding: 6px 0 6px 20px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .section ul li::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 16px;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        /* ── Warning box ── */
+        .warn-box {
+            background: rgba(201,168,76,0.06);
+            border: 1px solid rgba(201,168,76,0.2);
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+        .warn-box i { color: var(--gold); margin-right: 8px; }
+
+        .danger-box {
+            background: rgba(217,48,37,0.07);
+            border: 1px solid rgba(217,48,37,0.2);
+            border-radius: 10px;
+            padding: 16px 20px;
+            font-size: 13px;
+            color: #ffb3b3;
+            margin-top: 12px;
+        }
+        .danger-box i { color: #ff6b6b; margin-right: 8px; }
+
+        /* ── Footer ── */
+        .terms-footer {
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            padding: 32px;
+            text-align: center;
+        }
+        .terms-footer p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+        .terms-footer a {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px;
+            background: var(--gold);
+            color: #000;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .terms-footer a:hover { background: #e6c200; }
+
+        @media (max-width: 600px) {
+            .topbar { padding: 14px 18px; }
+            .hero { padding: 36px 18px 32px; }
+            .page-wrap { padding: 28px 18px 60px; }
+            .toc-card { padding: 18px; }
+        }
+    </style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
+</head>
+<body>
+
+    <!-- Top bar -->
+    <div class="topbar">
+        <a href="index.html" class="topbar-brand">
+            <img src="logo.png" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
+            <div>
+                <span class="brand-name">YLG BULLION</span>
+                <span class="brand-sub">INTERNATIONAL CO., LTD.</span>
+            </div>
+        </a>
+        <a href="javascript:history.back()" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge"><i class="fas fa-file-contract"></i> Legal Document</div>
+        <h1>Terms &amp; Conditions</h1>
+        <p>Please read these terms carefully before using YLG Bullion International platform and services.</p>
+        <div class="hero-meta">
+            <span><i class="fas fa-calendar-alt"></i> Effective: January 1, 2026</span>
+            <span><i class="fas fa-sync-alt"></i> Last updated: May 2026</span>
+            <span><i class="fas fa-globe"></i> YLG Bullion International Co., Ltd.</span>
+        </div>
+    </div>
+
+    <div class="page-wrap">
+
+        <!-- Table of Contents -->
+        <div class="toc-card">
+            <h4><i class="fas fa-list" style="margin-right:8px;"></i>Table of Contents</h4>
+            <ul class="toc-list">
+                <li><a href="#s1">1. Acceptance of Terms</a></li>
+                <li><a href="#s2">2. Account Registration</a></li>
+                <li><a href="#s3">3. Trading Rules</a></li>
+                <li><a href="#s4">4. Deposits &amp; Withdrawals</a></li>
+                <li><a href="#s5">5. Risk Disclosure</a></li>
+                <li><a href="#s6">6. Prohibited Activities</a></li>
+                <li><a href="#s7">7. KYC &amp; Verification</a></li>
+                <li><a href="#s8">8. Privacy Policy</a></li>
+                <li><a href="#s9">9. Limitation of Liability</a></li>
+                <li><a href="#s10">10. Governing Law</a></li>
+            </ul>
+        </div>
+
+        <!-- Section 1 -->
+        <div class="section" id="s1">
+            <div class="section-header">
+                <div class="section-num">1</div>
+                <h2>Acceptance of Terms</h2>
+            </div>
+            <p>By accessing or using the YLG Bullion International platform ("Platform"), you confirm that you have read, understood, and agree to be bound by these Terms &amp; Conditions.</p>
+            <p>If you do not agree to any part of these terms, you must immediately cease using the Platform. YLG Bullion International reserves the right to update or modify these terms at any time without prior notice.</p>
+            <div class="warn-box">
+                <i class="fas fa-info-circle"></i>
+                Continued use of the Platform after any changes to these Terms constitutes your acceptance of the revised Terms.
+            </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="section" id="s2">
+            <div class="section-header">
+                <div class="section-num">2</div>
+                <h2>Account Registration</h2>
+            </div>
+            <p>To access trading features, you must register an account. By registering, you agree to:</p>
+            <ul>
+                <li>Provide accurate, current, and complete information during registration</li>
+                <li>Maintain the security of your account password and accept responsibility for all activities under your account</li>
+                <li>Be at least 18 years of age</li>
+                <li>Not share your account credentials with any third party</li>
+                <li>Notify us immediately of any unauthorized use of your account</li>
+            </ul>
+            <p>YLG Bullion International reserves the right to suspend or terminate accounts that violate these terms or engage in fraudulent activity.</p>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="section" id="s3">
+            <div class="section-header">
+                <div class="section-num">3</div>
+                <h2>Trading Rules</h2>
+            </div>
+            <p>All trades executed on the Platform are subject to the following rules:</p>
+            <ul>
+                <li>Trades are final once confirmed and cannot be reversed or cancelled</li>
+                <li>Minimum and maximum trade amounts are set by the Platform and may change without notice</li>
+                <li>Payout rates are displayed before each trade and are subject to change</li>
+                <li>The Platform may suspend trading during technical maintenance or market volatility</li>
+                <li>Results are determined by real-time market data feeds and are final</li>
+                <li>Any attempt to exploit system errors or glitches will result in account termination</li>
+            </ul>
+            <div class="warn-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                Trade results depend on market conditions. Past performance does not guarantee future results.
+            </div>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="section" id="s4">
+            <div class="section-header">
+                <div class="section-num">4</div>
+                <h2>Deposits &amp; Withdrawals</h2>
+            </div>
+            <p>All financial transactions are subject to the following conditions:</p>
+            <ul>
+                <li>Deposits must be made through approved payment methods only</li>
+                <li>Minimum deposit and withdrawal amounts apply as stated on the Platform</li>
+                <li>Withdrawals are processed within 24 hours subject to verification</li>
+                <li>The Platform reserves the right to request identity verification before processing withdrawals</li>
+                <li>Funds deposited for trading purposes are not insured or guaranteed</li>
+                <li>Withdrawal fees may apply depending on the payment method chosen</li>
+                <li>YLG Bullion International is not responsible for delays caused by third-party payment processors</li>
+            </ul>
+        </div>
+
+        <!-- Section 5 -->
+        <div class="section" id="s5">
+            <div class="section-header">
+                <div class="section-num">5</div>
+                <h2>Risk Disclosure</h2>
+            </div>
+            <div class="danger-box">
+                <i class="fas fa-exclamation-circle"></i>
+                <strong>HIGH RISK WARNING:</strong> Trading gold and financial instruments involves substantial risk of loss. You should only trade with money you can afford to lose entirely.
+            </div>
+            <p style="margin-top:14px;">You acknowledge and accept the following risks:</p>
+            <ul>
+                <li>Gold prices are highly volatile and can move rapidly against your position</li>
+                <li>You may lose all funds deposited in your trading account</li>
+                <li>Past trading results do not guarantee future performance</li>
+                <li>Market conditions, liquidity, and technical factors can affect trade outcomes</li>
+                <li>Trading may not be suitable for all individuals — seek independent financial advice if needed</li>
+            </ul>
+        </div>
+
+        <!-- Section 6 -->
+        <div class="section" id="s6">
+            <div class="section-header">
+                <div class="section-num">6</div>
+                <h2>Prohibited Activities</h2>
+            </div>
+            <p>The following activities are strictly prohibited and will result in immediate account suspension:</p>
+            <ul>
+                <li>Using automated bots, scripts, or software to manipulate trades</li>
+                <li>Opening multiple accounts under the same identity</li>
+                <li>Money laundering, fraud, or use of stolen financial information</li>
+                <li>Sharing account access with unauthorized persons</li>
+                <li>Exploiting technical errors or system vulnerabilities</li>
+                <li>Any form of market manipulation or collusion</li>
+                <li>Providing false information during KYC verification</li>
+            </ul>
+            <div class="warn-box">
+                <i class="fas fa-gavel"></i>
+                Violations may be reported to relevant authorities. YLG Bullion International cooperates fully with law enforcement investigations.
+            </div>
+        </div>
+
+        <!-- Section 7 -->
+        <div class="section" id="s7">
+            <div class="section-header">
+                <div class="section-num">7</div>
+                <h2>KYC &amp; Verification</h2>
+            </div>
+            <p>In compliance with anti-money laundering (AML) regulations, YLG Bullion International requires identity verification (Know Your Customer — KYC) for all users.</p>
+            <ul>
+                <li>Users must submit valid government-issued ID documents</li>
+                <li>Withdrawal of funds may be restricted until KYC verification is complete</li>
+                <li>All submitted documents are stored securely and used solely for verification purposes</li>
+                <li>YLG Bullion International reserves the right to reject any KYC submission</li>
+                <li>KYC information will not be shared with third parties except where required by law</li>
+            </ul>
+        </div>
+
+        <!-- Section 8 -->
+        <div class="section" id="s8">
+            <div class="section-header">
+                <div class="section-num">8</div>
+                <h2>Privacy Policy</h2>
+            </div>
+            <p>YLG Bullion International is committed to protecting your personal information. We collect and process the following data:</p>
+            <ul>
+                <li>Account information (name, email, phone number)</li>
+                <li>Identity documents submitted for KYC verification</li>
+                <li>Transaction and trading history</li>
+                <li>Device and usage data for security and fraud prevention</li>
+            </ul>
+            <p>Your data will not be sold or shared with third parties for marketing purposes. We may share data with regulatory authorities when required by law.</p>
+            <div class="warn-box">
+                <i class="fas fa-shield-alt"></i>
+                All data is encrypted and stored securely. You may request deletion of your account and data by contacting our support team.
+            </div>
+        </div>
+
+        <!-- Section 9 -->
+        <div class="section" id="s9">
+            <div class="section-header">
+                <div class="section-num">9</div>
+                <h2>Limitation of Liability</h2>
+            </div>
+            <p>To the maximum extent permitted by law, YLG Bullion International shall not be liable for:</p>
+            <ul>
+                <li>Any trading losses incurred through use of the Platform</li>
+                <li>Technical outages, system errors, or internet connectivity issues</li>
+                <li>Delays in trade execution due to market conditions</li>
+                <li>Loss of data due to force majeure events (natural disasters, cyberattacks, etc.)</li>
+                <li>Actions taken by third-party service providers including payment processors</li>
+            </ul>
+            <p>The Platform is provided "as is" without warranties of any kind, express or implied.</p>
+        </div>
+
+        <!-- Section 10 -->
+        <div class="section" id="s10">
+            <div class="section-header">
+                <div class="section-num">10</div>
+                <h2>Governing Law</h2>
+            </div>
+            <p>These Terms &amp; Conditions shall be governed by and construed in accordance with applicable laws. Any disputes arising from the use of the Platform shall be subject to the exclusive jurisdiction of the relevant courts.</p>
+            <p>If any provision of these terms is found to be unenforceable, the remaining provisions shall continue in full force and effect.</p>
+            <div class="warn-box">
+                <i class="fas fa-envelope"></i>
+                For any questions regarding these Terms, please contact us via <strong>Live Support</strong> or the <strong>Complaints &amp; Reports</strong> page.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="terms-footer">
+        <p>By using YLG Bullion International, you confirm that you have read and agreed to these Terms &amp; Conditions.</p>
+        <a href="javascript:history.back()">
+            <i class="fas fa-check-circle"></i> I Understand &amp; Accept
+        </a>
+    </div>
+
+<script src="/toast.js"></script>
+</body>
+</html>
+
+
+
+

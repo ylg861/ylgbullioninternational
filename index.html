@@ -1,56 +1,72 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="my">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YLG Bullion - Gold Trading Dashboard</title>
-    
-    <meta property="og:title" content="YLG Bullion - Live Support">
-    <meta property="og:description" content="Secure and Transparent Gold Trading Support. Connecting Your Gold Futures.">
+    <meta name="description" content="YLG Bullion — Gold trading platform. Buy, sell and trade gold online with real-time prices.">
+    <meta name="robots" content="index, follow">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ylgbullion.netlify.app/">
-    
-    <meta property="og:image" content="https://ylgbullion.netlify.app/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://ylgbullion.netlify.app/og-image.png">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta property="og:url" content="https://ylgbullion.asia/">
+    <meta property="og:title" content="YLG Bullion">
+    <meta property="og:site_name" content="YLG Bullion">
+    <meta property="og:description" content="Gold trading platform — real-time gold prices, secure trading, and portfolio management.">
+    <meta property="og:image" content="https://ylgbullion.asia/og-image.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "YLG Bullion",
+      "url": "https://ylgbullion.asia/",
+      "description": "Gold trading platform — real-time prices, secure trading, portfolio management."
+    }
+    </script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
-    
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
         :root {
-            --color-dark-bg: #1A1A1A;
-            --color-medium-dark: #2A2A2A;
+            --color-dark-bg: #111111;
+            --color-medium-dark: #1A1A1A;
             --color-gold-accent: #FFD700;
             --color-text-light: #E0E0E0;
             --color-text-fade: #A0A0A0;
             --color-positive: #00B050;
             --color-negative: #D93025;
-            --color-white: #FFFFFF;
         }
 
         body {
-            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', sans-serif;
             background-color: var(--color-dark-bg);
             color: var(--color-text-light);
-            margin: 0; padding: 0; overflow-x: hidden;
+            margin: 0;
+            display: flex;
         }
-
-        .dashboard-container { display: flex; min-height: 100vh; }
 
         /* Sidebar Styling */
         .sidebar {
-            width: 280px; background-color: var(--color-medium-dark);
-            padding: 20px 0; display: flex; flex-direction: column;
-            position: fixed; height: 100vh; z-index: 1000; border-right: 1px solid #333;
+            width: 260px;
+            min-height: 100vh;
+            background-color: var(--color-medium-dark);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            z-index: 1000;
+            border-right: 1px solid #333;
         }
 
         .logo-section {
-            padding: 0 20px 20px 20px;
-            margin-bottom: 10px;
+            padding: 20px;
             border-bottom: 1px solid #3A3A3A;
             display: flex;
             align-items: center;
@@ -58,405 +74,1645 @@
         }
 
         .logo-img {
-            width: 50px; height: 50px;
-            border-radius: 50%; border: 2px solid #FFD700;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--color-gold-accent);
             object-fit: cover;
         }
 
-        .logo-text-group { display: flex; flex-direction: column; }
-        .logo-y-text { font-size: 24px; font-weight: 800; color: #FFD700; line-height: 1; }
-        .logo-subtext { font-size: 16px; font-weight: 700; color: #FFFFFF; letter-spacing: 1px; }
-        .logo-company { font-size: 8px; color: #A0A0A0; margin-top: 2px; }
+        .logo-y-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-gold-accent);
+            line-height: 1;
+        }
 
-        .sidebar-lang-box { padding: 10px 20px; border-bottom: 1px solid #3A3A3A; margin-bottom: 10px; }
-        .lang-dropdown { position: relative; width: 100%; }
-        .lang-btn-trigger {
-            width: 100%; background: #1A1A1A; color: var(--color-gold-accent); 
-            border: 1px solid #444; padding: 10px; border-radius: 6px; 
-            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-            font-size: 13px; font-weight: bold;
+        .logo-subtext {
+            font-size: 12px;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: 1px;
         }
-        .lang-list {
-            display: none; position: absolute; top: 105%; left: 0; width: 100%;
-            background: #222; border: 1px solid #444; border-radius: 6px;
-            z-index: 1001; box-shadow: 0 5px 15px rgba(0,0,0,0.5); overflow: hidden;
-        }
-        .lang-item {
-            padding: 10px; color: white; cursor: pointer; font-size: 13px; transition: 0.2s;
-        }
-        .lang-item:hover { background: var(--color-gold-accent); color: black; }
 
-        .sidebar-nav { flex-grow: 1; overflow-y: auto; }
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
         .nav-item {
-            display: flex; align-items: center; padding: 15px 20px;
-            color: var(--color-text-fade); text-decoration: none; transition: 0.3s;
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--color-text-fade);
+            text-decoration: none;
+            transition: 0.3s;
         }
-        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
-        .nav-item:hover, .nav-item.active {
-            background-color: #383838; color: var(--color-text-light);
-            border-left: 5px solid var(--color-gold-accent);
-        }
 
-        .auth-control-box { padding: 20px; margin: 0 20px 20px 20px; background-color: #333; border-radius: 8px; border: 1px solid #444; }
-        .btn-sidebar-login { display: block; width: 100%; padding: 10px 0; background-color: var(--color-gold-accent); color: black; text-align: center; text-decoration: none; border-radius: 5px; font-weight: bold; }
-        .btn-logout-sidebar { width: 100%; background: #ff4d4d; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-
-        .main-content { flex-grow: 1; padding: 0 40px 40px 40px; margin-left: 280px; box-sizing: border-box; }
-        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 20px; border-bottom: 1px solid #333; }
-
-        .company-header-section { width: 100%; margin-bottom: 30px; }
-        .full-width-banner { width: 100%; border-radius: 12px; border: 2px solid var(--color-gold-accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: block; }
-        .company-info-container { background-color: var(--color-medium-dark); padding: 30px; border-radius: 12px; border: 1px solid #333; margin-top: 20px; }
-
-        .history-timeline-container { margin: 40px 0; position: relative; }
-        .ylg-timeline { position: relative; padding: 20px 0; }
-        .timeline-line { position: absolute; width: 2px; background: var(--color-gold-accent); top: 0; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 1; opacity: 0.3; }
-        .timeline-item { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 50px; position: relative; z-index: 2; }
-        .timeline-item.reverse { flex-direction: row-reverse; }
-        .timeline-img-box { width: 45%; overflow: hidden; border-radius: 12px; }
-        .timeline-img-box img { display: block; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; border: 2px solid var(--color-gold-accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; }
-        .timeline-img-box img:hover { transform: scale(1.03); }
-        .timeline-content { width: 45%; background: #1e1e1e; padding: 25px; border-radius: 12px; border-bottom: 4px solid var(--color-gold-accent); }
-        .timeline-year { color: var(--color-gold-accent); font-weight: bold; font-size: 24px; display: block; margin-bottom: 8px; }
-        .timeline-content h5 { margin: 0 0 12px 0; color: #fff; font-size: 18px; }
-        .timeline-content p { margin: 0; font-size: 14px; color: var(--color-text-fade); line-height: 1.6; }
-
-        /* License Image Styling - Updated */
-        .license-container {
-            margin-top: 30px;
-            padding: 20px;
-            background: #1A1A1A;
-            border-radius: 10px;
-            border: 1px solid #444;
+        .nav-item i {
+            margin-right: 15px;
+            width: 20px;
             text-align: center;
         }
 
-        @media (max-width: 768px) {
-            .dashboard-container { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid #333; }
-            .sidebar-nav { display: flex; flex-wrap: wrap; justify-content: center; overflow-y: hidden; }
-            .nav-item { padding: 10px 12px; font-size: 12px; border-left: none !important; }
-            .nav-item.active { border-bottom: 3px solid var(--color-gold-accent); }
-            .main-content { margin-left: 0; padding: 15px; width: 100%; }
-            .main-header { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
-            .timeline-line { left: 20px; }
-            .timeline-item, .timeline-item.reverse { flex-direction: column; align-items: flex-start; padding-left: 45px; }
-            .timeline-img-box, .timeline-content { width: 100%; margin-bottom: 20px; }
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: #252525;
+            color: white;
+            border-left: 4px solid var(--color-gold-accent);
         }
-    </style>
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+        }
+
+        header h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: var(--color-medium-dark);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-top: 20px;
+            border-top: 3px solid var(--color-gold-accent);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dashboard-card h3 {
+            margin-top: 0;
+            color: var(--color-text-light);
+            font-size: 18px;
+        }
+
+        .dashboard-card p {
+            color: var(--color-text-fade);
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-gold-accent);
+            margin-top: 15px;
+        }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text { font-size: 20px; font-weight: 800; color: var(--color-gold-accent, #C9A84C); letter-spacing: 0.5px; }
+        .logo-subtext { font-size: 11px; font-weight: 700; color: #fff; letter-spacing: 2px; margin-top: 2px; }
+        .logo-company { font-size: 9px; color: var(--color-text-fade, #7A8196); margin-top: 3px; letter-spacing: 0.6px; }
+
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+
+            .sidebar nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .nav-item {
+                padding: 12px 10px;
+                font-size: 12px;
+                border-left: none !important;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        
+        /* ══════════════════════════════════════════════
+           MOBILE RESPONSIVE — Dashboard (index.html)
+           Breakpoints: 992px, 768px, 480px
+           ══════════════════════════════════════════════ */
+
+        /* ── TABLET (992px) ── */
+        @media (max-width: 992px) {
+            .journey-timeline .timeline-row {
+                grid-template-columns: 1fr 40px 1fr !important;
+            }
+            .journey-timeline .timeline-img {
+                height: 150px !important;
+            }
+            #journey-card {
+                padding: 28px 20px !important;
+            }
+            #history-header {
+                font-size: 26px !important;
+            }
+        }
+
+        /* ── MOBILE (768px) ── */
+        @media (max-width: 768px) {
+
+            /* Body layout */
+            body {
+                flex-direction: column !important;
+                overflow-x: hidden !important;
+            }
+
+            /* ── Sidebar → sticky top bar ── */
+            .sidebar {
+                position: sticky !important;
+                top: 0 !important;
+                z-index: 100 !important;
+                width: 100% !important;
+                min-height: auto !important;
+                height: auto !important;
+                max-height: none !important;
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+                overflow: visible !important;
+            }
+
+            /* ── Logo area — compact row ── */
+            .logo-section {
+                padding: 12px 16px !important;
+                border-bottom: none !important;
+            }
+
+            .logo-img {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
+            .logo-y-text  { font-size: 17px !important; }
+            .logo-subtext { font-size: 10px !important; }
+            .logo-company { font-size: 8px !important; }
+
+            /* ── Language switcher — inline with logo ── */
+            .sidebar-lang-box,
+            .sidebar > div:nth-child(2) {
+                padding: 8px 16px !important;
+                border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+            }
+
+            /* ── Nav — horizontal scrollable strip ── */
+            .sidebar nav,
+            .sidebar-nav {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 6px 10px !important;
+                gap: 4px !important;
+                scrollbar-width: none !important;
+            }
+
+            .sidebar nav::-webkit-scrollbar { display: none !important; }
+
+            .nav-item {
+                flex: 0 0 auto !important;
+                white-space: nowrap !important;
+                padding: 8px 12px !important;
+                font-size: 12px !important;
+                border-left: none !important;
+                border-bottom: 2px solid transparent !important;
+                border-radius: 6px !important;
+                margin: 0 !important;
+            }
+
+            .nav-item.active {
+                border-left: none !important;
+                border-bottom-color: var(--color-gold-accent, #C9A84C) !important;
+                background: rgba(201,168,76,0.1) !important;
+            }
+
+            /* ── Hide auth/logout from sidebar on mobile ── */
+            #dashboard-auth-box {
+                padding: 8px 14px !important;
+                border-top: 1px solid rgba(255,255,255,0.07) !important;
+            }
+
+            /* ── Main content ── */
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 14px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* ── Page header ── */
+            header, .main-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding-bottom: 14px !important;
+                gap: 6px !important;
+            }
+
+            header h2, .main-header h2 {
+                font-size: 20px !important;
+            }
+
+            header p, .main-header p {
+                font-size: 12px !important;
+            }
+
+            /* ── Dashboard cards ── */
+            .dashboard-card {
+                padding: 16px 14px !important;
+                border-radius: 10px !important;
+                margin-bottom: 14px !important;
+            }
+
+            .dashboard-card h3 {
+                font-size: 17px !important;
+            }
+
+            /* ── Promo image (hero) ── */
+            .dashboard-card img[alt="YLG Gold"] {
+                max-height: 220px !important;
+                object-fit: cover !important;
+            }
+
+            /* ── Journey section header ── */
+            #journey-card {
+                padding: 20px 14px !important;
+            }
+
+            #journey-card > div:first-child {
+                margin-bottom: 24px !important;
+            }
+
+            #history-header {
+                font-size: 22px !important;
+                line-height: 1.3 !important;
+            }
+
+            #journey-subtitle {
+                font-size: 12px !important;
+            }
+
+            /* ── Timeline — single column vertical ── */
+            .journey-timeline {
+                max-width: 100% !important;
+            }
+
+            .timeline-spine {
+                display: none !important;
+            }
+
+            .journey-timeline .timeline-row {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                margin-bottom: 28px !important;
+                padding-bottom: 28px !important;
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+            }
+
+            .journey-timeline .timeline-row:last-child {
+                border-bottom: none !important;
+            }
+
+            .timeline-node { display: none !important; }
+
+            .timeline-image-wrap,
+            .timeline-content {
+                padding: 0 !important;
+                text-align: left !important;
+                order: unset !important;
+            }
+
+            /* Image always on top */
+            .journey-timeline .timeline-row .timeline-image-wrap {
+                order: 1 !important;
+            }
+
+            .journey-timeline .timeline-row .timeline-content {
+                order: 2 !important;
+                text-align: left !important;
+            }
+
+            .timeline-img {
+                max-width: 100% !important;
+                width: 100% !important;
+                height: 185px !important;
+                margin: 0 !important;
+            }
+
+            .timeline-content h4 {
+                font-size: 17px !important;
+                text-align: left !important;
+            }
+
+            .timeline-content p {
+                font-size: 13px !important;
+                line-height: 1.65 !important;
+                text-align: left !important;
+            }
+
+            /* Year badge on mobile */
+            .timeline-content > div:first-child {
+                margin-bottom: 8px !important;
+            }
+
+            /* ── License card ── */
+            #ylg-promo-video {
+                border-radius: 10px !important;
+            }
+        }
+
+        /* ── SMALL PHONES (480px) ── */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 10px !important;
+            }
+
+            .dashboard-card {
+                padding: 14px 12px !important;
+            }
+
+            .nav-item {
+                padding: 7px 10px !important;
+                font-size: 11px !important;
+            }
+
+            #history-header {
+                font-size: 19px !important;
+            }
+
+            .timeline-img {
+                height: 160px !important;
+            }
+
+            .timeline-content h4 {
+                font-size: 15px !important;
+            }
+
+            .dashboard-card p {
+                font-size: 12px !important;
+                line-height: 1.6 !important;
+            }
+
+            .logo-section {
+                padding: 10px 14px !important;
+            }
+
+            .logo-img {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            .logo-y-text { font-size: 15px !important; }
+        }
+
+        /* ── Announcement Banner ── */
+        .announce-bar {
+            display: flex; align-items: center; gap: 12px;
+            background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+            border: 1px solid rgba(201,168,76,0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .announce-bar i { color: var(--color-gold-accent,#C9A84C); font-size: 16px; flex-shrink: 0; }
+        .announce-bar span { font-size: 13px; color: #EDF0F7; flex: 1; line-height: 1.5; }
+        .announce-bar a { color: var(--color-gold-accent,#C9A84C); font-weight: 700; text-decoration: none; white-space: nowrap; }
+        .announce-close {
+            background: none; border: none; color: rgba(255,255,255,0.35);
+            cursor: pointer; font-size: 14px; padding: 2px 4px; flex-shrink: 0;
+            transition: color 0.15s;
+        }
+        .announce-close:hover { color: #fff; }
+
+        /* ── Page Footer ── */
+        .page-footer {
+            margin-top: 36px;
+            padding: 28px 0 20px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .footer-brand {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 20px;
+        }
+        .footer-logo {
+            width: 36px; height: 36px; border-radius: 50%;
+            object-fit: cover; border: 1px solid rgba(201,168,76,0.35);
+            flex-shrink: 0;
+        }
+        .footer-brand-name {
+            font-size: 14px; font-weight: 800;
+            color: var(--color-gold-accent, #C9A84C); letter-spacing: 1px;
+        }
+        .footer-brand-sub {
+            font-size: 9px; color: rgba(255,255,255,0.3);
+            letter-spacing: 1px; margin-top: 2px;
+        }
+        .footer-links {
+            display: flex; flex-wrap: wrap; gap: 4px 0;
+            margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 16px;
+        }
+        .footer-links a {
+            font-size: 12px; color: rgba(255,255,255,0.4);
+            text-decoration: none; padding: 4px 14px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            transition: color 0.18s;
+        }
+        .footer-links a:first-child { padding-left: 0; }
+        .footer-links a:last-child  { border-right: none; }
+        .footer-links a:hover { color: var(--color-gold-accent, #C9A84C); }
+        .footer-badges {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            margin-bottom: 16px;
+        }
+        .footer-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.3);
+            padding: 4px 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 999px;
+        }
+        .footer-badge i { font-size: 9px; color: var(--color-gold-accent, #C9A84C); }
+        .footer-divider { display: none; }
+        .footer-bottom { text-align: center; }
+        .footer-copy {
+            margin: 0 0 4px;
+            font-size: 11px; color: rgba(255,255,255,0.25);
+        }
+        .footer-note {
+            margin: 0;
+            font-size: 10px; color: rgba(255,255,255,0.15);
+        }
+
+        /* ── LANDSCAPE PHONES ── */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .sidebar {
+                position: relative !important;
+            }
+            .timeline-img {
+                height: 160px !important;
+            }
+            .journey-timeline .timeline-row {
+                flex-direction: row !important;
+                gap: 16px !important;
+            }
+            .timeline-image-wrap {
+                flex: 0 0 45% !important;
+            }
+            .timeline-content {
+                flex: 1 !important;
+            }
+        }
+
+</style>
     <link rel="stylesheet" href="mobile-responsive.css">
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
+
 <body>
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <div class="logo-section">
-                <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
-                <div class="logo-text-group">
-                    <div class="logo-y-text">YLG</div>
-                    <div class="logo-subtext">BULLION</div>
-                    <div class="logo-company">INTERNATIONAL CO.,LTD.</div>
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=FFD700&color=000&bold=true'">
+            <div class="logo-text-group">
+                <div class="logo-y-text">YLG</div>
+                <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
+            </div>
+        </div>
+
+        <div class="sidebar-lang-box" style="padding: 10px 20px; border-bottom: 1px solid #3A3A3A; margin-bottom: 10px;">
+            <div class="lang-dropdown">
+                <button class="lang-btn-trigger" onclick="toggleSidebarLang()" style="width:100%;background:none;border:none;color:var(--color-text-light);text-align:left;cursor:pointer;padding:8px 0;">
+                    <span id="display-lang-name"><i class="fas fa-globe"></i> English</span>
+                    <i class="fas fa-chevron-down" style="float:right"></i>
+                </button>
+                <div class="lang-list" id="sidebar-lang-list" style="display:none;background:#252525;margin-top:8px;border-radius:6px;overflow:hidden;position:absolute;width:180px;left:20px;z-index:1001">
+                    <div class="lang-item" style="padding:10px;color:#ddd;cursor:pointer;border-bottom:1px solid #333;" onclick="handleLangChange('en')">English</div>
+                    <div class="lang-item" style="padding:10px;color:#ddd;cursor:pointer;border-bottom:1px solid #333;" onclick="handleLangChange('mm')">မြန်မာ</div>
+                    <div class="lang-item" style="padding:10px;color:#ddd;cursor:pointer" onclick="handleLangChange('th')">ไทย</div>
+                </div>
+            </div>
+        </div>
+
+        <nav id="sidebar-nav">
+            <a href="index.html" class="nav-item active">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="trading.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Trading</span>
+            </a>
+            <a href="portfolio.html" class="nav-item">
+                <i class="fas fa-briefcase"></i>
+                <span>Portfolio</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </a>
+            <a href="wallet.html" class="nav-item">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+            </a>
+            <a href="kyc.html" class="nav-item">
+                <i class="fas fa-user-check"></i>
+                <span>KYC</span>
+            </a>
+            <a href="chat-user.html" class="nav-item">
+                <i class="fas fa-headset"></i>
+                <span>Live Support</span>
+            </a>
+        </nav>
+        <div id="dashboard-auth-box" style="padding: 20px; border-top: 1px solid #333;">
+            <div id="auth-buttons" style="display: none; text-align: center; gap: 8px;">
+                <a href="login.html" style="display:inline-block;width:100%;margin-bottom:8px;padding:10px 0;background:var(--color-gold-accent);color:#000;border-radius:8px;text-decoration:none;font-weight:700;">Login</a>
+                <a href="register.html" style="display:inline-block;width:100%;padding:10px 0;background:#333;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">Register</a>
+            </div>
+            <div id="logged-in-box" style="display: none; text-align: center;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px;">
+                    <i class="fas fa-user-circle" style="font-size: 24px; color: var(--color-gold-accent);"></i>
+                    <span id="logged-in-name" style="font-size: 12px; font-weight: bold;">User</span>
+                </div>
+                <button id="logout-btn" style="width:100%;padding:10px 0;background:#b71c1c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Logout</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div>
+                <h2 id="welcome-title" style="margin: 0 0 5px 0;">Dashboard</h2>
+                <p id="welcome-subtitle" style="color: var(--color-text-fade); margin: 0;">Welcome to YLG Bullion International</p>
+            </div>
+        </header>
+
+        <!-- ── Announcement Banner ── -->
+        <div class="announce-bar" id="announce-bar">
+            <i class="fas fa-bullhorn"></i>
+            <span id="announce-text">Complete your <strong>KYC verification</strong> to unlock full trading features and higher withdrawal limits.</span>
+            <a href="kyc.html" id="announce-link">Verify Now &rarr;</a>
+            <button class="announce-close" onclick="dismissAnnounce()" title="Dismiss"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- ── Promo Slideshow (license + promo images) ── -->
+        <div class="dashboard-card" style="padding:0;overflow:hidden;border-radius:14px;border:2px solid rgba(201,168,76,0.35);">
+            <div class="promo-slider" id="promoSlider">
+                <div class="promo-track" id="promoTrack">
+                    <div class="promo-slide"><img src="license.jpg"  alt="YLG License"></div>
+                    <div class="promo-slide"><img src="promo1.jpg" alt="YLG Gold 1"></div>
+                    <div class="promo-slide"><img src="promo2.jpg" alt="YLG Gold 2"></div>
+                    <div class="promo-slide"><img src="promo3.jpg" alt="YLG Gold 3"></div>
+                    <div class="promo-slide"><img src="promo4.jpg" alt="YLG Gold 4"></div>
+                </div>
+                <div class="promo-dots" id="promoDots">
+                    <span class="promo-dot active" onclick="goSlide(0)"></span>
+                    <span class="promo-dot" onclick="goSlide(1)"></span>
+                    <span class="promo-dot" onclick="goSlide(2)"></span>
+                    <span class="promo-dot" onclick="goSlide(3)"></span>
+                    <span class="promo-dot" onclick="goSlide(4)"></span>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .promo-slider {
+                position: relative;
+                width: 100%;
+                overflow: hidden;
+                border-radius: 12px;
+                background: #111;
+                height: 220px;
+                cursor: grab;
+            }
+            .promo-slider.dragging { cursor: grabbing; }
+            @media (min-width: 480px)  { .promo-slider { height: 280px; } }
+            @media (min-width: 768px)  { .promo-slider { height: 380px; } }
+            @media (min-width: 1024px) { .promo-slider { height: 440px; } }
+
+            .promo-track {
+                display: flex;
+                width: 100%;
+                height: 100%;
+                transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                will-change: transform;
+            }
+            .promo-track.no-transition { transition: none; }
+
+            .promo-slide {
+                flex: 0 0 100%;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+            .promo-slide img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+                pointer-events: none;
+                user-select: none;
+                -webkit-user-drag: none;
+            }
+            .promo-dots {
+                position: absolute;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 8px;
+                z-index: 10;
+            }
+            .promo-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.4);
+                cursor: pointer;
+                transition: background 0.3s, transform 0.3s;
+                border: 1px solid rgba(255,255,255,0.2);
+            }
+            .promo-dot.active {
+                background: var(--color-gold-accent, #FFD700);
+                transform: scale(1.35);
+            }
+        </style>
+
+        <script>
+        (function () {
+            var cur   = 0;
+            var TOTAL = 5;
+            var timer = null;
+            var track, slider, sliderW;
+            var dragStartX = 0, dragCurX = 0, isDragging = false;
+
+            function setSlide(idx, animate) {
+                cur = ((idx % TOTAL) + TOTAL) % TOTAL;
+                if (animate === false) {
+                    track.classList.add('no-transition');
+                } else {
+                    track.classList.remove('no-transition');
+                }
+                track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+                document.querySelectorAll('#promoDots .promo-dot').forEach(function(d, i) {
+                    d.classList.toggle('active', i === cur);
+                });
+            }
+
+            window.goSlide = function(idx) { setSlide(idx, true); };
+
+            function startAuto() {
+                if (timer) clearInterval(timer);
+                timer = setInterval(function () { setSlide(cur + 1, true); }, 4500);
+            }
+            function stopAuto() { clearInterval(timer); timer = null; }
+
+            /* ── Drag helpers ── */
+            function onDragStart(x) {
+                isDragging = true;
+                dragStartX = x;
+                dragCurX   = x;
+                sliderW    = slider.offsetWidth;
+                track.classList.add('no-transition');
+                slider.classList.add('dragging');
+                stopAuto();
+            }
+
+            function onDragMove(x) {
+                if (!isDragging) return;
+                dragCurX = x;
+                var offset = dragCurX - dragStartX;
+                /* clamp drag to ±80% of slider width */
+                offset = Math.max(-sliderW * 0.8, Math.min(sliderW * 0.8, offset));
+                track.style.transform = 'translateX(calc(-' + (cur * 100) + '% + ' + offset + 'px))';
+            }
+
+            function onDragEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                slider.classList.remove('dragging');
+                var diff = dragCurX - dragStartX;
+                track.classList.remove('no-transition');
+                if (Math.abs(diff) > sliderW * 0.18) {
+                    setSlide(diff < 0 ? cur + 1 : cur - 1, true);
+                } else {
+                    setSlide(cur, true); /* snap back */
+                }
+                startAuto();
+            }
+
+            function init() {
+                track  = document.getElementById('promoTrack');
+                slider = document.getElementById('promoSlider');
+                if (!slider || !track) return;
+
+                /* ── Touch events ── */
+                slider.addEventListener('touchstart', function(e) {
+                    onDragStart(e.touches[0].clientX);
+                }, { passive: true });
+                slider.addEventListener('touchmove', function(e) {
+                    onDragMove(e.touches[0].clientX);
+                }, { passive: true });
+                slider.addEventListener('touchend', function() { onDragEnd(); }, { passive: true });
+                slider.addEventListener('touchcancel', function() { onDragEnd(); }, { passive: true });
+
+                /* ── Mouse drag events ── */
+                slider.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    onDragStart(e.clientX);
+                });
+                window.addEventListener('mousemove', function(e) { onDragMove(e.clientX); });
+                window.addEventListener('mouseup',   function()   { onDragEnd(); });
+
+                /* ── Pause on hover (desktop) ── */
+                slider.addEventListener('mouseenter', stopAuto);
+                slider.addEventListener('mouseleave', function() {
+                    if (!isDragging) startAuto();
+                });
+
+                setSlide(0, false);
+                startAuto();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+        </script>
+
+
+        <!-- ═══════════════════════════════════════════════
+             LIVE GOLD PRICE + MARKET STATUS
+             ═══════════════════════════════════════════════ -->
+        <style>
+            /* ── Gold Price Card ── */
+            .db-gold-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+            .market-badge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.5px;}
+            .market-open{background:rgba(0,176,80,.15);color:#00B050;border:1px solid rgba(0,176,80,.3);}
+            .market-closed{background:rgba(217,48,37,.15);color:#FF6B6B;border:1px solid rgba(217,48,37,.3);}
+            .db-price-label{font-size:11px;color:#7A8196;margin-bottom:4px;letter-spacing:.5px;}
+            .db-price-big{font-size:34px;font-weight:800;letter-spacing:-1px;color:#EDF0F7;line-height:1;}
+            .db-change-box{text-align:right;padding:6px 12px;border-radius:8px;min-width:72px;}
+            .db-up{background:rgba(0,176,80,.1);}
+            .db-down{background:rgba(217,48,37,.1);}
+            .db-pct{font-size:15px;font-weight:700;}
+            .db-up .db-pct{color:#00B050;}
+            .db-down .db-pct{color:#FF6B6B;}
+            .db-up .db-chg{color:#00B050;}
+            .db-down .db-chg{color:#FF6B6B;}
+            .db-chg{font-size:11px;margin-top:2px;}
+            .db-gold-main{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px;}
+            .db-thb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(201,168,76,.07);border-radius:8px;margin-bottom:8px;}
+            .db-thb-label{font-size:12px;color:#7A8196;}
+            .db-thb-val{font-size:15px;font-weight:700;color:#C9A84C;}
+            .db-updated{font-size:10px;color:#3A3D4A;text-align:right;}
+            /* ── Account Summary ── */
+            .db-section-title{font-size:12px;font-weight:700;color:#C9A84C;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+            .db-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+            .db-stat-item{background:rgba(255,255,255,.04);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,.06);}
+            .db-stat-label{font-size:11px;color:#7A8196;margin-bottom:4px;}
+            .db-stat-val{font-size:20px;font-weight:800;color:#EDF0F7;}
+            /* ── Quick Actions ── */
+            .db-quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+            .db-qa-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px 10px;border-radius:14px;text-decoration:none;font-weight:800;font-size:13px;letter-spacing:.5px;transition:transform .15s,box-shadow .15s;border:none;cursor:pointer;}
+            .db-qa-btn i{font-size:22px;}
+            .db-qa-btn:active{transform:scale(.97);}
+            .db-qa-buy{background:linear-gradient(135deg,#00B050,#00832E);color:#fff;box-shadow:0 8px 24px rgba(0,176,80,.25);}
+            .db-qa-sell{background:linear-gradient(135deg,#D93025,#A51E15);color:#fff;box-shadow:0 8px 24px rgba(217,48,37,.25);}
+            /* ── Recent Trades ── */
+            .db-trade-item{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+            .db-trade-item:last-child{border-bottom:none;}
+            .db-trade-type{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+            .db-t-buy{background:rgba(0,176,80,.15);color:#00B050;}
+            .db-t-sell{background:rgba(217,48,37,.15);color:#FF6B6B;}
+            .db-trade-info{flex:1;margin:0 12px;}
+            .db-trade-pair{font-size:13px;font-weight:600;color:#EDF0F7;}
+            .db-trade-date{font-size:10px;color:#7A8196;margin-top:1px;}
+            .db-trade-pnl{font-size:13px;font-weight:700;flex-shrink:0;}
+            .db-view-all{display:block;text-align:center;margin-top:14px;color:#C9A84C;font-size:13px;font-weight:600;text-decoration:none;padding:8px;border:1px solid rgba(201,168,76,.2);border-radius:8px;}
+            /* ── Referral ── */
+            .db-ref-inner{text-align:center;}
+            .db-ref-icon{font-size:28px;color:#C9A84C;margin-bottom:10px;}
+            .db-ref-title{font-size:16px;font-weight:700;color:#EDF0F7;margin-bottom:6px;}
+            .db-ref-desc{font-size:13px;color:#7A8196;margin:0 0 16px;}
+            .db-ref-code-row{display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(0,0,0,.3);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:10px 16px;margin-bottom:12px;}
+            .db-ref-code{font-size:20px;font-weight:800;letter-spacing:4px;color:#C9A84C;font-family:monospace;}
+            .db-ref-copy-btn{background:none;border:none;color:#C9A84C;cursor:pointer;font-size:16px;padding:4px;}
+            .db-ref-share-btn{width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#A88A3A);color:#000;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;}
+        </style>
+
+        <!-- Gold Price Card -->
+        <div class="dashboard-card">
+            <div class="db-gold-header">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-coins" style="color:#C9A84C;font-size:16px;"></i>
+                    <span style="font-size:12px;font-weight:700;color:#C9A84C;letter-spacing:1.5px;text-transform:uppercase;" id="dbl-goldtitle">Live Gold Price</span>
+                </div>
+                <span id="market-badge" class="market-badge market-open">&#9679; OPEN</span>
+            </div>
+
+            <!-- Price row: TradingView quote (left) + mini chart (right) -->
+            <div style="display:flex;align-items:stretch;gap:10px;margin:4px 0 10px;">
+                <!-- TradingView single-quote (reliable price source) -->
+                <div class="tradingview-widget-container" style="flex:1;min-width:0;min-height:64px;">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+                    {
+                        "symbol": "OANDA:XAUUSD",
+                        "width": "100%",
+                        "colorTheme": "dark",
+                        "isTransparent": true,
+                        "locale": "en"
+                    }
+                    </script>
+                </div>
+                <!-- Mini sparkline chart -->
+                <div style="flex-shrink:0;width:120px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+                    <canvas id="gold-sparkline" width="120" height="70" style="display:block;"></canvas>
                 </div>
             </div>
 
-            <div class="sidebar-lang-box">
-                <div class="lang-dropdown">
-                    <button class="lang-btn-trigger" onclick="toggleSidebarLang()">
-                        <span id="display-lang-name"><i class="fas fa-globe"></i> English</span>
-                        <i class="fas fa-chevron-down"></i>
+            <div class="db-thb-row">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:18px;">🇹🇭</span>
+                    <div>
+                        <div class="db-thb-label" style="margin-bottom:1px;">XAU / THB</div>
+                        <div id="gp-thb-usd" style="font-size:10px;color:#555;">Loading...</div>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div id="gp-thb" class="db-thb-val">—</div>
+                    <div id="gp-updated" class="db-updated" style="margin-top:2px;">Connecting...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Summary Card (shown when logged in) -->
+        <div class="dashboard-card" id="db-account-card" style="display:none;">
+            <div class="db-section-title"><i class="fas fa-chart-pie"></i><span id="dbl-accsummary">Account Summary</span></div>
+            <!-- Skeleton shown while data loads -->
+            <div id="db-account-skel" class="db-stats-grid">
+                <div class="db-stat-item"><span class="skel skel-text-sm skel-w40" style="margin-bottom:8px;"></span><span class="skel skel-val"></span></div>
+                <div class="db-stat-item"><span class="skel skel-text-sm skel-w40" style="margin-bottom:8px;"></span><span class="skel skel-val"></span></div>
+                <div class="db-stat-item"><span class="skel skel-text-sm skel-w40" style="margin-bottom:8px;"></span><span class="skel skel-val"></span></div>
+                <div class="db-stat-item"><span class="skel skel-text-sm skel-w40" style="margin-bottom:8px;"></span><span class="skel skel-val"></span></div>
+            </div>
+            <!-- Real data (hidden until loaded) -->
+            <div id="db-account-data" class="db-stats-grid" style="display:none;">
+                <div class="db-stat-item">
+                    <div class="db-stat-label" id="dbl-balance">Balance</div>
+                    <div class="db-stat-val" id="dbs-balance">—</div>
+                </div>
+                <div class="db-stat-item">
+                    <div class="db-stat-label" id="dbl-pnl">Total P&amp;L</div>
+                    <div class="db-stat-val" id="dbs-pnl">—</div>
+                </div>
+                <div class="db-stat-item">
+                    <div class="db-stat-label" id="dbl-trades">Trades</div>
+                    <div class="db-stat-val" id="dbs-trades">—</div>
+                </div>
+                <div class="db-stat-item">
+                    <div class="db-stat-label" id="dbl-winrate">Win Rate</div>
+                    <div class="db-stat-val" id="dbs-winrate">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="db-quick-actions">
+            <a href="trading.html" class="db-qa-btn db-qa-buy">
+                <i class="fas fa-arrow-trend-up"></i>
+                <span id="dbl-buy">BUY GOLD</span>
+            </a>
+            <a href="trading.html" class="db-qa-btn db-qa-sell">
+                <i class="fas fa-arrow-trend-down"></i>
+                <span id="dbl-sell">SELL GOLD</span>
+            </a>
+        </div>
+
+        <!-- Recent Trades (shown when logged in) -->
+        <div class="dashboard-card" id="db-recent-card" style="display:none;">
+            <div class="db-section-title"><i class="fas fa-clock-rotate-left"></i><span id="dbl-recent">Recent Trades</span></div>
+            <div id="db-recent-list">
+                <!-- Skeleton rows while trades load -->
+                <div class="db-trade-item">
+                    <span class="skel" style="width:46px;height:22px;border-radius:4px;flex-shrink:0;"></span>
+                    <div class="db-trade-info">
+                        <span class="skel skel-text skel-w60" style="margin-bottom:5px;"></span>
+                        <span class="skel skel-text-sm skel-w40"></span>
+                    </div>
+                    <span class="skel skel-text" style="width:52px;"></span>
+                </div>
+                <div class="db-trade-item">
+                    <span class="skel" style="width:46px;height:22px;border-radius:4px;flex-shrink:0;"></span>
+                    <div class="db-trade-info">
+                        <span class="skel skel-text skel-w60" style="margin-bottom:5px;"></span>
+                        <span class="skel skel-text-sm skel-w30"></span>
+                    </div>
+                    <span class="skel skel-text" style="width:52px;"></span>
+                </div>
+                <div class="db-trade-item">
+                    <span class="skel" style="width:46px;height:22px;border-radius:4px;flex-shrink:0;"></span>
+                    <div class="db-trade-info">
+                        <span class="skel skel-text skel-w60" style="margin-bottom:5px;"></span>
+                        <span class="skel skel-text-sm skel-w40"></span>
+                    </div>
+                    <span class="skel skel-text" style="width:52px;"></span>
+                </div>
+            </div>
+            <a href="history.html" class="db-view-all" id="dbl-viewall">View All History &#8594;</a>
+        </div>
+
+        <!-- Show account cards immediately if user is likely logged in (avoids flash) -->
+        <script>
+        if (localStorage.getItem('userEmail')) {
+            ['db-account-card','db-recent-card','db-referral-card'].forEach(function(id){
+                var el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+        }
+        </script>
+
+        <!-- Referral Card (shown when logged in) -->
+        <div class="dashboard-card" id="db-referral-card" style="display:none;background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.03));">
+            <div class="db-ref-inner">
+                <div class="db-ref-icon"><i class="fas fa-gift"></i></div>
+                <div class="db-ref-title" id="dbl-ref-title">Invite Friends</div>
+                <p class="db-ref-desc" id="dbl-ref-desc">Share your referral code and earn rewards</p>
+                <div class="db-ref-code-row">
+                    <span class="db-ref-code" id="db-ref-code">——</span>
+                    <button class="db-ref-copy-btn" onclick="copyRefCode()" title="Copy code">
+                        <i class="fas fa-copy" id="db-ref-copy-icon"></i>
                     </button>
-                    <div class="lang-list" id="sidebar-lang-list">
-                        <div class="lang-item" onclick="handleLangChange('en')">English</div>
-                        <div class="lang-item" onclick="handleLangChange('mm')">မြန်မာ (Myanmar)</div>
-                        <div class="lang-item" onclick="handleLangChange('th')">ไทย (Thai)</div>
-                    </div>
                 </div>
+                <button class="db-ref-share-btn" onclick="shareRefCode()">
+                    <i class="fas fa-share-nodes"></i><span id="dbl-ref-share">Share</span>
+                </button>
             </div>
+        </div>
 
-            <nav class="sidebar-nav">
-                <a href="index.html" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
-                <a href="trading.html" class="nav-item"><i class="fas fa-chart-line"></i> Gold Trading</a>
-                <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
-                <a href="history.html" class="nav-item"><i class="fas fa-history"></i> History</a>
-                <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> My Wallet</a>
-                <a href="kyc.html" class="nav-item"><i class="fas fa-user-check"></i> KYC Verification</a>
-                <a href="chat-user.html" class="nav-item"><i class="fas fa-headset"></i> Live Support</a>
-            </nav>
+        <!-- Gold Price Script — USD + THB via metals.live, sparkline canvas -->
+        <script>
+        (function(){
+            var thbRate = 34;
+            var priceHistory = [];
+            var prevUsd = 0;
+            var MAX_PTS = 40;
 
-            <div class="auth-control-box">
-                <div id="sidebar-logged-out">
-                    <a href="login.html" class="btn-sidebar-login"><i class="fas fa-sign-in-alt"></i> Login / Register</a>
+            /* ── Sparkline renderer ── */
+            function drawSparkline(prices) {
+                var canvas = document.getElementById('gold-sparkline');
+                if (!canvas || prices.length < 2) return;
+                var ctx = canvas.getContext('2d');
+                var W = canvas.width, H = canvas.height;
+                ctx.clearRect(0, 0, W, H);
+
+                var mn = Math.min.apply(null, prices);
+                var mx = Math.max.apply(null, prices);
+                var range = mx - mn || 1;
+                var isUp = prices[prices.length - 1] >= prices[0];
+                var clr = isUp ? '#00B050' : '#FF6B6B';
+
+                var pts = prices.map(function(p, i) {
+                    return {
+                        x: (i / (prices.length - 1)) * W,
+                        y: H - 4 - ((p - mn) / range) * (H - 12)
+                    };
+                });
+
+                /* gradient fill */
+                var grad = ctx.createLinearGradient(0, 0, 0, H);
+                grad.addColorStop(0, isUp ? 'rgba(0,176,80,0.25)' : 'rgba(255,107,107,0.25)');
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+                ctx.beginPath();
+                ctx.moveTo(pts[0].x, H);
+                for (var i = 0; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+                ctx.lineTo(pts[pts.length - 1].x, H);
+                ctx.closePath();
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                /* smooth line */
+                ctx.beginPath();
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (var i = 1; i < pts.length; i++) {
+                    var cx = (pts[i-1].x + pts[i].x) / 2;
+                    ctx.bezierCurveTo(cx, pts[i-1].y, cx, pts[i].y, pts[i].x, pts[i].y);
+                }
+                ctx.strokeStyle = clr;
+                ctx.lineWidth = 2;
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+
+                /* dot at latest price */
+                var last = pts[pts.length - 1];
+                ctx.beginPath();
+                ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = clr;
+                ctx.fill();
+            }
+
+            /* seed sparkline with simulated intraday history on first load */
+            function seedHistory(basePrice) {
+                priceHistory = [];
+                var p = basePrice * 0.998;
+                for (var i = 0; i < 20; i++) {
+                    p += (Math.random() - 0.48) * (basePrice * 0.0008);
+                    priceHistory.push(parseFloat(p.toFixed(2)));
+                }
+            }
+
+            function isMarketOpen(){
+                var d=new Date(), day=d.getUTCDay(), hr=d.getUTCHours();
+                if(day===6) return false;
+                if(day===0 && hr<21) return false;
+                if(day===5 && hr>=21) return false;
+                return true;
+            }
+            function updateBadge(){
+                var b=document.getElementById('market-badge');
+                if(!b) return;
+                if(isMarketOpen()){ b.textContent='● OPEN'; b.className='market-badge market-open'; }
+                else { b.textContent='● CLOSED'; b.className='market-badge market-closed'; }
+            }
+            function fetchTHB(){
+                fetch('https://open.er-api.com/v6/latest/USD')
+                    .then(function(r){ return r.json(); })
+                    .then(function(d){ if(d.rates&&d.rates.THB) thbRate=d.rates.THB; fetchGoldPrice(); })
+                    .catch(function(){ fetchGoldPrice(); });
+            }
+
+            /* Try gold-api.com first, fallback to metals.live */
+            function fetchGoldPrice(){
+                fetch('https://api.gold-api.com/price/XAU')
+                    .then(function(r){ return r.json(); })
+                    .then(function(d){
+                        var usd = d && d.price ? parseFloat(d.price) : 0;
+                        if(usd > 100){ applyGoldPrice(usd); }
+                        else { fetchGoldFallback(); }
+                    })
+                    .catch(function(){ fetchGoldFallback(); });
+            }
+            function fetchGoldFallback(){
+                fetch('https://api.metals.live/v1/spot')
+                    .then(function(r){ return r.json(); })
+                    .then(function(j){
+                        var usd = 0;
+                        if(Array.isArray(j) && j[0] && j[0].gold) usd = j[0].gold;
+                        else if(j && j.gold) usd = parseFloat(j.gold);
+                        if(usd > 100){ applyGoldPrice(usd); }
+                        else { showThbError(); }
+                    })
+                    .catch(function(){ showThbError(); });
+            }
+
+            function applyGoldPrice(usd){
+                /* sparkline */
+                if(priceHistory.length === 0) seedHistory(usd);
+                else if(Math.abs(usd - priceHistory[priceHistory.length-1]) > usd * 0.05) seedHistory(usd);
+                priceHistory.push(usd);
+                if(priceHistory.length > MAX_PTS) priceHistory.shift();
+                drawSparkline(priceHistory);
+                prevUsd = usd;
+                localStorage.setItem('_ylgLastGold', usd);
+
+                /* THB display */
+                var thb = usd * thbRate;
+                var thbEl  = document.getElementById('gp-thb');
+                var thbUsd = document.getElementById('gp-thb-usd');
+                var updEl  = document.getElementById('gp-updated');
+                if(thbEl)  thbEl.textContent  = '฿' + thb.toLocaleString('th-TH', {maximumFractionDigits:0});
+                if(thbUsd) thbUsd.textContent = '$' + usd.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+                if(updEl)  updEl.textContent  = 'Updated: ' + new Date().toLocaleTimeString();
+            }
+            function showThbError(){
+                var el = document.getElementById('gp-updated');
+                if(el) el.textContent = 'THB unavailable';
+            }
+
+            document.addEventListener('DOMContentLoaded', function(){
+                updateBadge();
+                /* draw sparkline immediately with seeded data so canvas is never blank */
+                var seed = parseFloat(localStorage.getItem('_ylgLastGold')) || 3300;
+                seedHistory(seed);
+                drawSparkline(priceHistory);
+                fetchTHB();
+                setInterval(fetchTHB, 30000);
+                setInterval(updateBadge, 60000);
+            });
+
+            window.copyRefCode = function(){
+                var c=window._ylgRefCode||'—';
+                navigator.clipboard.writeText(c)
+                    .then(function(){ showToast('Referral code copied!', 'success'); })
+                    .catch(function(){});
+                var ic=document.getElementById('db-ref-copy-icon');
+                if(ic){ ic.className='fas fa-check'; setTimeout(function(){ ic.className='fas fa-copy'; },1200); }
+            };
+            window.shareRefCode = function(){
+                var c=window._ylgRefCode||'—';
+                var url='https://www.ylgbullion.asia/register.html?ref='+c;
+                var msg='Join YLG Bullion International!\nUse my referral code: '+c+'\nRegister here: '+url;
+                if(navigator.share){
+                    navigator.share({title:'YLG Bullion International',text:msg,url:url});
+                } else {
+                    navigator.clipboard.writeText(msg)
+                        .then(function(){ showToast('Referral link copied!', 'success'); })
+                        .catch(function(){});
+                }
+            };
+        })();
+        </script>
+
+        <div class="dashboard-card" style="display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;align-items:center;gap:14px;">
+                <div style="width:48px;height:48px;border-radius:50%;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <img src="logo.png" alt="YLG" style="width:32px;height:32px;object-fit:contain;" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
                 </div>
-                <div id="sidebar-logged-in" style="display: none;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-user-circle" style="font-size: 30px; color: var(--color-gold-accent);"></i>
-                        <div style="overflow: hidden;">
-                            <div id="user-display-name" style="font-weight: bold; font-size: 13px; white-space: nowrap; text-overflow: ellipsis;">User</div>
-                            <div style="font-size: 10px; color: #888;">Verified Member</div>
-                        </div>
-                    </div>
-                    <button id="logoutBtn" class="btn-logout-sidebar">Logout Account</button>
-                </div>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <header class="main-header">
                 <div>
-                    <h2 id="welcome-title">Dashboard</h2>
-                    <p id="welcome-subtitle" style="font-size: 14px; color: var(--color-text-fade); margin: 0;">Welcome to YLG Bullion International.</p>
+                    <h3 id="about-title" style="margin:0;font-size:17px;">About YLG Bullion</h3>
+                    <p style="margin:2px 0 0;color:var(--color-gold-accent);font-size:10px;letter-spacing:1.5px;font-weight:700;">EST. 1993 · BANGKOK, THAILAND</p>
                 </div>
-            </header>
+            </div>
+            <p id="about-desc" style="color:var(--color-text-fade);font-size:14px;line-height:1.7;margin:0;">YLG Bullion International is a globally renowned gold trading company providing excellent services to our clients.</p>
+            <a href="about.html" style="display:inline-flex;align-items:center;gap:8px;padding:11px 22px;background:var(--color-gold-accent);color:#000;font-weight:700;border-radius:8px;text-decoration:none;font-size:14px;align-self:flex-start;">
+                <span id="about-learn-more">Learn More</span> <i class="fas fa-arrow-right" style="font-size:12px;"></i>
+            </a>
+        </div>
 
-            <section class="company-header-section">
-                <img src="license.jpg" 
-                     onerror="this.src='https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=1200&q=80'"
-                     alt="YLG Bullion Gold" class="full-width-banner">
-
-                <div class="company-info-container">
-                    <h3 id="about-title" style="color: var(--color-gold-accent); margin-top: 0;">About Us</h3>
-                    <p id="about-desc" style="line-height: 1.8; color: var(--color-text-light); margin-bottom: 25px;">
-                        YLG Bullion International Co., Ltd. is a global standard gold trading company, providing secure and reliable services to our valued clients.
-                    </p>
-
-                    <div class="history-timeline-container">
-                        <h4 id="history-header" style="color: var(--color-gold-accent); text-align: center; margin-bottom: 30px; font-size: 22px;">Company History</h4>
-                        <div class="ylg-timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-img-box"><img src="ylg-1993.png" alt="YLG 1993" onerror="this.src='https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?w=500'"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-year">1993</span>
-                                    <h5 id="h-1993-t">Founding Excellence</h5>
-                                    <p id="h-1993-d">YLG was established as a premier gold bullion trader, laying the foundation for trust and quality in the precious metals market.</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item reverse">
-                                <div class="timeline-img-box"><img src="ylg-2003.PNG" alt="YLG 2003" onerror="this.src='https://images.unsplash.com/photo-1551288560-199738d4d38c?w=500'"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-year">2003</span>
-                                    <h5 id="h-2003-t">Strategic Expansion</h5>
-                                    <p id="h-2003-d">Implementation of global standard infrastructure and launch of innovative digital trading platforms.</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-img-box"><img src="ylg-2009.PNG" alt="YLG Futures" onerror="this.src='https://images.unsplash.com/photo-1611974715853-28d3aea539ce?w=500'"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-year">2009</span>
-                                    <h5 id="h-2009-t">YLG Bullion and Futures</h5>
-                                    <p id="h-2009-d">Established as a professional broker for gold futures trading, offering diverse products from precious metals to equity and currencies.</p>
-                                </div>
-                            </div>
-                            <div class="timeline-item reverse">
-                                <div class="timeline-img-box"><img src="ylg-2012.PNG" alt="YLG 2012" onerror="this.src='https://images.unsplash.com/photo-1525625230556-8e8bdbaae190?w=500'"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-year">2012</span>
-                                    <h5 id="h-2012-t">Singapore Global Hub</h5>
-                                    <p id="h-2012-d">Established the Singapore branch to strengthen our presence in the international gold market.</p>
-                                </div>
-                            </div>
-                            <div class="timeline-line"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="license-container">
-                        <h4 id="license-main-title" style="color: var(--color-gold-accent); margin-bottom: 20px; font-size: 18px;">YLG Bullion and Futures Co., Ltd.</h4>
-                        
-                        <video autoplay muted loop playsinline style="width:100%; border-radius: 8px; border: 1px solid var(--color-gold-accent); margin-bottom: 20px; background: #000;">
-                        <source src="ylgvideo.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                        
-                        <div id="license-full-desc" style="text-align: left; line-height: 1.8; color: var(--color-text-light); font-size: 14px;">
-                            <p>Watch the official YLG Bullion license and certification overview in the video above. This presentation is aligned with our active SEC registration, gold trader license, and AML compliance status.</p>
-                        </div>
-
-                        <div style="margin-top: 15px; text-align: left; font-size: 13px; color: #A0A0A0; border-top: 1px solid #333; padding-top: 10px;">
-                            <p>â— SEC Thailand Active</p>
-                            <p>â— Gold Trader License Active</p>
-                            <p>â— AML Compliance Active</p>
-                        </div>
-                    </div>
-
-                    <div id="additional-content" style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
-                        <p style="color: var(--color-text-fade); font-size: 12px; text-align: center;">
-                            Â© 2025 YLG Bullion International Co.,Ltd. All rights reserved.
-                        </p>
-                    </div>
+        <!-- ── Page Footer ── -->
+        <footer class="page-footer">
+            <div class="footer-brand">
+                <img src="logo.png" alt="YLG" class="footer-logo" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
+                <div>
+                    <div class="footer-brand-name">YLG BULLION</div>
+                    <div class="footer-brand-sub">INTERNATIONAL CO., LTD.</div>
                 </div>
-            </section>
-        </main>
-    </div>
+            </div>
+
+            <div class="footer-links">
+                <a href="about.html" id="ftl-about">About Us</a>
+                <a href="terms.html" id="ftl-terms">Terms &amp; Conditions</a>
+                <a href="faq.html" id="ftl-faq">FAQ</a>
+                <a href="complaints.html" id="ftl-complaints">Complaints</a>
+                <a href="chat-user.html" id="ftl-support">Live Support</a>
+            </div>
+
+            <div class="footer-badges">
+                <span class="footer-badge"><i class="fas fa-shield-halved"></i> <span id="ftl-regulated">Licensed &amp; Regulated</span></span>
+                <span class="footer-badge"><i class="fas fa-lock"></i> <span id="ftl-secure">Secure &amp; Encrypted</span></span>
+                <span class="footer-badge"><i class="fas fa-headset"></i> <span id="ftl-support-badge">24/7 Support</span></span>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <p class="footer-copy" id="ftl-copy">© 2025 YLG Bullion International Co., Ltd. All rights reserved.</p>
+                <p class="footer-note" id="ftl-note">Est. 1993 · Bangkok, Thailand · Gold Trading Platform</p>
+            </div>
+        </footer>
+    </main>
 
     <script>
+        // Multi-language support with full translations
+        const translations = {
+            en: {
+                'welcome-title': 'Dashboard',
+                'welcome-subtitle': 'Welcome to YLG Bullion International',
+                'about-title': 'About YLG Bullion',
+                'about-desc': 'YLG Bullion International is a globally renowned gold trading company providing excellent services to our clients.',
+                'about-learn-more': 'Learn More',
+                'dbl-goldtitle': 'Live Gold Price',
+                'dbl-accsummary': 'Account Summary',
+                'dbl-balance': 'Balance',
+                'dbl-pnl': 'Total P&L',
+                'dbl-trades': 'Trades',
+                'dbl-winrate': 'Win Rate',
+                'dbl-buy': 'BUY GOLD',
+                'dbl-sell': 'SELL GOLD',
+                'dbl-recent': 'Recent Trades',
+                'dbl-viewall': 'View All History →',
+                'dbl-ref-title': 'Invite Friends',
+                'dbl-ref-desc': 'Share your referral code and earn rewards',
+                'dbl-ref-share': 'Share',
+                'ftl-about': 'About Us', 'ftl-terms': 'Terms & Conditions',
+                'ftl-faq': 'FAQ', 'ftl-complaints': 'Complaints', 'ftl-support': 'Live Support',
+                'ftl-regulated': 'Licensed & Regulated', 'ftl-secure': 'Secure & Encrypted',
+                'ftl-support-badge': '24/7 Support',
+                'ftl-copy': '© 2025 YLG Bullion International Co., Ltd. All rights reserved.',
+                'ftl-note': 'Est. 1993 · Bangkok, Thailand · Gold Trading Platform',
+                'announce-text': 'Complete your KYC verification to unlock full trading features and higher withdrawal limits.',
+                'announce-link': 'Verify Now →'
+            },
+            mm: {
+                'welcome-title': 'ပင်မစာမျက်နှာ',
+                'welcome-subtitle': 'YLG Bullion International သို့ ကြိုဆိုပါသည်။',
+                'about-title': 'ကျွန်ုပ်တို့အကြောင်း',
+                'about-desc': 'YLG Bullion International Co., Ltd. သည် ကမ္ဘာလုံးဆိုင်ရာ စံနှုန်းမြင့် ရွှေထုတ်ကုန် ကုန်သွယ်ရေး ကုမ္ပဏီဖြစ်ပြီး သာယာကောင်းမွန်သော ဝန်ဆောင်မှုများကို ဖောက်သည်များအား ပေးဆောင်သည်။',
+                'about-learn-more': 'ပိုမိုသိရှိရန်',
+                'dbl-goldtitle': 'ရွှေဈေးနှုန်း',
+                'dbl-accsummary': 'အကောင့်အကျဉ်းချုပ်',
+                'dbl-balance': 'လက်ကျန်ငွေ',
+                'dbl-pnl': 'အမြတ်/အရှုံး',
+                'dbl-trades': 'ကုန်သွယ်မှု',
+                'dbl-winrate': 'အနိုင်နှုန်း',
+                'dbl-buy': 'ရွှေဝယ်',
+                'dbl-sell': 'ရွှေရောင်း',
+                'dbl-recent': 'မကြာသေးမီ ကုန်သွယ်မှုများ',
+                'dbl-viewall': 'အားလုံးကြည့်ရန် →',
+                'dbl-ref-title': 'သူငယ်ချင်းများ ဖိတ်ကြားပါ',
+                'dbl-ref-desc': 'Referral code မျှဝေပြီး ဆုလာဘ်ရယူပါ',
+                'dbl-ref-share': 'မျှဝေ',
+                'ftl-about': 'ကျွန်ုပ်တို့အကြောင်း', 'ftl-terms': 'စည်းမျဉ်းနှင့် စည်းကမ်းများ',
+                'ftl-faq': 'မေးလေ့မေးထ', 'ftl-complaints': 'တိုင်ကြားမှုများ', 'ftl-support': 'တိုက်ရိုက် ပံ့ပိုးမှု',
+                'ftl-regulated': 'လိုင်စင်ရပြီး ထိန်းချုပ်ထားသည်', 'ftl-secure': 'လုံခြုံပြီး ကုဒ်ဝှက်ထားသည်',
+                'ftl-support-badge': '24/7 ပံ့ပိုးမှု',
+                'ftl-copy': '© 2025 YLG Bullion International Co., Ltd. မူပိုင်ခွင့်အားလုံး ထိန်းသိမ်းသည်။',
+                'ftl-note': 'ထူထောင်သည် 1993 · ဘန်ကောက်၊ ထိုင်းနိုင်ငံ · ရွှေကုန်သွယ်မှု ပလပ်ဖောင်း',
+                'announce-text': 'KYC စစ်ဆေးခြင်းကို ပြုလုပ်ပြီး ကုန်သွယ်မှု လုပ်ဆောင်ချက် အပြည့်အဝ ရယူပါ။',
+                'announce-link': 'ယခုစစ်ဆေးရန် →'
+            },
+            th: {
+                'welcome-title': 'แดชบอร์ด',
+                'welcome-subtitle': 'ยินดีต้อนรับสู่ YLG Bullion International',
+                'about-title': 'เกี่ยวกับเรา',
+                'about-desc': 'YLG Bullion International Co., Ltd. เป็นบริษัทเทรดทองคำมาตรฐานสากล ให้บริการที่ปลอดภัยและเชื่อถือได้แก่ลูกค้าของเรา.',
+                'about-learn-more': 'เรียนรู้เพิ่มเติม',
+                'dbl-goldtitle': 'ราคาทองคำสด',
+                'dbl-accsummary': 'สรุปบัญชี',
+                'dbl-balance': 'ยอดคงเหลือ',
+                'dbl-pnl': 'กำไร/ขาดทุน',
+                'dbl-trades': 'การเทรด',
+                'dbl-winrate': 'อัตราชนะ',
+                'dbl-buy': 'ซื้อทอง',
+                'dbl-sell': 'ขายทอง',
+                'dbl-recent': 'การเทรดล่าสุด',
+                'dbl-viewall': 'ดูประวัติทั้งหมด →',
+                'dbl-ref-title': 'เชิญเพื่อน',
+                'dbl-ref-desc': 'แชร์รหัสแนะนำของคุณและรับรางวัล',
+                'dbl-ref-share': 'แชร์',
+                'ftl-about': 'เกี่ยวกับเรา', 'ftl-terms': 'ข้อกำหนดและเงื่อนไข',
+                'ftl-faq': 'คำถามที่พบบ่อย', 'ftl-complaints': 'ข้อร้องเรียน', 'ftl-support': 'สนับสนุนสด',
+                'ftl-regulated': 'ได้รับใบอนุญาตและการควบคุม', 'ftl-secure': 'ปลอดภัยและเข้ารหัส',
+                'ftl-support-badge': 'สนับสนุน 24/7',
+                'ftl-copy': '© 2025 YLG Bullion International Co., Ltd. สงวนลิขสิทธิ์ทุกประการ',
+                'ftl-note': 'ก่อตั้งปี 1993 · กรุงเทพฯ, ประเทศไทย · แพลตฟอร์มซื้อขายทองคำ',
+                'announce-text': 'ยืนยัน KYC ของคุณเพื่อปลดล็อคฟีเจอร์เทรดทั้งหมดและวงเงินถอนที่สูงขึ้น',
+                'announce-link': 'ยืนยันตอนนี้ →'
+            }
+        };
+
+        /* ── Announcement Banner ── */
+        (function() {
+            var bar = document.getElementById('announce-bar');
+            if (bar && localStorage.getItem('announce_dismissed_v1') === '1') {
+                bar.style.display = 'none';
+            }
+            // Hide banner when KYC is approved
+            window.addEventListener('DOMContentLoaded', function() {
+                var kycDone = localStorage.getItem('kycStatus') === 'approved';
+                if (bar && kycDone) bar.style.display = 'none';
+            });
+        })();
+        window.dismissAnnounce = function() {
+            var bar = document.getElementById('announce-bar');
+            if (!bar) return;
+            bar.style.transition = 'opacity 0.3s, max-height 0.3s, margin 0.3s, padding 0.3s';
+            bar.style.opacity = '0'; bar.style.maxHeight = '0'; bar.style.overflow = 'hidden';
+            bar.style.marginBottom = '0'; bar.style.padding = '0';
+            setTimeout(function() { bar.style.display = 'none'; }, 320);
+            localStorage.setItem('announce_dismissed_v1', '1');
+        };
+
         function toggleSidebarLang() {
             const list = document.getElementById('sidebar-lang-list');
+            if (!list) return;
             list.style.display = (list.style.display === 'block') ? 'none' : 'block';
         }
 
-        window.onclick = function(event) {
-            if (!event.target.matches('.lang-btn-trigger') && !event.target.closest('.lang-btn-trigger')) {
-                document.getElementById('sidebar-lang-list').style.display = 'none';
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.lang-dropdown')) {
+                const list = document.getElementById('sidebar-lang-list');
+                if (list) list.style.display = 'none';
             }
-        }
+        });
 
         function handleLangChange(lang) {
             localStorage.setItem('selectedLang', lang);
             applyLanguage(lang);
-            document.getElementById('sidebar-lang-list').style.display = 'none';
+            const list = document.getElementById('sidebar-lang-list');
+            if (list) list.style.display = 'none';
         }
 
         function applyLanguage(lang) {
-            document.documentElement.lang = lang === 'mm' ? 'my' : lang === 'th' ? 'th' : 'en';
-            const langNames = { 'en': 'English', 'mm': 'မြန်မာ (Myanmar)', 'th': 'ไทย (Thai)' };
-            const displayLang = document.getElementById('display-lang-name');
-            if(displayLang) displayLang.innerHTML = `<i class="fas fa-globe"></i> ${langNames[lang]}`;
-            
-            const texts = {
-                'en': { 
-                    welcome: "Dashboard", sub: "Welcome to YLG Bullion International.", about: "About Us", 
-                    desc: "YLG Bullion International Co., Ltd. is a global standard gold trading company, providing secure and reliable services to our valued clients.", 
-                    login: "Login / Register", nav: ["Dashboard", "Gold Trading", "Portfolio", "History", "My Wallet", "KYC Verification", "Live Support"],
-                    historyHeader: "Company History",
-                    h1993t: "Founding Excellence", h1993d: "YLG was established as a premier gold bullion trader, laying the foundation for trust and quality.",
-                    h2003t: "Strategic Expansion", h2003d: "Implementation of global standard infrastructure and launch of innovative digital trading platforms.",
-                    h2009t: "YLG Bullion and Futures", h2009d: "Established as a professional broker for gold futures trading, covering Precious Metals, Equity, and Currencies under SEC certification.",
-                    h2012t: "Singapore Global Hub", h2012d: "Established the Singapore branch to strengthen our presence in the international gold market.",
-                    licenseTitle: "YLG Bullion and Futures Co., Ltd.",
-                    licenseDesc: `<p>YLG Bullion and Futures was established in 2009 as a broker for gold futures trading. The company holds a Full License, covering a wide range of products such as Precious Metals (Gold Online Futures, Gold Futures), Equity (SET50 Futures, Single Stock Futures), as well as Currencies and Agricultures.</p>
-                                 <p>YLG is certified by the Securities and Exchange Commission (SEC) and is a member of the Gold Traders Association. It operates in compliance with the Derivatives Act B.E. 2546 (2003).</p>
-                                 <p>In 2022, YLG expanded its market reach to Global Markets, offering world-class products such as COMEX, NYMEX, and S&P Dow Jones. Investors can trade 24/7 through leading platforms like CQG and MT5. Additionally, YLG became the first in Thailand to provide investor trading via TradingView, reaffirming its leadership in the Futures market both domestically and globally.</p>`
-                },
-                'mm': {
-                    welcome: "ဒက်ရှ်ဘုတ်",
-                    sub: "YLG Bullion International သို့ ကြိုဆိုပါသည်။",
-                    about: "ကျွန်ုပ်တို့အကြောင်း",
-                    desc: "YLG Bullion International Co., Ltd. သည် ကမ္ဘာလုံးဆိုင်ရာ စံနှုန်းမြင့် ရွှေထုတ်ကုန် ကုန်သွယ်ရေး ကုမ္ပဏီဖြစ်ပြီး သာယာကောင်းမွန်သော ဝန်ဆောင်မှုများကို ဖောက်သည်များအား ပေးဆောင်သည်။",
-                    login: "ဝင်ရောက်ရန် / မှတ်ပုံတင်ရန်",
-                    nav: ["ဒက်ရှ်ဘုတ်", "ရွှေကုန်သွယ်ရေး", "ပို့ဖိုလီယို", "သမိုင်း", "ငွေထည်", "KYC စစ်ဆေးခြင်း", "တိုက်ရိုက်အကူအညီ"],
-                    historyHeader: "ကုမ္ပဏီ သမိုင်း",
-                    h1993t: "တည်ထောင်မှု အောင်မြင်မှု",
-                    h1993d: "YLG သည် ယုံကြည်စိတ်ချရသော ရွှေ ကုန်သွယ်ရေး ကုမ္ပဏီတစ်ခုအဖြစ် စတင်တည်ထောင်ခဲ့သည်။",
-                    h2003t: "တိုးချဲ့ရေး မဟာဗျူဟာ",
-                    h2003d: "ကမ္ဘာလုံးဆိုင်ရာ စံချိန်စံနစ်အရ ကုန်သွယ်ရေး ပလက်ဖောင်းများကို တည်ဆောက်ခဲ့သည်။",
-                    h2009t: "YLG Bullion နှင့် Futures",
-                    h2009d: "SEC အတည်ပြုထားသော ရွှေ ဖျူးချန် ကုန်သွယ်ရေး အဖွဲ့အစည်း ဖြစ်လာခဲ့သည်။",
-                    h2012t: "စင်ကာပူ ကမ္ဘာလမ်း",
-                    h2012d: "စင်ကာပူ ရုံးကို စတင်ဖွင့်လှစ်ကာ ကမ္ဘာ့ ရွှေစျေးကွက်တွင် ပိုမိုတည်တံခါး ခဲ့သည်။",
-                    licenseTitle: "YLG Bullion နှင့် Futures Co., Ltd.",
-                    licenseDesc: `<p>YLG Bullion and Futures သည် ၂၀၀၉ ခုနှစ်တွင် ရွှေ ဖျူးချန် ကုန်သွယ်ရေး ကုမ္ပဏီအဖြစ် စတင်တည်ထောင်ခဲ့ပြီး အရည်အသွေးမြင့် ဝန်ဆောင်မှုများကို ပေးဆောင်သည်။</p>
-                                 <p>SEC မှ အတည်ပြုထားပြီး Gold Traders Association ၏ အဖွဲ့ဝင်ဖြစ်ပါသည်။</p>`
-                },
-                'th': { 
-                    welcome: "ยินดีต้อนรับ", sub: "ยินดีต้อนรับสู่ YLG Bullion", about: "เกี่ยวกับเรา", 
-                    desc: "YLG Bullion International Co., Ltd. เป็นบริษัทเทรดทองคำมาตรฐานสากล ให้บริการที่ปลอดภัยและเชื่อถือได้แก่ลูกค้าของเรา.", 
-                    login: "เข้าสู่ระบบ / ลงทะเบียน", nav: ["แดชบอร์ด", "การซื้อขายทองคำ", "พอร์ตโฟลิโอ", "ประวัติ", "กระเป๋าสตางค์", "การตรวจสอบ KYC", "ช่วยเหลือ"],
-                    historyHeader: "ประวัติบริษัท",
-                    h1993t: "ความเป็นเลิศในการก่อตั้ง", h1993d: "YLG ก่อตั้งขึ้นในฐานะผู้นำค้าทองคำ เพื่อสร้างมาตรฐานคุณภาพและความน่าเชื่อถือ.",
-                    h2003t: "การขยายกลยุทธ์", h2003d: "พัฒนาโครงสร้างพื้นฐานมาตรฐานสากลและเปิดตัวแพลตฟอร์มการซื้อขายดิจิทัลที่ทันสมัย.",
-                    h2009t: "YLG Bullion and Futures", h2009d: "ก่อตั้งเป็นโบรกเกอร์ทองคำฟิวเจอร์สระดับมืออาชีพ ภายใต้การกำกับดูแลของ ก.ล.ต.",
-                    h2012t: "ศูนย์กลางสิงคโปร์", h2012d: "เปิดสำนักงานสิงคโปร์เพื่อเสริมความแข็งแกร่งในตลาดทองคำระดับโลก.",
-                    licenseTitle: "บริษัท YLG Bullion and Futures จำกัด",
-                    licenseDesc: `<p>YLG Bullion and Futures ก่อตั้งในปี 2009 ในฐานะผู้ให้บริการซื้อขายทองคำฟิวเจอร์ส โดยมีใบอนุญาตเต็มรูปแบบ ครอบคลุมผลิตภัณฑ์ทั้งทองคำออนไลน์ฟิวเจอร์ส ทองคำฟิวเจอร์ส SET50 Futures Single Stock Futures อัตราแลกเปลี่ยน และสินค้าเกษตร.</p>
-                                 <p>YLG ได้รับการรับรองจากคณะกรรมการกำกับหลักทรัพย์และตลาดหลักทรัพย์ (ก.ล.ต.) และดำเนินงานตามพระราชบัญญัติว่าด้วยตลาดล่วงหน้า พ.ศ. 2546.</p>
-                                 <p>ในปี 2022 YLG ขยายสู่ตลาดโลก โดยให้บริการผลิตภัณฑ์ระดับสากล เช่น COMEX, NYMEX และ S&P Dow Jones นักลงทุนสามารถซื้อขายได้ 24 ชั่วโมงผ่านแพลตฟอร์มชั้นนำอย่าง CQG และ MT5 พร้อมการใช้งาน TradingView ในประเทศไทย.</p>`
-                }
-            };
-            
-            if(document.getElementById('welcome-title')) document.getElementById('welcome-title').innerText = texts[lang].welcome;
-            if(document.getElementById('welcome-subtitle')) document.getElementById('welcome-subtitle').innerText = texts[lang].sub;
-            if(document.getElementById('about-title')) document.getElementById('about-title').innerText = texts[lang].about;
-            if(document.getElementById('about-desc')) document.getElementById('about-desc').innerText = texts[lang].desc;
-            
-            if(document.getElementById('history-header')) document.getElementById('history-header').innerText = texts[lang].historyHeader;
-            if(document.getElementById('h-1993-t')) document.getElementById('h-1993-t').innerText = texts[lang].h1993t;
-            if(document.getElementById('h-1993-d')) document.getElementById('h-1993-d').innerText = texts[lang].h1993d;
-            if(document.getElementById('h-2003-t')) document.getElementById('h-2003-t').innerText = texts[lang].h2003t;
-            if(document.getElementById('h-2003-d')) document.getElementById('h-2003-d').innerText = texts[lang].h2003d;
-            if(document.getElementById('h-2009-t')) document.getElementById('h-2009-t').innerText = texts[lang].h2009t;
-            if(document.getElementById('h-2009-d')) document.getElementById('h-2009-d').innerText = texts[lang].h2009d;
-            if(document.getElementById('h-2012-t')) document.getElementById('h-2012-t').innerText = texts[lang].h2012t;
-            if(document.getElementById('h-2012-d')) document.getElementById('h-2012-d').innerText = texts[lang].h2012d;
+            if (!translations[lang]) lang = 'en';
 
-            if(document.getElementById('license-main-title')) document.getElementById('license-main-title').innerText = texts[lang].licenseTitle;
-            if(document.getElementById('license-full-desc')) document.getElementById('license-full-desc').innerHTML = texts[lang].licenseDesc;
-            
-            const loginBtn = document.querySelector('.btn-sidebar-login');
-            if(loginBtn) loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> ${texts[lang].login}`;
-            
-            const navItems = document.querySelectorAll('.nav-item');
-            const navIcons = ["fa-th-large", "fa-chart-line", "fa-briefcase", "fa-history", "fa-wallet", "fa-user-check", "fa-headset"];
-            navItems.forEach((item, index) => {
-                if(texts[lang].nav[index]) {
-                    item.innerHTML = `<i class="fas ${navIcons[index]}"></i> ${texts[lang].nav[index]}`;
+            const langNames = {
+                'en': 'English',
+                'mm': 'မြန်မာ (Myanmar)',
+                'th': 'ไทย (Thai)'
+            };
+
+            const display = document.getElementById('display-lang-name');
+            if (display) {
+                display.innerHTML = `<i class="fas fa-globe"></i> ${langNames[lang] || 'English'}`;
+            }
+
+            // Apply all text translations
+            Object.keys(translations[lang]).forEach(key => {
+                const elem = document.getElementById(key);
+                if (elem) {
+                    // Timeline descriptions contain <strong> tags, need innerHTML
+                    if (key.startsWith('h-') && (key.endsWith('-d') || key.endsWith('-t'))) {
+                        elem.innerHTML = translations[lang][key];
+                    } else {
+                        elem.innerText = translations[lang][key];
+                    }
                 }
             });
+
+
+            // Update sidebar nav items
+            const navTexts = {
+                en: ['Dashboard', 'Trading', 'Portfolio', 'History', 'Wallet', 'KYC', 'Live Support'],
+                mm: ['ပင်မစာမျက်နှာ', 'ရွှေရောင်းဝယ်မှု', 'ပိုင်ဆိုင်မှုစာရင်း', 'မှတ်တမ်း', 'ကျွန်ုပ်၏ ပိုက်ဆံအိတ်', 'KYC စစ်ဆေးခြင်း', 'တိုက်ရိုက် အထောက်အပံ့'],
+                th: ['แดชบอร์ด', 'เทรดทอง', 'พอร์ตโฟลิโอ', 'ประวัติ', 'กระเป๋า', 'KYC', 'สนับสนุนสด']
+            };
+
+            const navItems = document.querySelectorAll('#sidebar-nav .nav-item span');
+            navItems.forEach((item, idx) => {
+                if (navTexts[lang] && navTexts[lang][idx]) {
+                    item.innerText = navTexts[lang][idx];
+                }
+            });
+
         }
 
+        // Initialize language
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('selectedLang') || 'en';
             applyLanguage(savedLang);
         });
     </script>
+
     <script type="module">
-    import { app } from './firebase-init.js';
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { app, auth, db } from './firebase-init.js';
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const auth = getAuth(app);
+        let _unsubUser   = null;
+        let _unsubTrades = null;
 
-    // Sidebar UI elements
-    const loggedOutUI = document.getElementById('sidebar-logged-out');
-    const loggedInUI = document.getElementById('sidebar-logged-in');
-    const userNameDisplay = document.getElementById('user-display-name');
-
-    // Hide sections until we know the auth state
-    if (loggedOutUI) loggedOutUI.style.setProperty('display', 'none', 'important');
-    if (loggedInUI) loggedInUI.style.setProperty('display', 'none', 'important');
-
-    function showLoggedIn(name) {
-        if (loggedOutUI) loggedOutUI.style.setProperty('display', 'none', 'important');
-        if (loggedInUI) loggedInUI.style.setProperty('display', 'block', 'important');
-        if (userNameDisplay) userNameDisplay.innerText = name || 'Member';
-    }
-
-    function showLoggedOut() {
-        if (loggedOutUI) loggedOutUI.style.setProperty('display', 'block', 'important');
-        if (loggedInUI) loggedInUI.style.setProperty('display', 'none', 'important');
-    }
-
-    function updateAuthUI(user) {
-        const storedEmail = localStorage.getItem('userEmail');
-        const storedName = localStorage.getItem('userName');
-
-        if (user) {
-            const displayName = storedName || user.displayName || (user.email ? user.email.split('@')[0] : 'Member');
-            showLoggedIn(displayName);
-            return;
+        function teardownListeners() {
+            if (_unsubUser)   { _unsubUser();   _unsubUser   = null; }
+            if (_unsubTrades) { _unsubTrades(); _unsubTrades = null; }
         }
 
-        if (storedEmail) {
-            showLoggedIn(storedName || storedEmail.split('@')[0]);
-            return;
+        const authButtons = document.getElementById('auth-buttons');
+        const loggedInBox = document.getElementById('logged-in-box');
+        const loggedInName = document.getElementById('logged-in-name');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        function showAuthState(user) {
+            if (user) {
+                const name = localStorage.getItem('userName') || user.displayName || user.email?.split('@')[0] || 'Member';
+                if (authButtons) authButtons.style.display = 'none';
+                if (loggedInBox) { loggedInBox.style.display = 'block'; if (loggedInName) loggedInName.innerText = name; }
+            } else {
+                if (authButtons) authButtons.style.display = 'block';
+                if (loggedInBox) loggedInBox.style.display = 'none';
+                hideDashWidgets();
+            }
         }
 
-        showLoggedOut();
-    }
-
-    updateAuthUI(auth.currentUser);
-
-    onAuthStateChanged(auth, (user) => {
-        updateAuthUI(user);
-    });
-
-    // Logout Function
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.onclick = () => {
-            signOut(auth).then(() => {
-                window.location.href = 'login.html';
-            }).catch((error) => {
-                console.error("Logout Error:", error);
+        function hideDashWidgets() {
+            ['db-account-card','db-recent-card','db-referral-card'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
             });
-        };
+        }
+
+        function escHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function loadDashData(user) {
+            // Show logged-in widgets immediately
+            ['db-account-card','db-recent-card','db-referral-card'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+
+            // Referral code
+            const refCode = user.uid.slice(0, 8).toUpperCase();
+            window._ylgRefCode = refCode;
+            const refEl = document.getElementById('db-ref-code');
+            if (refEl) refEl.textContent = refCode;
+
+            // ── Real-time: user doc → balance + P&L (balance - deposit) ──
+            _unsubUser = onSnapshot(
+                doc(db, 'users', user.uid),
+                (snap) => {
+                    if (!snap.exists()) return;
+                    const d   = snap.data();
+                    const bal = typeof d.balance === 'number' ? d.balance : 0;
+                    const dep = typeof d.depositBalance === 'number' ? d.depositBalance : 0;
+                    const pnl = bal - dep;
+
+                    const balEl = document.getElementById('dbs-balance');
+                    if (balEl) balEl.textContent = '$' + bal.toLocaleString(undefined, { minimumFractionDigits: 2 });
+
+                    const pnlEl = document.getElementById('dbs-pnl');
+                    if (pnlEl) {
+                        pnlEl.textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                        pnlEl.style.color = pnl >= 0 ? '#00B050' : '#FF6B6B';
+                    }
+
+                    const fullName = d.fullname || d.fullName || d.name || '';
+                    if (fullName) localStorage.setItem('memberName', fullName);
+                    const mId = 'YLG-2026' + String(d.userIndex || 0).padStart(4, '0');
+                    localStorage.setItem('memberId', mId);
+
+                    if (d.kycStatus === 'approved') {
+                        localStorage.setItem('kycStatus', 'approved');
+                        const bar = document.getElementById('announce-bar');
+                        if (bar) bar.style.display = 'none';
+                    }
+
+                    // Show data panel as soon as user doc loads
+                    const skelEl = document.getElementById('db-account-skel');
+                    const dataEl = document.getElementById('db-account-data');
+                    if (skelEl) skelEl.style.display = 'none';
+                    if (dataEl) dataEl.style.display = '';
+                },
+                (e) => {}
+            );
+
+            // ── Real-time: trades → count, win rate, recent list ──
+            const q = query(
+                collection(db, 'users', user.uid, 'trades'),
+                orderBy('timestamp', 'desc'),
+                limit(500)
+            );
+            _unsubTrades = onSnapshot(q, (snap) => {
+                let wins = 0, total = 0, recentHTML = '';
+
+                snap.forEach((tdoc) => {
+                    const t      = tdoc.data();
+                    const isWin  = (t.result || '').toUpperCase() === 'WIN';
+                    const amount = Number(t.amount || 0);
+                    const payout = Number(t.payout || 0);
+                    const pnl    = isWin ? (payout - amount) : -amount;
+
+                    if (total < 3) {
+                        let dateStr = '—';
+                        if (t.timestamp && typeof t.timestamp.toDate === 'function') {
+                            dateStr = t.timestamp.toDate().toLocaleDateString();
+                        } else if (t.date) {
+                            dateStr = t.date;
+                        }
+                        const type     = (t.type || 'BUY').toUpperCase();
+                        const isBuy    = type === 'BUY';
+                        const pnlColor = pnl >= 0 ? '#00B050' : '#FF6B6B';
+                        const pnlStr   = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toFixed(2);
+                        recentHTML += `<div class="db-trade-item">
+                            <span class="db-trade-type ${isBuy ? 'db-t-buy' : 'db-t-sell'}">
+                                <i class="fas ${isBuy ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'}"></i> ${type}
+                            </span>
+                            <div class="db-trade-info">
+                                <div class="db-trade-pair">${escHtml(t.pair || 'XAU/USD')}</div>
+                                <div class="db-trade-date">${escHtml(dateStr)}</div>
+                            </div>
+                            <div class="db-trade-pnl" style="color:${pnlColor};">${pnlStr}</div>
+                        </div>`;
+                    }
+
+                    total++;
+                    if (isWin) wins++;
+                });
+
+                // Recent trades list
+                const listEl = document.getElementById('db-recent-list');
+                if (listEl) {
+                    listEl.innerHTML = recentHTML ||
+                        '<div style="text-align:center;color:#7A8196;padding:20px;font-size:13px;">No trades yet</div>';
+                }
+
+                // Trades count + win rate
+                const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+                const trEl = document.getElementById('dbs-trades');
+                const wrEl = document.getElementById('dbs-winrate');
+                if (trEl) trEl.textContent = total;
+                if (wrEl) {
+                    wrEl.textContent = winRate + '%';
+                    wrEl.style.color = winRate >= 50 ? '#00B050' : '#FF6B6B';
+                }
+            }, (e) => {});
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            showAuthState(user);
+            if (user) {
+                loadDashData(user);
+            } else {
+                teardownListeners();
+            }
+        });
+
+        if (logoutBtn) {
+            logoutBtn.onclick = () => {
+                signOut(auth).then(() => {
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userName');
+                    window.location.href = 'index.html';
+                }).catch((error) => { console.error('Logout failed', error); });
+            };
+        }
+    </script>
+
+<script>
+/* ═══ YLG Language Sync — v2 ═══ */
+(function(){
+    function triggerApply(lang){
+        const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                     'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                     'applyTradingLanguage','applyAccountLanguage','applyLang'];
+        for (const fn of fns) {
+            if (typeof window[fn] === 'function') {
+                try { window[fn](lang); } catch(e) {}
+            }
+        }
     }
+    window.addEventListener('storage', function(e){
+        if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+    });
+    function initialApply(){
+        const lang = localStorage.getItem('selectedLang') || 'en';
+        triggerApply(lang);
+    }
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', function(){ setTimeout(initialApply, 50); });
+    } else {
+        setTimeout(initialApply, 50);
+    }
+    setTimeout(initialApply, 500);
+})();
 </script>
+
+<script src="mobile-nav.js"></script>
+<script src="sidebar-user.js"></script>
+<script src="/toast.js"></script>
+<script type="module" src="notifications-bell.js"></script>
 </body>
 </html>
+
+
+
+

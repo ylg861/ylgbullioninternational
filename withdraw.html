@@ -1,132 +1,546 @@
-�<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="my">
 <head>
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
     <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="YLG Bullion">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YLG - Withdrawal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <title>YLG Bullion</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard-styles.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        :root { 
-            --color-dark-bg: #111111; 
-            --color-medium-dark: #151920; 
-            --color-gold-accent: #FFD700; 
-            --color-text-light: #E6E9EE; 
-            --color-text-fade: #9aa0b3; 
-            --color-positive: #00B050; 
-            --color-negative: #D93025; 
-            --bg: var(--color-dark-bg); 
-            --panel: var(--color-medium-dark); 
-            --gold: var(--color-gold-accent); 
-            --text: var(--color-text-light); 
-            --shadow: 0 18px 50px rgba(0,0,0,0.18);
+        :root {
+            --gold: #FFD700;
+            --bg: #111111;
+            --card: #1A1A1A;
+            --text: #E0E0E0;
+            --muted: #A0A0A0;
+            --green: #00B050;
+            --red: #D93025;
         }
-        body { 
-            font-family: 'Noto Sans Myanmar', 'Noto Sans Thai', 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            display: flex; 
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
         }
-        .sidebar { 
-            width: 240px; 
-            height: 100vh; 
-            background: var(--panel); 
-            position: fixed; 
-            box-shadow: none;
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: var(--card);
+            position: fixed;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
         }
-        .nav-item { 
-            padding: 12px 18px; 
-            color: #888; 
-            text-decoration: none; 
-            display: flex; 
+
+        .sidebar-logo {
+            padding: 22px 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .sidebar-logo h2 {
+            margin: 0;
+            font-size: 22px;
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .sidebar-logo small {
+            display: block;
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        nav { padding: 8px 0; }
+
+        .nav-item {
+            padding: 12px 18px;
+            color: var(--muted);
+            text-decoration: none;
+            display: flex;
             align-items: center;
-            border-left: 4px solid transparent;
-            transition: all 0.18s ease;
-            margin: 6px 12px;
+            gap: 12px;
+            border-left: 3px solid transparent;
+            transition: 0.2s;
+            font-size: 13px;
+            margin: 2px 8px;
             border-radius: 6px;
         }
-        .nav-item.active { 
-            color: var(--gold); 
-            background: #252525; 
-            border-left-color: var(--gold); 
+
+        .nav-item:hover { background: #252525; color: var(--text); }
+        .nav-item.active { color: var(--gold); background: #252525; border-left-color: var(--gold); }
+
+        /* Main */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px 36px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
         }
-        .main-content { 
-            margin-left: 240px; 
-            padding: 28px; 
-            width: calc(100% - 240px); 
+
+        .page-header {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
         }
-        .withdraw-card { 
-            background: var(--panel); 
-            padding: 28px; 
-            border-radius: 12px; 
-            max-width: 500px; 
-            border: 1px solid rgba(15,23,36,0.04);
-            box-shadow: var(--shadow);
+
+        .page-header h1 {
+            margin: 0 0 4px;
+            font-size: 26px;
+            color: var(--text);
         }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; }
-        .btn-withdraw { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+
+        .page-header p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* Balance info bar */
+        .balance-bar {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-left: 4px solid var(--gold);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .balance-bar i { color: var(--gold); font-size: 18px; }
+
+        .balance-bar .bal-label { font-size: 12px; color: var(--muted); }
+
+        .balance-bar .bal-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Withdraw Card */
+        .withdraw-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            border: 1px solid #333;
+        }
+
+        .withdraw-card h3 {
+            color: var(--gold);
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .withdraw-card .card-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0 0 22px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus, select:focus { border-color: var(--gold); }
+
+        .btn-withdraw {
+            width: 100%;
+            padding: 14px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-withdraw:hover { background: #e6c200; transform: translateY(-1px); }
+        .btn-withdraw:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .warning-box {
+            background: rgba(217,48,37,0.1);
+            border: 1px solid rgba(217,48,37,0.3);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: #ff7c7c;
+            margin-top: 16px;
+            line-height: 1.6;
+        }
+
+        /* Spinner inside button */
+        .spinner-sm {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid #333; }
+            nav { display: flex; flex-wrap: wrap; padding: 6px; }
+            .nav-item { margin: 3px; padding: 8px 12px; font-size: 12px; border-left: none; border-bottom: 2px solid transparent; }
+            .nav-item.active { border-bottom-color: var(--gold); border-left: none; }
+            .main-content { margin-left: 0; width: 100%; padding: 18px; }
+        }
     </style>
     <link rel="stylesheet" href="mobile-responsive.css">
+<style>
+        /* 3-line logo */
+        .logo-section { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold, #C9A84C); flex-shrink: 0; }
+        .logo-text-group { line-height: 1; }
+        .logo-y-text    { font-size: 20px !important; font-weight: 800 !important; color: var(--gold, #C9A84C) !important; display: block !important; letter-spacing: 0.5px !important; }
+        .logo-subtext   { font-size: 11px !important; font-weight: 700 !important; color: #fff !important; letter-spacing: 2px !important; display: block !important; margin-top: 2px !important; }
+        .logo-company   { font-size: 9px !important; color: var(--muted, #7A8196) !important; display: block !important; margin-top: 3px !important; letter-spacing: 0.6px !important; }
+    </style>
+<script src="/pwa-register.js" defer></script>
+    <link rel="stylesheet" href="/skeleton.css">
 </head>
 <body>
+
     <aside class="sidebar">
-        <div style="padding: 25px;"><h2 style="color:var(--gold); margin:0;">YLG BULLION</h2></div>
+        <div class="logo-section">
+            <img src="logo.png" class="logo-img" alt="YLG" onerror="this.src='https://ui-avatars.com/api/?name=YLG&background=C9A84C&color=000&bold=true'">
+            <div class="logo-text-group">
+                <div class="logo-y-text">YLG</div>
+                <div class="logo-subtext">BULLION</div>
+                <div class="logo-company">INTERNATIONAL CO., LTD.</div>
+            </div>
+        </div>
         <nav>
-            <a href="account.html" class="nav-item"><i class="fas fa-user-circle"></i> My Account</a>
-            <a href="trading.html" class="nav-item"><i class="fas fa-chart-line"></i> Gold Trading</a>
-            <a href="wallet.html" class="nav-item"><i class="fas fa-wallet"></i> My Wallet</a>
-            <a href="withdraw.html" class="nav-item active"><i class="fas fa-hand-holding-usd"></i> Withdrawal</a>
+            <a href="index.html"     class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="trading.html"   class="nav-item"><i class="fas fa-chart-line"></i> Gold Trading</a>
+            <a href="wallet.html"    class="nav-item"><i class="fas fa-wallet"></i> My Wallet</a>
+            <a href="portfolio.html" class="nav-item"><i class="fas fa-briefcase"></i> Portfolio</a>
+            <a href="kyc.html"       class="nav-item"><i class="fas fa-user-check"></i> KYC</a>
+            <a href="withdraw.html"  class="nav-item active"><i class="fas fa-hand-holding-usd"></i> Withdrawal</a>
         </nav>
     </aside>
 
     <main class="main-content">
-        <h1>Withdraw Funds</h1>
-        <div class="withdraw-card">
-            <h3 style="color: var(--gold); margin-top:0;">Request Withdrawal (�ᬽᬱ�ᬯᬐᬺ�aᬰ�:�ᬺ)</h3>
-            <p style="font-size: 14px; color: #888;">�ᬯᬐᬺ�aᬰ�Sᬭᬯ�~ᬱᬬ �"�"ᬬᬏ�ᬾ�ᬷᬺ �Sᬬᬺᬁᬶ�"�`ᬷᬺ ᬡᬬᬱᬬ�ᬷᬺ�ᬶ�"ᬫᬐᬺᬬᬭᬯ �:ᬭᬯᬬᬺ��`ᬷᬺ�"ᬫ�9</p>
-            
-            <label>Amount (USD):</label>
-            <input type="number" id="wdAmount" placeholder="Min: $10">
 
-            <label>Payment Method:</label>
+        <div class="page-header">
+            <h1>Withdraw Funds</h1>
+            <p id="user-display">Loading account...</p>
+        </div>
+
+        <!-- Live Balance Bar -->
+        <div class="balance-bar">
+            <i class="fas fa-wallet"></i>
+            <div>
+                <div class="bal-label">Available Balance</div>
+                <div class="bal-value" id="balance-display">$ 0.00</div>
+            </div>
+        </div>
+
+        <div class="withdraw-card">
+            <h3><i class="fas fa-hand-holding-usd"></i> Request Withdrawal</h3>
+            <p class="card-sub">ငွေထုတ်ယူရန် ဖောင်ဖြည့်ပြီး Submit နှိပ်ပါ။ Admin မှ စစ်ဆေးပြီး ၂၄ နာရီအတွင်း ဆောင်ရွက်ပေးမည်။</p>
+
+            <label>Amount (USD)</label>
+            <input type="number" id="wdAmount" placeholder="Minimum: $10" min="10">
+
+            <label>Payment Method</label>
             <select id="wdMethod">
                 <option value="KPay">KPay</option>
                 <option value="WavePay">WavePay</option>
                 <option value="KBZ Bank">KBZ Bank</option>
+                <option value="AYA Bank">AYA Bank</option>
+                <option value="CB Bank">CB Bank</option>
+                <option value="USDT (TRC20)">USDT (TRC20)</option>
+                <option value="USDT (ERC20)">USDT (ERC20)</option>
             </select>
 
-            <label>Account Number (ᬡᬬᬱᬬ�ᬷᬺ�ᬶ�"ᬫᬐᬺ):</label>
+            <label>Account Number / Wallet Address</label>
             <input type="text" id="wdAccount" placeholder="09xxxxxxxxx">
 
-            <button class="btn-withdraw" onclick="submitWithdraw()">Submit Withdrawal Request</button>
+            <label>Account Name</label>
+            <input type="text" id="wdAccountName" placeholder="Full name on account">
+
+            <button class="btn-withdraw" id="wdBtn" onclick="submitWithdraw()">
+                <i class="fas fa-paper-plane"></i> Submit Withdrawal Request
+            </button>
+
+            <div id="pin-notice" style="display:none;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:#C9A84C;margin-bottom:12px;">
+                <i class="fas fa-key" style="margin-right:6px;"></i>Withdrawal PIN is required. <a href="portfolio.html" style="color:#C9A84C;text-decoration:underline;">Set or change PIN</a>
+            </div>
+
+            <div class="warning-box">
+                <i class="fas fa-info-circle"></i>
+                Minimum withdrawal: <strong>$10</strong>.
+                ငွေထုတ်မှု Request တင်သည်နှင့် Balance မှ နှုတ်ယူမည်။ Reject ဖြစ်ပါက Balance ပြန်ထည့်ပေးမည်။
+            </div>
         </div>
+
     </main>
 
-    <script>
-        async function submitWithdraw() {
-            const userId = localStorage.getItem('userId');
-            const userName = localStorage.getItem('userName');
-            const amount = document.getElementById('wdAmount').value;
-            const method = document.getElementById('wdMethod').value;
-            const accountNumber = document.getElementById('wdAccount').value;
+    <!-- Firebase Firestore Logic (replaces localhost:3000 API) -->
+    <script type="module">
+        import { auth, db } from './firebase-init.js';
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { doc, getDoc, addDoc, updateDoc, increment, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-            if(!amount || amount < 10) return alert("ᬡ��`ᬺᬸ� ᬯᬶᬸ $10 �ᬯᬐᬺ�"ᬱᬸ�"ᬫ�9");
-            if(!accountNumber) return alert("ᬡᬬᬱᬬ�ᬷᬺ�ᬶ�"ᬫᬐᬺ �ᬼ�`ᬷᬺ�"ᬱᬸ�"ᬫ�9");
+        let currentUser = null;
+        let currentBalance = 0;
+
+        // ── Auth state ──
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            localStorage.setItem('userShortUID', user.uid.slice(0, 8).toUpperCase());
+            currentUser = user;
+            document.getElementById('user-display').innerText = user.email;
+
+            // Load balance
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    currentBalance = data.balance || 0;
+                    document.getElementById('balance-display').innerText =
+                        "$ " + currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                    if (data.withdrawPin) {
+                        document.getElementById('pin-notice').style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                console.error("Balance fetch error:", e);
+            }
+        });
+
+        // ── Submit withdrawal ──
+        window.submitWithdraw = async function () {
+            if (!currentUser) {
+                Swal.fire({ icon: 'warning', title: 'Not Logged In', text: 'Please login first.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+
+            const amount       = parseFloat(document.getElementById('wdAmount').value);
+            const method       = document.getElementById('wdMethod').value;
+            const accountNum   = document.getElementById('wdAccount').value.trim();
+            const accountName  = document.getElementById('wdAccountName').value.trim();
+
+            // ── Validation ──
+            if (!amount || amount < 10) {
+                Swal.fire({ icon: 'warning', title: 'Invalid Amount', text: 'Minimum withdrawal is $10.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+            if (!accountNum) {
+                Swal.fire({ icon: 'warning', title: 'Missing Info', text: 'Please enter your account number.', background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+            if (amount > currentBalance) {
+                Swal.fire({ icon: 'error', title: 'Insufficient Balance', text: `Your balance is $${currentBalance.toLocaleString()}. Cannot withdraw $${amount}.`, background: '#1a1a1a', color: '#fff' });
+                return;
+            }
+
+            // ── Confirm ──
+            const confirm = await Swal.fire({
+                title: 'Confirm Withdrawal',
+                html: `<b>Amount:</b> $${amount.toFixed(2)}<br><b>Method:</b> ${method}<br><b>Account:</b> ${accountNum}`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#FFD700',
+                confirmButtonText: 'Confirm',
+                background: '#1a1a1a',
+                color: '#fff'
+            });
+
+            if (!confirm.isConfirmed) return;
+
+            // ── Check if user has a withdrawal PIN ──
+            const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+            const savedPin = userSnap.exists() ? userSnap.data().withdrawPin : null;
+
+            if (savedPin) {
+                const { value: enteredPin, isConfirmed: pinOk } = await Swal.fire({
+                    title: 'Enter Withdrawal PIN',
+                    html: `<p style="font-size:13px;color:#aaa;margin-bottom:12px;">Enter your 4-digit withdrawal PIN to continue.</p>
+                           <input id="swal-wd-pin" type="password" inputmode="numeric" maxlength="4"
+                             placeholder="• • • •"
+                             style="width:100%;padding:14px;font-size:24px;letter-spacing:12px;text-align:center;
+                                    background:#222;border:1px solid #444;color:#fff;border-radius:8px;font-family:monospace;">`,
+                    showCancelButton: true,
+                    confirmButtonColor: '#FFD700',
+                    confirmButtonText: 'Verify',
+                    background: '#1a1a1a',
+                    color: '#fff',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        const v = document.getElementById('swal-wd-pin').value;
+                        if (v !== savedPin) {
+                            Swal.showValidationMessage('Incorrect PIN. Please try again.');
+                            return false;
+                        }
+                        return v;
+                    }
+                });
+                if (!pinOk) return;
+            }
+
+            // ── Disable button + spinner ──
+            const btn = document.getElementById('wdBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner-sm"></div> Processing...';
 
             try {
-                const res = await fetch('http://localhost:3000/api/withdraw', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, userName, amount, method, accountNumber })
+                // 1. Deduct balance from user
+                await updateDoc(doc(db, "users", currentUser.uid), {
+                    balance: increment(-amount)
                 });
-                const data = await res.json();
-                alert(data.message);
-                window.location.href = 'account.html';
+
+                // 2. Create withdrawal request in Firestore
+                await addDoc(collection(db, "withdrawals"), {
+                    uid:     currentUser.uid,
+                    email:   currentUser.email,
+                    amount:  amount,
+                    method:  method,
+                    details: `${accountNum}${accountName ? ' (' + accountName + ')' : ''}`,
+                    date:    new Date().toLocaleDateString(),
+                    status:  "Pending",
+                    timestamp: serverTimestamp()
+                });
+
+                // Update displayed balance
+                currentBalance -= amount;
+                document.getElementById('balance-display').innerText =
+                    "$ " + currentBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request Submitted!',
+                    text: 'Withdrawal request sent. Admin will process within 24 hours.',
+                    confirmButtonColor: '#FFD700',
+                    background: '#1a1a1a',
+                    color: '#fff'
+                }).then(() => {
+                    window.location.href = 'wallet.html';
+                });
+
             } catch (err) {
-                alert("�ᬽᬱ�ᬯᬐᬺ�aᬰ�"ᬾᬯ �"ᬡᬱᬬ�ᬺ�"ᬼ�ᬺ�"ᬫ");
+                console.error("Withdrawal error:", err);
+                // Rollback balance if request creation failed
+                try {
+                    await updateDoc(doc(db, "users", currentUser.uid), {
+                        balance: increment(amount)
+                    });
+                } catch (_) {}
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to submit request. Please try again.',
+                    background: '#1a1a1a',
+                    color: '#fff'
+                });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Withdrawal Request';
+            }
+        };
+    </script>
+
+<script>
+/* ═══ YLG Language Sync — v2 ═══ */
+(function(){
+    console.log('[YLG Sync] Initialising language sync');
+    function triggerApply(lang){
+        const fns = ['applyLanguage','applyChatLanguage','applyHistoryLanguage',
+                     'applyKycLanguage','applyWalletLanguage','applyPortfolioLanguage',
+                     'applyTradingLanguage','applyAccountLanguage','applyLang'];
+        let foundAny = false;
+        for (const fn of fns) {
+            if (typeof window[fn] === 'function') {
+                foundAny = true;
+                console.log('[YLG Sync] Calling window.' + fn + '(' + lang + ')');
+                try { window[fn](lang); } catch(e) { console.error('[YLG Sync]', e); }
             }
         }
-    </script>
+        if (!foundAny) console.warn('[YLG Sync] No apply function found on window for lang=' + lang);
+    }
+    window.addEventListener('storage', function(e){
+        if (e.key === 'selectedLang' && e.newValue) triggerApply(e.newValue);
+    });
+    function initialApply(){
+        const lang = localStorage.getItem('selectedLang') || 'en';
+        console.log('[YLG Sync] Initial apply for lang=' + lang);
+        triggerApply(lang);
+    }
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', function(){ setTimeout(initialApply, 50); });
+    } else {
+        setTimeout(initialApply, 50);
+    }
+    setTimeout(initialApply, 500);
+    setTimeout(initialApply, 1500);
+})();
+</script>
+
+<script src="mobile-nav.js"></script>
+<script src="sidebar-user.js"></script>
+<script src="/toast.js"></script>
+<script type="module" src="notifications-bell.js"></script>
 </body>
 </html>
+
+
+
+

@@ -1,0 +1,769 @@
+/* ═══════════════════════════════════════════════════════════
+   YLG Bullion — UNIFIED THEME v2  (Live Support-grade polish)
+   theme.css
+
+   Load AFTER dashboard-styles.css + mobile-responsive.css,
+   BEFORE each page's inline <style>.
+   ═══════════════════════════════════════════════════════════ */
+
+
+/* ══════════════════════════════════
+   DESIGN TOKENS
+   ══════════════════════════════════ */
+:root {
+    --color-dark-bg:       #0C0D0F !important;
+    --color-medium-dark:   #111318 !important;
+    --color-gold-accent:   #C9A84C !important;
+    --color-text-light:    #EDF0F7 !important;
+    --color-text-fade:     #7A8196 !important;
+    --color-positive:      #2ECC8F !important;
+    --color-negative:      #E05555 !important;
+    --color-info:          #4A9EE0 !important;
+    --color-white:         #FFFFFF !important;
+
+    --gold:                #C9A84C;
+    --gold-light:          #E8C96A;
+    --gold-dim:            rgba(201,168,76,0.12);
+    --gold-line:           rgba(201,168,76,0.28);
+    --bg:                  #0C0D0F;
+    --bg-2:                #15171D;
+    --bg-3:                #1C1F27;
+    --card:                #111318;
+    --text:                #EDF0F7;
+    --muted:               #7A8196;
+    --green:               #2ECC8F;
+    --red:                 #E05555;
+    --blue:                #4A9EE0;
+    --border:              rgba(255,255,255,0.07);
+    --border-gold:         rgba(201,168,76,0.28);
+
+    --sidebar-width:       240px;
+    --radius:              10px;
+    --radius-lg:           14px;
+    --transition:          0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ══════════════════════════════════
+   BASE
+   ══════════════════════════════════ */
+body {
+    font-family: 'Outfit', 'Noto Sans Myanmar', 'Noto Sans Thai',
+                 -apple-system, system-ui, Segoe UI, sans-serif !important;
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-gold); border-radius: 99px; }
+
+
+/* ══════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════ */
+.sidebar {
+    background: var(--card) !important;
+    border-right: 1px solid var(--border) !important;
+    box-shadow: none !important;
+}
+
+.logo-section, .brand-header, .sidebar-logo {
+    padding: 20px !important;
+    border-bottom: 1px solid var(--border) !important;
+    gap: 12px !important;
+}
+
+.logo-img {
+    width: 44px !important; height: 44px !important;
+    border: 2px solid var(--gold) !important;
+    box-shadow: 0 0 14px rgba(201,168,76,0.18) !important;
+}
+
+.logo-text-group { line-height: 1 !important; }
+.logo-y-text    { font-size: 20px !important; font-weight: 800 !important; color: var(--gold) !important; display: block !important; letter-spacing: 0.5px !important; }
+.logo-subtext   { font-size: 11px !important; font-weight: 700 !important; color: #fff !important; letter-spacing: 2px !important; display: block !important; margin-top: 2px !important; }
+.logo-company   { font-size: 9px !important; color: var(--muted) !important; display: block !important; margin-top: 3px !important; letter-spacing: 0.6px !important; }
+
+nav, .sidebar-nav { padding: 8px 10px !important; gap: 2px; }
+
+.nav-item {
+    padding: 11px 13px !important;
+    color: var(--muted) !important;
+    border-left: 3px solid transparent !important;
+    border-radius: 8px !important;
+    margin: 2px 0 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    gap: 11px !important;
+    transition: var(--transition) !important;
+    background: transparent !important;
+}
+
+.nav-item i {
+    width: 17px !important;
+    text-align: center !important;
+    font-size: 13px !important;
+    color: var(--muted) !important;
+    transition: var(--transition);
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.04) !important;
+    color: var(--text) !important;
+    border-left-color: transparent !important;
+    transform: none !important;
+}
+
+.nav-item.active {
+    background: var(--gold-dim) !important;
+    color: var(--gold) !important;
+    border-left-color: var(--gold) !important;
+    font-weight: 600 !important;
+}
+.nav-item.active i { color: var(--gold) !important; }
+
+
+/* ══════════════════════════════════
+   MAIN + HEADER
+   ══════════════════════════════════ */
+.main-content { background: var(--bg) !important; }
+
+header, .main-header, .page-header {
+    padding-bottom: 18px !important;
+    border-bottom: 1px solid var(--border) !important;
+    margin-bottom: 24px !important;
+}
+
+header h2, .main-header h2, .page-header h2, .header-title-group h2 {
+    color: var(--text) !important;
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 24px !important;
+    letter-spacing: -0.3px !important;
+}
+
+header p, .main-header p { color: var(--muted) !important; font-size: 13px !important; }
+
+
+/* ══════════════════════════════════
+   CARDS
+   ══════════════════════════════════ */
+.dashboard-card, .withdraw-card, .welcome-card, .info-card,
+.history-card, .portfolio-card, .ylg-card, .kyc-card,
+.license-img-card, .about-card, .balance-card, .tier-card,
+.license-info-card, .chart-card, .order-box, .order-panel {
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: none !important;
+}
+
+
+/* ══════════════════════════════════
+   ★ TRADING PAGE — full luxury polish
+   ══════════════════════════════════ */
+
+/* Grid layout */
+.trading-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 360px !important;
+    gap: 20px !important;
+}
+
+/* Chart card */
+.chart-card {
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.chart-card-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 16px 20px !important;
+    border-bottom: 1px solid var(--border) !important;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent) !important;
+}
+
+.chart-card-header h3 {
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Market badge (XAU/USD etc.) */
+.market-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    padding: 6px 14px !important;
+    border-radius: 99px !important;
+    background: var(--gold-dim) !important;
+    border: 1px solid var(--border-gold) !important;
+    color: var(--gold-light) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.8px !important;
+    text-transform: uppercase;
+}
+.market-badge i { font-size: 11px; }
+
+/* Order box — the Quick Trade panel */
+.order-box {
+    padding: 24px 22px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.trade-box-header h3 {
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: var(--gold-light) !important;
+    margin: 0 0 6px !important;
+    letter-spacing: -0.2px !important;
+}
+
+.trade-box-subtitle {
+    font-size: 12px !important;
+    color: var(--muted) !important;
+    line-height: 1.6 !important;
+    margin-bottom: 18px !important;
+}
+
+/* Form labels & inputs inside order-box */
+.order-box label,
+#amountLabel {
+    display: block !important;
+    margin-top: 14px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+    color: var(--muted) !important;
+    margin-bottom: 6px !important;
+}
+
+.order-box select,
+.order-box input[type="number"],
+.order-box input[type="text"] {
+    width: 100% !important;
+    padding: 12px 14px !important;
+    background: var(--bg-3) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    color: var(--text) !important;
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    font-size: 13px !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    transition: var(--transition) !important;
+}
+
+.order-box select:focus,
+.order-box input:focus {
+    border-color: var(--border-gold) !important;
+    background: #1F2330 !important;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.08) !important;
+}
+
+/* Profit preview box */
+.profit-container {
+    background: rgba(201,168,76,0.07) !important;
+    border: 1px solid var(--border-gold) !important;
+    border-radius: var(--radius) !important;
+    padding: 18px !important;
+    margin: 18px 0 10px !important;
+    text-align: center !important;
+}
+
+.profit-container p {
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.2px !important;
+    color: var(--muted) !important;
+    margin: 0 0 8px !important;
+}
+
+#profitDisplay {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: var(--green) !important;
+    line-height: 1 !important;
+    font-variant-numeric: tabular-nums;
+}
+
+#percentDisplay, .profit-container small {
+    font-size: 11px !important;
+    color: var(--gold) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    margin-top: 4px;
+    display: block;
+}
+
+/* BUY / SELL buttons (big gradient actions) */
+.trade-action-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+}
+
+.trade-btn {
+    width: 100% !important;
+    padding: 15px !important;
+    border: none !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    cursor: pointer !important;
+    border-radius: var(--radius) !important;
+    transition: transform 0.2s ease, box-shadow 0.25s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+.trade-btn:hover:not(.btn-disabled):not(:disabled) {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.3) !important;
+}
+
+.buy-btn, .trade-btn.btn-buy {
+    background: linear-gradient(135deg, #00c47a, #009a5e) !important;
+    color: #fff !important;
+}
+
+.sell-btn, .trade-btn.btn-sell {
+    background: linear-gradient(135deg, #e03a3a, #b82a2a) !important;
+    color: #fff !important;
+}
+
+.btn-disabled {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+/* Tier notes & info text */
+.trade-note, #tierNote, #tradeInfoNote {
+    margin-top: 12px !important;
+    padding: 12px 14px !important;
+    border-radius: var(--radius) !important;
+    background: var(--bg-3) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--muted) !important;
+    font-size: 11px !important;
+    line-height: 1.6 !important;
+}
+
+/* Trading overlay (countdown) */
+#trading-overlay {
+    background: rgba(0,0,0,0.88) !important;
+    backdrop-filter: blur(6px);
+}
+
+.spinner {
+    width: 64px !important;
+    height: 64px !important;
+    border: 4px solid rgba(255,255,255,0.08) !important;
+    border-top-color: var(--gold) !important;
+    border-radius: 50% !important;
+    animation: spin 0.9s linear infinite !important;
+    margin-bottom: 18px !important;
+}
+
+#overlay-timer {
+    font-size: 52px !important;
+    font-weight: 700 !important;
+    color: var(--gold) !important;
+    line-height: 1 !important;
+    font-variant-numeric: tabular-nums;
+    margin: 8px 0 10px !important;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* head-user-name (balance info) */
+#head-user-name {
+    font-size: 13px !important;
+    color: var(--gold) !important;
+    font-weight: 600 !important;
+    margin-top: 4px !important;
+    font-variant-numeric: tabular-nums;
+}
+
+
+/* ══════════════════════════════════
+   ★ ACCOUNT / PORTFOLIO / WALLET cards
+   ══════════════════════════════════ */
+
+/* Welcome / hero cards */
+.welcome-card {
+    padding: 26px 28px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+    pointer-events: none;
+}
+
+.welcome-card h2 {
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: var(--gold-light) !important;
+    margin: 0 0 8px !important;
+    position: relative;
+}
+
+.welcome-card p {
+    color: var(--muted) !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+    font-size: 13px !important;
+    position: relative;
+}
+
+/* Info grid cards */
+.info-grid, .account-info-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 18px !important;
+}
+
+.info-card {
+    padding: 24px 26px !important;
+}
+
+.info-card h3 {
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    font-size: 16px !important;
+    color: var(--gold) !important;
+    margin: 0 0 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-weight: 700 !important;
+}
+
+.info-card h3 i { color: var(--gold) !important; font-size: 15px !important; }
+
+.info-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 12px 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+    font-size: 13px !important;
+}
+
+.info-row:last-of-type { border-bottom: none !important; }
+.info-row .label,
+.info-row span:first-child { color: var(--muted) !important; }
+.info-row .value,
+.info-row span:last-child { color: var(--text) !important; font-weight: 600 !important; }
+.info-row .value.gold { color: var(--gold) !important; }
+.info-row .value.green { color: var(--green) !important; }
+
+/* Actions row */
+.actions-row {
+    display: flex !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    margin-top: 24px !important;
+}
+
+.action-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 11px 20px !important;
+    border-radius: var(--radius) !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    transition: var(--transition) !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.action-btn-gold {
+    background: linear-gradient(135deg, var(--gold), #a8872e) !important;
+    color: #000 !important;
+    box-shadow: 0 4px 16px rgba(201,168,76,0.22) !important;
+}
+.action-btn-gold:hover {
+    box-shadow: 0 6px 24px rgba(201,168,76,0.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+.action-btn-outline {
+    background: var(--bg-3) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+.action-btn-outline:hover {
+    border-color: var(--border-gold) !important;
+    color: var(--gold) !important;
+}
+
+/* Guest card */
+.guest-card {
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 50px 30px !important;
+    text-align: center !important;
+    max-width: 420px !important;
+}
+
+.guest-card i {
+    font-size: 40px !important;
+    color: var(--border-gold) !important;
+    margin-bottom: 16px !important;
+    display: block !important;
+}
+
+
+/* ══════════════════════════════════
+   BUTTONS (global)
+   ══════════════════════════════════ */
+.btn-register, .btn-login, .sidebar-login-btn,
+.unlock-wallet-btn, .btn-withdraw,
+#dep-btn, #submitKyc, #refreshBtn, .refresh-btn,
+#submitBtn, button.primary {
+    background: linear-gradient(135deg, var(--gold), #a8872e) !important;
+    color: #000 !important;
+    border: none !important;
+    font-weight: 700 !important;
+    font-family: 'Outfit', system-ui, sans-serif !important;
+    border-radius: var(--radius) !important;
+    transition: var(--transition) !important;
+    box-shadow: 0 4px 14px rgba(201,168,76,0.22) !important;
+}
+
+.btn-register:hover, .btn-login:hover,
+.sidebar-login-btn:hover, .unlock-wallet-btn:hover,
+.btn-withdraw:hover, #dep-btn:hover,
+#submitKyc:hover, #refreshBtn:hover, .refresh-btn:hover,
+#submitBtn:hover:not(:disabled),
+button.primary:hover:not(:disabled) {
+    box-shadow: 0 6px 22px rgba(201,168,76,0.38) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Secondary / outline */
+.logout-btn, #with-btn, .btn-cancel, .promo-toggle-btn {
+    background: var(--bg-3) !important;
+    color: var(--muted) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    font-weight: 600 !important;
+    transition: var(--transition) !important;
+}
+.logout-btn:hover, #with-btn:hover, .btn-cancel:hover,
+.promo-toggle-btn:hover {
+    border-color: var(--border-gold) !important;
+    color: var(--gold) !important;
+}
+
+/* Danger / logout */
+#logout-btn, #logoutBtn, #sidebar-logout-btn,
+#logout-btn-top, #logout-btn-header, #logout-main-btn {
+    background: rgba(224,85,85,0.1) !important;
+    color: var(--red) !important;
+    border: 1px solid rgba(224,85,85,0.25) !important;
+    border-radius: var(--radius) !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+}
+#logout-btn:hover, #logoutBtn:hover, #sidebar-logout-btn:hover,
+#logout-btn-top:hover, #logout-btn-header:hover,
+#logout-main-btn:hover {
+    background: rgba(224,85,85,0.22) !important;
+}
+
+
+/* ══════════════════════════════════
+   INPUTS (global)
+   ══════════════════════════════════ */
+input[type="text"], input[type="email"], input[type="password"],
+input[type="number"], input[type="tel"], select, textarea {
+    background: var(--bg-3) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: var(--radius) !important;
+    font-family: 'Outfit', 'Noto Sans Myanmar', sans-serif !important;
+    transition: var(--transition) !important;
+    outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--border-gold) !important;
+    background: #1F2330 !important;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.08) !important;
+}
+
+input::placeholder, textarea::placeholder { color: #4A5063 !important; }
+
+
+/* ══════════════════════════════════
+   TABLES
+   ══════════════════════════════════ */
+table { border-collapse: collapse; }
+
+th {
+    background: rgba(201,168,76,0.04) !important;
+    color: var(--gold) !important;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.2px !important;
+    font-weight: 700 !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 12px 14px !important;
+    text-align: left;
+}
+
+td {
+    border-bottom: 1px solid var(--border) !important;
+    font-size: 13px !important;
+    padding: 13px 14px !important;
+    color: var(--text) !important;
+}
+
+tbody tr:hover { background: rgba(201,168,76,0.04) !important; }
+
+
+/* ══════════════════════════════════
+   BADGES / PILLS
+   ══════════════════════════════════ */
+.kyc-badge, .badge, .status-pill, .member-badge {
+    border-radius: 99px !important;
+    padding: 4px 10px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.kyc-pending, .badge-pending {
+    background: rgba(201,168,76,0.12) !important;
+    color: var(--gold) !important;
+    border: 1px solid var(--border-gold) !important;
+}
+.kyc-verified, .badge-success {
+    background: rgba(46,204,143,0.12) !important;
+    color: var(--green) !important;
+    border: 1px solid rgba(46,204,143,0.3) !important;
+}
+.kyc-rejected, .badge-danger {
+    background: rgba(224,85,85,0.12) !important;
+    color: var(--red) !important;
+    border: 1px solid rgba(224,85,85,0.3) !important;
+}
+
+
+/* ══════════════════════════════════
+   SIDE PROFILE BOX
+   ══════════════════════════════════ */
+.side-profile, #side-profile-box {
+    padding: 14px 18px !important;
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+#side-user-name {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--text) !important;
+}
+
+
+/* ══════════════════════════════════
+   SIDEBAR AUTH BOX
+   ══════════════════════════════════ */
+#dashboard-auth-box, #sidebar-auth-box, .auth-control-box {
+    padding: 14px 16px !important;
+    border-top: 1px solid var(--border) !important;
+    background: transparent !important;
+}
+
+#auth-buttons a:first-child,
+#auth-buttons-sidebar a:first-child,
+#sidebar-logged-out a {
+    background: linear-gradient(135deg, var(--gold), #a8872e) !important;
+    color: #000 !important;
+    border-radius: var(--radius) !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(201,168,76,0.22) !important;
+    text-align: center !important;
+    padding: 10px !important;
+    display: block !important;
+    text-decoration: none !important;
+    margin-bottom: 8px !important;
+    transition: var(--transition) !important;
+}
+
+#auth-buttons a:last-child,
+#auth-buttons-sidebar a:last-child {
+    background: var(--bg-3) !important;
+    color: var(--muted) !important;
+    border: 1px solid var(--border) !important;
+    margin-bottom: 0 !important;
+}
+
+
+/* ══════════════════════════════════
+   LINKS / UTILITY
+   ══════════════════════════════════ */
+a { color: var(--gold); transition: var(--transition); }
+a:hover { color: var(--gold-light); }
+
+.positive { color: var(--green) !important; }
+.negative { color: var(--red) !important; }
+
+h1, h2, h3, h4, h5, h6, strong, b { color: var(--text); }
+
+
+/* ══════════════════════════════════
+   FOOTER
+   ══════════════════════════════════ */
+.site-footer {
+    border-top: 1px solid var(--border) !important;
+    color: var(--muted) !important;
+    background: transparent !important;
+}
+.site-footer a { color: #3A3F50 !important; font-size: 12px !important; }
+.site-footer a:hover { color: var(--gold) !important; }
+
+
+/* ══════════════════════════════════
+   RESPONSIVE — TRADING
+   ══════════════════════════════════ */
+@media (max-width: 992px) {
+    .trading-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
