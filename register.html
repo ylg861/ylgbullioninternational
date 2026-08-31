@@ -220,6 +220,9 @@
       submitBtn.disabled = true; btnText.textContent = 'Processing...';
 
       try{
+        const cred = await createUserWithEmailAndPassword(auth, emailVal, passVal);
+        await updateProfile(cred.user, { displayName: nameVal });
+
         const counterRef = doc(db, 'settings', 'userCounter');
         let newIndex = 1;
         await runTransaction(db, async (tx)=>{
@@ -231,9 +234,6 @@
         const currentYear = new Date().getFullYear();
         const formatted = String(newIndex).padStart(4,'0');
         const customYlgId = `YLG-${currentYear}${formatted}`;
-
-        const cred = await createUserWithEmailAndPassword(auth, emailVal, passVal);
-        await updateProfile(cred.user, { displayName: nameVal });
 
         await setDoc(doc(db, 'users', cred.user.uid), {
           uid: cred.user.uid, fullname: nameVal, email: emailVal, phone: phoneVal, balance: 0,
