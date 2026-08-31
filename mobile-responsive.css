@@ -404,7 +404,6 @@
     transform: translateY(0) !important;
 }
 
-@media (max-width: 768px) {
 
     /* ── No double safe-area on body (handled by nav + content) ── */
     body {
@@ -722,4 +721,3 @@
     .assets-list-item:active .ap-arrow {
         color: var(--color-gold-accent, #FFD700);
     }
-}
