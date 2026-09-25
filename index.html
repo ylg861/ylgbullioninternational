@@ -1254,10 +1254,13 @@
             window.shareRefCode = function(){
                 var c=window._ylgRefCode||'—';
                 var url='https://www.ylgbullion.org/register.html?ref='+c;
-                var msg='Join YLG Bullion International!\nUse my referral code: '+c+'\nRegister here: '+url;
                 if(navigator.share){
-                    navigator.share({title:'YLG Bullion International',text:msg,url:url});
+                    // Leave the URL out of `text` — share targets (e.g. Telegram) already
+                    // append the separate `url` field, so including it in both duplicates it.
+                    var shareText='Join YLG Bullion International!\nUse my referral code: '+c;
+                    navigator.share({title:'YLG Bullion International',text:shareText,url:url});
                 } else {
+                    var msg='Join YLG Bullion International!\nUse my referral code: '+c+'\nRegister here: '+url;
                     navigator.clipboard.writeText(msg)
                         .then(function(){ showToast('Referral link copied!', 'success'); })
                         .catch(function(){});
