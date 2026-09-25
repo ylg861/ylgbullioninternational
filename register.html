@@ -3,6 +3,14 @@
 <head>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <meta charset="utf-8" />
+  <meta name="description" content="YLG Bullion — Gold trading platform. Buy, sell and trade gold online with real-time prices.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ylgbullion.org/register.html">
+  <meta property="og:title" content="YLG Bullion — Create Your Account">
+  <meta property="og:site_name" content="YLG Bullion">
+  <meta property="og:description" content="Gold trading platform — real-time gold prices, secure trading, and portfolio management.">
+  <meta property="og:image" content="https://ylgbullion.org/og-image.png">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>YLG Bullion</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
@@ -116,6 +124,11 @@
         </div>
       </div>
 
+      <div style="margin-top:12px">
+        <label for="refcode" id="labelRef">Referral code (optional)</label>
+        <input id="refcode" type="text" autocomplete="off" style="text-transform:uppercase" />
+      </div>
+
       <p style="margin-top:12px"><label class="inline-row"><input id="terms" type="checkbox" /> <span id="labelTerms" class="small">I agree to the <a href="terms.html" target="_blank" style="color:var(--accent);text-decoration:underline;">Terms &amp; Conditions</a></span></label></p>
 
       <div class="actions">
@@ -153,6 +166,7 @@
     const email = document.getElementById('email');
     const password = document.getElementById('password');
     const confirm = document.getElementById('confirm');
+    const refcode = document.getElementById('refcode');
     const terms = document.getElementById('terms');
     const submitBtn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
@@ -160,9 +174,9 @@
     const debugBox = document.getElementById('debugBox');
 
     const texts = {
-      en: { title:'Create your account', subtitle:'Sign up to access trading & wallet', full:'Full name', phone:'Phone', email:'Email', pass:'Password', confirm:'Confirm password', terms:'I agree to Terms and Privacy', register:'Register', required:'Please fill required fields.' },
-      mm: { title:'အကောင့်အသစ်ဖန်တီးပါ', subtitle:'ရောင်းဝယ်မှုနှင့် အိတ်ချယ်နိုင်ရန်', full:'အမည်', phone:'ဖုန်း', email:'အီးမေးလ်', pass:'စကားဝှက်', confirm:'စကားဝှက် ထပ်မံရိုက်ပါ', terms:'စည်းမျဉ်းနှင့် ကိုယ်ရေးမူဝါဒ အတည်ပြုပါ', register:'မှတ်ပုံတင်ရန်', required:'လိုအပ်သောအချက်များကို ဖြည့်ပါ။' },
-      th: { title:'สร้างบัญชีของคุณ', subtitle:'สมัครเพื่อใช้งานการซื้อขายและกระเป๋า', full:'ชื่อ-นามสกุล', phone:'โทรศัพท์', email:'อีเมล', pass:'รหัสผ่าน', confirm:'ยืนยันรหัสผ่าน', terms:'ฉันยอมรับข้อกำหนดและนโยบาย', register:'สมัคร', required:'กรุณากรอกข้อมูลที่จำเป็น.' }
+      en: { title:'Create your account', subtitle:'Sign up to access trading & wallet', full:'Full name', phone:'Phone', email:'Email', pass:'Password', confirm:'Confirm password', ref:'Referral code (optional)', terms:'I agree to Terms and Privacy', register:'Register', required:'Please fill required fields.' },
+      mm: { title:'အကောင့်အသစ်ဖန်တီးပါ', subtitle:'ရောင်းဝယ်မှုနှင့် အိတ်ချယ်နိုင်ရန်', full:'အမည်', phone:'ဖုန်း', email:'အီးမေးလ်', pass:'စကားဝှက်', confirm:'စကားဝှက် ထပ်မံရိုက်ပါ', ref:'Referral code (ရှိလျှင်ဖြည့်ပါ)', terms:'စည်းမျဉ်းနှင့် ကိုယ်ရေးမူဝါဒ အတည်ပြုပါ', register:'မှတ်ပုံတင်ရန်', required:'လိုအပ်သောအချက်များကို ဖြည့်ပါ။' },
+      th: { title:'สร้างบัญชีของคุณ', subtitle:'สมัครเพื่อใช้งานการซื้อขายและกระเป๋า', full:'ชื่อ-นามสกุล', phone:'โทรศัพท์', email:'อีเมล', pass:'รหัสผ่าน', confirm:'ยืนยันรหัสผ่าน', ref:'รหัสแนะนำ (ถ้ามี)', terms:'ฉันยอมรับข้อกำหนดและนโยบาย', register:'สมัคร', required:'กรุณากรอกข้อมูลที่จำเป็น.' }
     };
 
     function applyLang(){
@@ -175,10 +189,17 @@
       document.getElementById('labelEmail').textContent = t.email;
       document.getElementById('labelPass').textContent = t.pass;
       document.getElementById('labelConfirm').textContent = t.confirm;
+      document.getElementById('labelRef').textContent = t.ref;
       document.getElementById('labelTerms').textContent = t.terms;
       btnText.textContent = t.register;
     }
     applyLang();
+
+    // Auto-fill referral code from ?ref= URL param (e.g. register.html?ref=6PXN12DC)
+    (function prefillRefCode(){
+      const refParam = new URLSearchParams(location.search).get('ref');
+      if (refParam) refcode.value = refParam.trim().toUpperCase();
+    })();
 
     window.resendVerification = async function() {
         if (!_verifyUser) return;
@@ -235,9 +256,13 @@
         const formatted = String(newIndex).padStart(4,'0');
         const customYlgId = `YLG-${currentYear}${formatted}`;
 
+        const refVal = refcode.value.trim().toUpperCase();
+
         await setDoc(doc(db, 'users', cred.user.uid), {
           uid: cred.user.uid, fullname: nameVal, email: emailVal, phone: phoneVal, balance: 0,
-          userIndex: newIndex, ylgId: customYlgId, tradeControl: 'NORMAL', kycStatus: 'pending', createdAt: new Date().toISOString()
+          userIndex: newIndex, ylgId: customYlgId, tradeControl: 'NORMAL', kycStatus: 'pending',
+          referredBy: refVal || null, hasReceivedReferralBonus: false,
+          createdAt: new Date().toISOString()
         });
 
         // Send verification email & show verify screen
